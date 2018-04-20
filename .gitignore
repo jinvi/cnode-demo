@@ -1,0 +1,7 @@
+.idea
+yarn.lock
+npm-debug.log
+node_modules
+
+output
+psd
