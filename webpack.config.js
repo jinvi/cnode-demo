@@ -25,7 +25,7 @@ if (process.argv.indexOf('-p') === -1) {
 }
 
 // 清除构建目录选项
-const cleanPluginOption = {
+const CleanPluginOption = {
     dry: !isCleanOutput,  //true：不会操作删除任务，可查看将删除的内容
     verbose: isCleanOutput,  //是否打印log
     allowExternal: false,  //删除的输出目录在当前目录外，需设此项
@@ -40,15 +40,27 @@ module.exports = {
         publicPath: '/'
     },
     module: {
-        rules: [{
-            test: /\.js$/,
-            exclude: /node_modules/,
-            loader: "babel-loader"
-        }]
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: "babel-loader"
+            },
+            {
+                test: /\.less$/,
+                use: [{
+                    loader: "style-loader"
+                }, {
+                    loader: "css-loader"
+                }, {
+                    loader: "less-loader"
+                }]
+            }
+        ]
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new CleanWebpackPlugin(outputPath, cleanPluginOption)
+        new CleanWebpackPlugin(outputPath, CleanPluginOption)
     ],
     devServer: {
         contentBase: path.join(__dirname, "output"),
