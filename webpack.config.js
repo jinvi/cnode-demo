@@ -10,9 +10,9 @@ const publicPath = '/'  //线上路径
 let isCleanOutput, entry;
 if (process.argv.indexOf('-p') === -1) {
     /*
-    * 开发模式
+    * 开发环境
     * */
-    process.env.NODE_ENV = 'development'
+    process.env.NODE_ENV = 'development'  //设置node环境变量
     isCleanOutput = false
     entry = [
         // 'whatwg-fetch',  //fetch polyfill
@@ -21,9 +21,9 @@ if (process.argv.indexOf('-p') === -1) {
     ]
 } else {
     /*
-    * 生产模式
+    * 生产环境
     * */
-    isCleanOutput = true
+    isCleanOutput = true //构建前先清除输出目录
     entry = entryPath
 }
 
@@ -34,12 +34,6 @@ const CleanPluginOption = {
     allowExternal: false,  //删除的输出目录在当前目录外，需设此项
     exclude: []  //排除的文件
 }
-
-// 提取样式选项
-const extractLess = new ExtractTextPlugin({
-    filename: "[name].css",
-    disable: process.env.NODE_ENV === "development"  //开发模式取消提取
-});
 
 module.exports = {
     entry: entry,
@@ -57,14 +51,20 @@ module.exports = {
             },
             {
                 test: /\.less$/,
-                use: extractLess.extract({
+                use: ExtractTextPlugin.extract({
                     use: [{
                         loader: "css-loader"
                     }, {
                         loader: "less-loader"
                     }],
-                    // use style-loader in development
-                    fallback: "style-loader"
+                    fallback: "style-loader"  // use style-loader in development
+                })
+            },
+            {
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract({
+                    use: 'css-loader',
+                    fallback: "style-loader",  // use style-loader in development
                 })
             },
             {
@@ -86,6 +86,9 @@ module.exports = {
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new CleanWebpackPlugin(outputPath, CleanPluginOption),
-        extractLess
+        new ExtractTextPlugin({  //提取样式文件
+            filename: '[name].css',
+            // disable: process.env.NODE_ENV === "development"  //开发模式取消提取
+        })
     ]
 }
