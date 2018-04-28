@@ -3,10 +3,43 @@ body, ul, li, ol, p, h1, h2, h3, textarea, input, select {
   margin: 0;
 }
 
+body{
+  font-size: 12px;
+}
+
 li {
   list-style: none
 }
 
 img {
   border: 0;
+}
+
+a{
+  text-decoration: none;
+}
+
+/*
+  common
+*/
+.fleft {
+  float: left;
+}
+
+.fright {
+  float: right;
+}
+
+.fleft, .fright {
+  display: inline;
+}
+
+.clear:after {
+  display: block;
+  content: '';
+  clear: both;
+}
+
+.clear {
+  zoom: 1; /* for IE6 IE7 */
 }

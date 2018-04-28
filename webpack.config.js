@@ -75,7 +75,7 @@ module.exports = {
                         options: {
                             limit: 10000,  //单位byte，超过限制使用file-loader代替，选项同时转移，否则输出DataURL图片
                             name: '[name].[ext]',
-                            outputPath: '',  //输出目录
+                            outputPath: 'img',  //输出目录
                             // publicPath: publicPath,
                         }
                     }

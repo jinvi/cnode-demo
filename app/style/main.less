@@ -1,4 +1,56 @@
-@import "preStyle";
+@import "preStyle"; //重置和一些公用样式
 
 @color-standard: #41D109;
 @color-contrast: #FA1F1A;
+
+.homeTop {
+  background-color: @color-standard;
+  @height: 50px;
+  height: @height;
+  line-height: @height;
+  padding: 0 20px;
+  color: #ffffff;
+
+  h2 {
+    display: inline;
+    font-size: 28px;
+  }
+
+  .homeTop-commentary {
+    font-size: 12px;
+    margin-left: 4px;
+  }
+
+  .link-color(@color) {
+    &:link, &:visited, &:hover {
+      color: @color;
+    }
+  }
+
+  .homeTop-loginBtn {
+    background-color: #ffffff;
+    text-align: center;
+    display: block;
+    padding: 4px 8px;
+    line-height: normal;
+    font-size: 12px;
+    margin-top: 14px;
+    border-radius: 5px;
+
+    .link-color(@color-standard)
+  }
+
+  .homeTop-loginState {
+    display: inline-block;
+    background-color: red;
+    background: url('../../assets/user.gif') no-repeat left center;
+    text-indent: 24px;
+    height: 20px;
+    line-height: normal;
+    margin-top: 14px;
+
+    a {
+      .link-color(#ffffff)
+    }
+  }
+}
