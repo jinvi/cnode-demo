@@ -2,8 +2,19 @@
 
 @color-standard: #41D109;
 @color-contrast: #FA1F1A;
+@color-nav: #8A8A8A;
+@nav-z-index: 100;
 
-.homeTop {
+@font-face {
+  font-family: 'iconfont';  /* project id 647982 */
+  src: url('//at.alicdn.com/t/font_647982_2ufd621tfi1i3sor.eot');
+  src: url('//at.alicdn.com/t/font_647982_2ufd621tfi1i3sor.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_647982_2ufd621tfi1i3sor.woff') format('woff'),
+  url('//at.alicdn.com/t/font_647982_2ufd621tfi1i3sor.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_647982_2ufd621tfi1i3sor.svg#iconfont') format('svg');
+}
+
+.top {
   background-color: @color-standard;
   @height: 50px;
   height: @height;
@@ -16,7 +27,7 @@
     font-size: 28px;
   }
 
-  .homeTop-commentary {
+  .top-commentary {
     font-size: 12px;
     margin-left: 4px;
   }
@@ -27,7 +38,7 @@
     }
   }
 
-  .homeTop-loginBtn {
+  .top-loginBtn {
     background-color: #ffffff;
     text-align: center;
     display: block;
@@ -40,7 +51,7 @@
     .link-color(@color-standard)
   }
 
-  .homeTop-loginState {
+  .top-loginState {
     display: inline-block;
     background-color: red;
     background: url('../../assets/user.gif') no-repeat left center;
@@ -52,5 +63,57 @@
     a {
       .link-color(#ffffff)
     }
+  }
+}
+
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: @nav-z-index;
+  width: 100%;
+  height: 52px;
+
+  li {
+    display: inline-block;
+    width: 33%;
+    text-align: center;
+  }
+
+  a {
+    display: inline-block;
+    width: 25px;
+    margin-top: 6px;
+    color: @color-nav;
+  }
+
+  .nav-active {
+    color: @color-standard;
+  }
+
+  .icon-font {
+    font-family: "iconfont" !important;
+    font-size: 24px;
+    font-style: normal;
+  }
+}
+
+.topics-nav {
+  li {
+    width: 20%;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+  }
+
+  a {
+    display: inline-block;
+    color: @color-nav;
+    padding: 14px 0;
+  }
+
+  .active {
+    color: @color-standard;
+    border-bottom: 4px solid @color-standard;
   }
 }

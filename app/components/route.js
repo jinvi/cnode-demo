@@ -12,7 +12,7 @@ export default class Main extends Component {
         return (
             <Switch>
                 <Route exact path={'/'} component={Home}/>
-                <Redirect to={'/'}/>
+                {/*<Redirect to={'/'}/>*/}
             </Switch>
         )
     }

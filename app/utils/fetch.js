@@ -26,11 +26,12 @@ function response(response) {
 }
 
 //返回JSON格式数据
-function fetchJSON(pathToResource) {
+function fetchJSON(pathToResource,cb) {
     fetch(pathToResource)
         .then(validateResponse)
         .then(readResponseAsJSON)
-        .then(logResult)
+        // .then(logResult)
+        .then(cb)
         .catch(logError);
 }
 
