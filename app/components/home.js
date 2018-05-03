@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Link, NavLink} from 'react-router-dom';
 import {fetchJSON} from '../utils/fetch'
+import moment from 'moment'
 
 class Top extends Component {
     constructor(props) {
@@ -68,15 +69,50 @@ class TopicList extends Component {
     }
 
     render() {
-        console.log(this.state)
+        // console.log(this.state)
+        console.log(moment.duration(1, "minutes").humanize())
+
+        const avatarStyle = {
+            width: '50px'
+            , height: '50px'
+            , borderRadius: '50%'
+        }
+
+        function transTab(origin) {
+            switch (origin) {
+                case 'ask':
+                    return '问答'
+                case 'share':
+                    return '分享'
+                case 'job':
+                    return '招聘'
+                case 'good':
+                    return '精华'
+            }
+        }
+
         return (
-            <div>
-            </div>
+            <ul className={'topic-list'}>
+                <li>
+                    <a className={'topic-item'} href={'#'}>
+                        <img className={'topic-item-avatar'} src={this.state.avatar} style={avatarStyle}/>
+                        <div className={'topic-item-content'}>
+                            <h3 className={'topic-item-title'}>{this.state.title}</h3>
+                            <div className={'topic-item-detail'}>
+                                <span className={'topic-item-tab'}>{transTab(this.state.tab)}</span>
+                                <span>{this.state.loginName}</span>
+                                <span>{this.state.createTime}</span>
+                                <span className={'fright'}>{this.state.reply}/{this.state.visit}</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
         )
     }
 
     componentDidMount() {
-        fetchJSON('https://cnodejs.org/api/v1/topics?tab=all&limit=1', (json) => {
+        fetchJSON('https://cnodejs.org/api/v1/topics?tab=all&limit=4', (json) => {
             const data = json.data[0]
 
             this.setState({

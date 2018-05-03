@@ -15,7 +15,7 @@ if (process.argv.indexOf('-p') === -1) {
     process.env.NODE_ENV = 'development'  //设置node环境变量
     isCleanOutput = false
     entry = [
-        // 'whatwg-fetch',  //fetch polyfill
+        // 'whatwg-fetch',  //fetch polyfill，替代import方式
         'webpack-hot-middleware/client?reload=true&noInfo=true',  //设置react热替换
         entryPath
     ]
