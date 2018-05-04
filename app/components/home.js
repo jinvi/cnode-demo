@@ -69,17 +69,15 @@ class TopicList extends Component {
     }
 
     render() {
-        // console.log(this.state)
-        console.log(moment.duration(1, "minutes").humanize())
-
+        console.log(this.state)
         const avatarStyle = {
             width: '50px'
             , height: '50px'
             , borderRadius: '50%'
         }
 
-        function transTab(origin) {
-            switch (origin) {
+        function transTab(originName) {
+            switch (originName) {
                 case 'ask':
                     return '问答'
                 case 'share':
@@ -89,6 +87,17 @@ class TopicList extends Component {
                 case 'good':
                     return '精华'
             }
+        }
+
+        function createTimeDuration(originTime) {
+            const re = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})\..+$/
+            const formatTime = originTime.replace(re,'$1 $2')
+
+            const m1 = moment(formatTime)  //创建的时间
+            const m2 = moment()  //实时时间
+            const du = moment.duration(m2-m1,'ms')
+
+            return du.locale('zh-cn').humanize()
         }
 
         return (
@@ -101,7 +110,7 @@ class TopicList extends Component {
                             <div className={'topic-item-detail'}>
                                 <span className={'topic-item-tab'}>{transTab(this.state.tab)}</span>
                                 <span>{this.state.loginName}</span>
-                                <span>{this.state.createTime}</span>
+                                <span>{createTimeDuration(this.state.createTime)}前</span>
                                 <span className={'fright'}>{this.state.reply}/{this.state.visit}</span>
                             </div>
                         </div>
