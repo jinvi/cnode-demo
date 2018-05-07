@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {Link, NavLink} from 'react-router-dom';
 import {fetchJSON} from '../utils/fetch'
-import moment from 'moment'
 
 class Top extends Component {
     constructor(props) {
@@ -69,7 +68,7 @@ class TopicList extends Component {
     }
 
     render() {
-        console.log(this.state)
+        // console.log(this.state)
         const avatarStyle = {
             width: '50px'
             , height: '50px'
@@ -89,15 +88,24 @@ class TopicList extends Component {
             }
         }
 
-        function createTimeDuration(originTime) {
-            const re = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})\..+$/
-            const formatTime = originTime.replace(re,'$1 $2')
+        function ctDuration(originTime) {
+            const duration = new Date().getTime() - new Date(originTime).getTime();
 
-            const m1 = moment(formatTime)  //创建的时间
-            const m2 = moment()  //实时时间
-            const du = moment.duration(m2-m1,'ms')
-
-            return du.locale('zh-cn').humanize()
+            if (duration < 0) {
+                return '';
+            } else if (duration / 1000 < 60) {
+                return '刚刚';
+            } else if ((duration / 60000) < 60) {
+                return parseInt((duration / 60000)) + '分钟前';
+            } else if ((duration / 3600000) < 24) {
+                return parseInt(duration / 3600000) + '小时前';
+            } else if ((duration / 86400000) < 31) {
+                return parseInt(duration / 86400000) + '天前';
+            } else if ((duration / 2592000000) < 12) {
+                return parseInt(duration / 2592000000) + '月前';
+            } else {
+                return parseInt(duration / 31536000000) + '年前';
+            }
         }
 
         return (
@@ -110,7 +118,7 @@ class TopicList extends Component {
                             <div className={'topic-item-detail'}>
                                 <span className={'topic-item-tab'}>{transTab(this.state.tab)}</span>
                                 <span>{this.state.loginName}</span>
-                                <span>{createTimeDuration(this.state.createTime)}前</span>
+                                <span>{ctDuration(this.state.createTime)}</span>
                                 <span className={'fright'}>{this.state.reply}/{this.state.visit}</span>
                             </div>
                         </div>

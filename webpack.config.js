@@ -15,7 +15,6 @@ if (process.argv.indexOf('-p') === -1) {
     process.env.NODE_ENV = 'development'  //设置node环境变量
     isCleanOutput = false
     entry = {
-        vendor: ['moment'],  //明确将模块打包进独立公共文件
         app: [
             // 'whatwg-fetch',  //fetch polyfill，替代import方式
             'webpack-hot-middleware/client?reload=true&noInfo=true',  //设置react热替换
@@ -27,10 +26,9 @@ if (process.argv.indexOf('-p') === -1) {
     * 生产环境
     * */
     isCleanOutput = true //构建前先清除输出目录
-    // entry = entryPath
     entry = {
-        vendor: ['moment']  //明确将模块打包进独立公共文件
-        , app: entryPath
+        // vendor: ['moment'], //明确将模块打包进独立公共文件
+        app: entryPath,
     }
 }
 
@@ -97,10 +95,10 @@ module.exports = {
             filename: '[name].css',
             disable: process.env.NODE_ENV === "development"  //开发模式取消提取
         }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',  //入口chunk名称
-            filename: "commons.js",  //公共文件输出文件名
-            minChunks: Infinity
-        })
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name: 'vendor',  //入口的chunk名称
+        //     filename: "commons.js",  //公共文件输出文件名
+        //     minChunks: Infinity
+        // })
     ]
 }
