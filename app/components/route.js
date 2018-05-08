@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Route, Switch, Redirect} from 'react-router-dom';
 
-import Loadable from 'react-loadable'
+import Loadable from 'react-loadable'  //edge不支持其使用Object.assign方法
 // import Home from './home'
 
 const Home = Loadable({
