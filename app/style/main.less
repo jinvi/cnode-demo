@@ -1,9 +1,13 @@
 @import "preStyle"; //重置和一些公用样式
 
-@color-standard: #41D109;
-@color-contrast: #FA1F1A;
-@color-nav: #8A8A8A;
-@nav-z-index: 100;
+@g-color-standard: #41D109;  //VI色
+@g-color-contrast: #FA1F1A;  //VI对比色
+@g-color-main: #171717;  //正文色
+@g-color-nav: #9f9f9f;  //主题导航及底部导航色
+@g--nav--z-index: 100;  //导航层级
+@g--nav--height: 52px;  //底部导航高度
+@g--top--height: 64px;  //头部色块高度
+@g--topics-nav--height: 46px;  //主题导航高度
 
 @font-face {
   font-family: 'iconfont';  /* project id 647982 */
@@ -14,11 +18,16 @@
   url('//at.alicdn.com/t/font_647982_2ufd621tfi1i3sor.svg#iconfont') format('svg');
 }
 
+.head {
+  position: fixed;
+  width: 100%;
+  z-index: @g--nav--z-index;
+}
+
 .top {
-  background-color: @color-standard;
-  @height: 50px;
-  height: @height;
-  line-height: @height;
+  background-color: @g-color-standard;
+  height: @g--top--height;
+  line-height: @g--top--height;
   padding: 0 20px;
   color: #ffffff;
 
@@ -38,6 +47,7 @@
     }
   }
 
+  @login-state-margin-top:28px;
   .top-loginBtn {
     background-color: #ffffff;
     text-align: center;
@@ -45,20 +55,21 @@
     padding: 4px 8px;
     line-height: normal;
     font-size: 12px;
-    margin-top: 14px;
+    margin-top: @login-state-margin-top;
     border-radius: 5px;
 
-    .link-color(@color-standard)
+    .link-color(@g-color-standard)
   }
 
   .top-loginState {
+    @height:20px;
     display: inline-block;
     background-color: red;
     background: url('../assets/user.gif') no-repeat left center;
     text-indent: 24px;
-    height: 20px;
-    line-height: normal;
-    margin-top: 14px;
+    height: @height;
+    line-height: @height;
+    margin-top: @login-state-margin-top;
 
     a {
       .link-color(#ffffff)
@@ -70,9 +81,9 @@
   position: fixed;
   bottom: 0;
   left: 0;
-  z-index: @nav-z-index;
+  z-index: @g--nav--z-index;
   width: 100%;
-  height: 52px;
+  height: @g--nav--height;
   background-color: #ffffff;
 
   li {
@@ -85,11 +96,11 @@
     display: inline-block;
     width: 25px;
     margin-top: 6px;
-    color: @color-nav;
+    color: @g-color-nav;
   }
 
   .nav-active {
-    color: @color-standard;
+    color: @g-color-standard;
   }
 
   .icon-font {
@@ -100,7 +111,8 @@
 }
 
 .topics-nav {
-  @height: 46px;
+  height: @g--topics-nav--height;
+  background-color: #ffffff;
 
   li {
     width: 20%;
@@ -111,16 +123,20 @@
 
   a {
     display: inline-block;
-    color: @color-nav;
-    height: @height;
-    line-height: @height;
+    color: @g-color-nav;
+    height: @g--topics-nav--height;
+    line-height: @g--topics-nav--height;
     box-sizing: border-box;
   }
 
   .active {
-    color: @color-standard;
-    border-bottom: 4px solid @color-standard;
+    color: @g-color-standard;
+    border-bottom: 4px solid @g-color-standard;
   }
+}
+
+.topic-list {
+  padding: (@g--top--height+@g--topics-nav--height) 0 @g--nav--height 0;
 }
 
 .topic-item {
@@ -142,12 +158,13 @@
 
   .topic-item-title {
     font-size: 14px;
-    color: #171717;
+    font-weight: normal;
+    color: @g-color-main;
     margin-bottom: 10px;
   }
 
   .topic-item-detail {
-    color: #AAAAAA;
+    color: #bdbdbd;
 
     span {
       margin-right: 10px;
@@ -155,7 +172,8 @@
   }
 
   .topic-item-tab {
-    background-color: #F2F2F2;
+    background-color: #f5f5f5;
+    color: #9c9c9c;
     padding: 2px 6px;
     border-radius: 4px;
   }

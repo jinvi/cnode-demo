@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Link, NavLink} from 'react-router-dom';
 import {fetchJSON} from '../utils/fetch'
 
-class Top extends Component {
+class Head extends Component {
     constructor(props) {
         super(props)
 
@@ -18,7 +18,7 @@ class Top extends Component {
         location.search.split('=')[1] ? setClass[location.search.split('=')[1]] = activeClass : setClass['all'] = activeClass
 
         return (
-            <div>
+            <div className={'head'}>
                 <div className={'top clear'}>
                     <h2>
                         <span>CNODE</span>
@@ -61,14 +61,14 @@ class TopicList extends Component {
     }
 
     componentDidMount() {
-        const prStr = new URLSearchParams({
+        const queryString = require('query-string');
+        const queryParams = queryString.stringify({
             page: 1,
             tab: 'all',
-            limit: 10
+            limit: 18
         })
 
-        fetchJSON('https://cnodejs.org/api/v1/topics?' + prStr.toString(), (json) => {
-            console.log(json)
+        fetchJSON('https://cnodejs.org/api/v1/topics?' + queryParams, (json) => {
             const listData = json.data
             const avatarStyle = {
                 width: '50px'
@@ -121,7 +121,7 @@ class TopicList extends Component {
                                         <span className={'topic-item-tab'}>{transTab(item.tab)}</span>
                                         <span>{item.author.loginname}</span>
                                         <span>{ctDuration(item.create_at)}</span>
-                                        <span className={'fright'}>{item.reply_count}/{item.visit_count}</span>
+                                        <span className={'fright'}>{item.reply_count} / {item.visit_count}</span>
                                     </div>
                                 </div>
                             </a>
@@ -134,6 +134,16 @@ class TopicList extends Component {
                 container: el
             })
         })
+    }
+
+    componentDidUpdate() {
+        window.onscroll = () => {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;//滚动条y轴上的距离
+            const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;//可视区域的高度
+            const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;//可视化的高度与溢出的距离（总高度）
+
+            console.log(scrollTop, clientHeight, scrollHeight)
+        }
     }
 }
 
@@ -156,7 +166,7 @@ export default class Main extends Component {
     render() {
         return (
             <div>
-                <Top/>
+                <Head/>
                 <TopicList/>
                 <Nav/>
             </div>
