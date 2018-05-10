@@ -52,20 +52,44 @@ class TopicList extends Component {
         super(props)
 
         this.state = {
-            container: null
+            list: null
         }
     }
 
     render() {
-        return (this.state.container)
+        return <div>{this.state.list}</div>
     }
 
     componentDidMount() {
+        //滚动加载事件
+        window.onscroll = () => {
+            //滚动高度
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            //可视区域高度（不包括滚动高度）
+            const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+            //元素总高度（可视高度与滚动高度）
+            const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+
+            if (scrollTop + clientHeight === scrollHeight) {  //滚动到底部时
+                console.log('end')
+                this.setState({
+                    list:null
+                })
+            }
+        }
+
+        //可视区域高度（不包括滚动高度）
+        const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        const listItemHeight = '85'  //列表单项高度
+        const excludeListHeight = '162'  //视图除列表外剩余高度总和
+        //初始加载列表个数（数量足以溢出视区以显示滚动条）
+        const initListNum = Math.ceil((clientHeight - excludeListHeight) / listItemHeight) + 4
+
         const queryString = require('query-string');
         const queryParams = queryString.stringify({
             page: 1,
             tab: 'all',
-            limit: 18
+            limit: initListNum
         })
 
         fetchJSON('https://cnodejs.org/api/v1/topics?' + queryParams, (json) => {
@@ -109,7 +133,7 @@ class TopicList extends Component {
                 }
             }
 
-            const el = (
+            const list = (
                 <ul className={'topic-list'}>
                     {listData.map((item) => (
                         <li key={item.id}>
@@ -120,8 +144,8 @@ class TopicList extends Component {
                                     <div className={'topic-item-detail'}>
                                         <span className={'topic-item-tab'}>{transTab(item.tab)}</span>
                                         <span>{item.author.loginname}</span>
-                                        <span>{ctDuration(item.create_at)}</span>
-                                        <span className={'fright'}>{item.reply_count} / {item.visit_count}</span>
+                                        <span>{item.reply_count}/{item.visit_count}</span>
+                                        <span className={'fright'}>{ctDuration(item.create_at)}</span>
                                     </div>
                                 </div>
                             </a>
@@ -131,19 +155,9 @@ class TopicList extends Component {
             )
 
             this.setState({
-                container: el
+                list: list
             })
         })
-    }
-
-    componentDidUpdate() {
-        window.onscroll = () => {
-            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;//滚动条y轴上的距离
-            const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;//可视区域的高度
-            const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;//可视化的高度与溢出的距离（总高度）
-
-            console.log(scrollTop, clientHeight, scrollHeight)
-        }
     }
 }
 
