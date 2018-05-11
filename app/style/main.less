@@ -1,13 +1,15 @@
 @import "preStyle"; //重置和一些公用样式
 
-@g-color-standard: #41D109;  //VI色
-@g-color-contrast: #FA1F1A;  //VI对比色
-@g-color-main: #171717;  //正文色
-@g-color-nav: #9f9f9f;  //主题导航及底部导航色
-@g--nav--z-index: 100;  //导航层级
-@g--nav--height: 52px;  //底部导航高度
-@g--top--height: 64px;  //头部色块高度
-@g--topics-nav--height: 46px;  //主题导航高度
+@g-color-standard: #41D109; //VI色
+@g-color-contrast: #FA1F1A; //VI对比色
+@g-color-main: #171717; //正文色
+@g-color-nav: #9f9f9f; //主题导航及底部导航色
+
+@g--nav--z-index: 100; //导航层级，包括主题和底部导航
+@g--nav--height: 52px; //底部导航高度 * 程序有应用此数值，改动需同时改动程序配合 *
+@g--top--height: 64px; //头部色块高度 * 程序有应用此数值，改动需同时改动程序配合 *
+@g--topics-nav--height: 46px; //主题导航高度 * 程序有应用此数值，改动需同时改动程序配合 *
+@g--topic-item--height: 70px;  //主题列表单项高度，不包含1px分隔线 * 程序有应用此数值，改动需同时改动程序配合 *
 
 @font-face {
   font-family: 'iconfont';  /* project id 647982 */
@@ -47,7 +49,7 @@
     }
   }
 
-  @login-state-margin-top:28px;
+  @login-state-margin-top: 28px;
   .top-loginBtn {
     background-color: #ffffff;
     text-align: center;
@@ -62,7 +64,7 @@
   }
 
   .top-loginState {
-    @height:20px;
+    @height: 20px;
     display: inline-block;
     background-color: red;
     background: url('../assets/user.gif') no-repeat left center;
@@ -137,19 +139,24 @@
 
 .topic-list {
   padding: (@g--top--height+@g--topics-nav--height) 0 @g--nav--height 0;
+
+  .topic-loading {
+    height: 20px;
+    background: url("../assets/loading.gif") no-repeat center 5px;
+  }
 }
 
 .topic-item {
   display: flex;
-  height: 84px;
+  height: @g--topic-item--height;
   border-top: 1px solid #F5F5F5;
 
   .topic-item-avatar {
-    margin: 14px 12px 0 22px;
+    margin: 10px 12px 0 22px;
   }
 
   .topic-item-content {
-    margin-top: 20px;
+    margin-top: 14px;
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;

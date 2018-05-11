@@ -47,17 +47,108 @@ class Head extends Component {
     }
 }
 
-class TopicList extends Component {
+class Topic extends Component {
+    render() {
+        const avatarStyle = {
+            width: '50px'
+            , height: '50px'
+            , borderRadius: '50%'
+        }
+
+        function transTab(originName) {
+            switch (originName) {
+                case 'ask':
+                    return '问答'
+                case 'share':
+                    return '分享'
+                case 'job':
+                    return '招聘'
+                case 'good':
+                    return '精华'
+            }
+        }
+
+        function ctDuration(originTime) {
+            const duration = new Date().getTime() - new Date(originTime).getTime();
+
+            if (duration < 0) {
+                return '';
+            } else if (duration / 1000 < 60) {
+                return '刚刚';
+            } else if ((duration / 60000) < 60) {
+                return parseInt((duration / 60000)) + '分钟前';
+            } else if ((duration / 3600000) < 24) {
+                return parseInt(duration / 3600000) + '小时前';
+            } else if ((duration / 86400000) < 31) {
+                return parseInt(duration / 86400000) + '天前';
+            } else if ((duration / 2592000000) < 12) {
+                return parseInt(duration / 2592000000) + '月前';
+            } else {
+                return parseInt(duration / 31536000000) + '年前';
+            }
+        }
+
+        return (
+            <ul className={'topic-list'}>
+                {this.props.listData.map((item) => (
+                    <li key={item.id}>
+                        <a className={'topic-item'} href={'#'}>
+                            <img className={'topic-item-avatar'} src={item.author.avatar_url} style={avatarStyle}/>
+                            <div className={'topic-item-content'}>
+                                <h3 className={'topic-item-title'}>{item.title}</h3>
+                                <div className={'topic-item-detail'}>
+                                    <span className={'topic-item-tab'}>{transTab(item.tab)}</span>
+                                    <span>{item.author.loginname}</span>
+                                    <span>{ctDuration(item.create_at)}</span>
+                                    <span className={'fright'}>{item.reply_count} / {item.visit_count}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                ))}
+                <li className={'topic-loading'}></li>
+            </ul>
+        )
+    }
+}
+
+class LoadTopic extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            list: null
+            listData: []
+        }
+
+        this.page = 0
+
+        this.loadList = () => {
+            console.log(2)
+            //可视区域高度（不包括滚动高度）
+            const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+            const listItemHeight = 70 + 1  //列表单项高度（单项高度+分隔线高度）
+            const excludeListHeight = 52 + 64 + 46  //视图除列表外剩余高度总和（底部导航高度+头部色块高度+主题导航高度）
+            //初始加载列表个数（数量足以溢出视区以触发滚动事件）
+            const initListNum = Math.ceil((clientHeight - excludeListHeight) / listItemHeight) + 2
+
+            const queryString = require('query-string');
+            const queryParams = queryString.stringify({
+                page: ++this.page,
+                tab: 'all',
+                limit: initListNum
+            });
+
+            fetchJSON('https://cnodejs.org/api/v1/topics?' + queryParams, (json) => {
+                this.setState({
+                    listData: this.state.listData.concat(json.data)
+                })
+            })
         }
     }
 
     render() {
-        return <div>{this.state.list}</div>
+        console.log(1)
+        return this.state.listData ? <Topic listData={this.state.listData}/> : null
     }
 
     componentDidMount() {
@@ -71,93 +162,11 @@ class TopicList extends Component {
             const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
 
             if (scrollTop + clientHeight === scrollHeight) {  //滚动到底部时
-                console.log('end')
-                this.setState({
-                    list:null
-                })
+                this.loadList.bind(this)()
             }
         }
 
-        //可视区域高度（不包括滚动高度）
-        const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-        const listItemHeight = '85'  //列表单项高度
-        const excludeListHeight = '162'  //视图除列表外剩余高度总和
-        //初始加载列表个数（数量足以溢出视区以显示滚动条）
-        const initListNum = Math.ceil((clientHeight - excludeListHeight) / listItemHeight) + 4
-
-        const queryString = require('query-string');
-        const queryParams = queryString.stringify({
-            page: 1,
-            tab: 'all',
-            limit: initListNum
-        })
-
-        fetchJSON('https://cnodejs.org/api/v1/topics?' + queryParams, (json) => {
-            const listData = json.data
-            const avatarStyle = {
-                width: '50px'
-                , height: '50px'
-                , borderRadius: '50%'
-            }
-
-            function transTab(originName) {
-                switch (originName) {
-                    case 'ask':
-                        return '问答'
-                    case 'share':
-                        return '分享'
-                    case 'job':
-                        return '招聘'
-                    case 'good':
-                        return '精华'
-                }
-            }
-
-            function ctDuration(originTime) {
-                const duration = new Date().getTime() - new Date(originTime).getTime();
-
-                if (duration < 0) {
-                    return '';
-                } else if (duration / 1000 < 60) {
-                    return '刚刚';
-                } else if ((duration / 60000) < 60) {
-                    return parseInt((duration / 60000)) + '分钟前';
-                } else if ((duration / 3600000) < 24) {
-                    return parseInt(duration / 3600000) + '小时前';
-                } else if ((duration / 86400000) < 31) {
-                    return parseInt(duration / 86400000) + '天前';
-                } else if ((duration / 2592000000) < 12) {
-                    return parseInt(duration / 2592000000) + '月前';
-                } else {
-                    return parseInt(duration / 31536000000) + '年前';
-                }
-            }
-
-            const list = (
-                <ul className={'topic-list'}>
-                    {listData.map((item) => (
-                        <li key={item.id}>
-                            <a className={'topic-item'} href={'#'}>
-                                <img className={'topic-item-avatar'} src={item.author.avatar_url} style={avatarStyle}/>
-                                <div className={'topic-item-content'}>
-                                    <h3 className={'topic-item-title'}>{item.title}</h3>
-                                    <div className={'topic-item-detail'}>
-                                        <span className={'topic-item-tab'}>{transTab(item.tab)}</span>
-                                        <span>{item.author.loginname}</span>
-                                        <span>{item.reply_count}/{item.visit_count}</span>
-                                        <span className={'fright'}>{ctDuration(item.create_at)}</span>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-            )
-
-            this.setState({
-                list: list
-            })
-        })
+        this.loadList.bind(this)();
     }
 }
 
@@ -181,7 +190,7 @@ export default class Main extends Component {
         return (
             <div>
                 <Head/>
-                <TopicList/>
+                <LoadTopic search={location.search}/>
                 <Nav/>
             </div>
         )
