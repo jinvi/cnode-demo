@@ -17,6 +17,10 @@ class Head extends Component {
         const setClass = {}
         location.search.split('=')[1] ? setClass[location.search.split('=')[1]] = activeClass : setClass['all'] = activeClass
 
+        function toTop() {
+            document.documentElement.scrollTop = document.body.scrollTop = 0
+        }
+
         return (
             <div className={'head'}>
                 <div className={'top clear'}>
@@ -36,18 +40,55 @@ class Head extends Component {
                     }
                 </div>
                 <ul className={'topics-nav'}>
-                    <li><Link className={setClass.all} to={'/'}>全部</Link></li>
-                    <li><Link className={setClass.good} to={'/?tab=good'}>精华</Link></li>
-                    <li><Link className={setClass.share} to={'/?tab=share'}>分享</Link></li>
-                    <li><Link className={setClass.ask} to={'/?tab=ask'}>问答</Link></li>
-                    <li><Link className={setClass.job} to={'/?tab=job'}>招聘</Link></li>
+                    <li><Link className={setClass.all} to={'/'} onClick={toTop}>全部</Link></li>
+                    <li><Link className={setClass.good} to={'/?tab=good'} onClick={toTop}>精华</Link></li>
+                    <li><Link className={setClass.share} to={'/?tab=share'} onClick={toTop}>分享</Link></li>
+                    <li><Link className={setClass.ask} to={'/?tab=ask'} onClick={toTop}>问答</Link></li>
+                    <li><Link className={setClass.job} to={'/?tab=job'} onClick={toTop}>招聘</Link></li>
                 </ul>
             </div>
         )
     }
 }
 
-class Topic extends Component {
+class TopicList extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            listData: []
+        }
+
+        this.page = 0  //设置列表页数初始值
+    }
+
+    loadList({tabParam, isNewTab}) {
+        if (isNewTab) {  //切换标签初始化状态
+            this.page = 0
+            this.setState({
+                listData: []
+            })
+        }
+
+        const clientHeight = document.documentElement.clientHeight || document.body.clientHeight  //可视区域高度（不包括滚动高度）
+        const listItemHeight = 70 + 1  //列表单项高度（单项高度+分隔线高度）
+        const excludeListHeight = 52 + 64 + 46  //视图除列表外剩余高度总和（底部导航高度+头部色块高度+主题导航高度）
+        const initListNum = Math.ceil((clientHeight - excludeListHeight) / listItemHeight) + 2  //初始加载列表个数（数量足以溢出视区以触发滚动事件）
+
+        const queryString = require('query-string');
+        const queryParams = queryString.stringify({
+            page: ++this.page,
+            tab: tabParam ? tabParam.split('=')[1] : 'all',
+            limit: initListNum
+        });
+
+        fetchJSON('https://cnodejs.org/api/v1/topics?' + queryParams, (json) => {
+            this.setState({
+                listData: isNewTab ? json.data : this.state.listData.concat(json.data)
+            })
+        })
+    }
+
     render() {
         const avatarStyle = {
             width: '50px'
@@ -90,7 +131,7 @@ class Topic extends Component {
 
         return (
             <ul className={'topic-list'}>
-                {this.props.listData.map((item) => (
+                {this.state.listData.map((item) => (
                     <li key={item.id}>
                         <a className={'topic-item'} href={'#'}>
                             <img className={'topic-item-avatar'} src={item.author.avatar_url} style={avatarStyle}/>
@@ -110,63 +151,26 @@ class Topic extends Component {
             </ul>
         )
     }
-}
-
-class LoadTopic extends Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            listData: []
-        }
-
-        this.page = 0
-
-        this.loadList = () => {
-            console.log(2)
-            //可视区域高度（不包括滚动高度）
-            const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-            const listItemHeight = 70 + 1  //列表单项高度（单项高度+分隔线高度）
-            const excludeListHeight = 52 + 64 + 46  //视图除列表外剩余高度总和（底部导航高度+头部色块高度+主题导航高度）
-            //初始加载列表个数（数量足以溢出视区以触发滚动事件）
-            const initListNum = Math.ceil((clientHeight - excludeListHeight) / listItemHeight) + 2
-
-            const queryString = require('query-string');
-            const queryParams = queryString.stringify({
-                page: ++this.page,
-                tab: 'all',
-                limit: initListNum
-            });
-
-            fetchJSON('https://cnodejs.org/api/v1/topics?' + queryParams, (json) => {
-                this.setState({
-                    listData: this.state.listData.concat(json.data)
-                })
-            })
-        }
-    }
-
-    render() {
-        console.log(1)
-        return this.state.listData ? <Topic listData={this.state.listData}/> : null
-    }
 
     componentDidMount() {
-        //滚动加载事件
-        window.onscroll = () => {
-            //滚动高度
-            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            //可视区域高度（不包括滚动高度）
-            const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
-            //元素总高度（可视高度与滚动高度）
-            const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+        window.onscroll = () => { //添加滚动加载列表事件
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;  //滚动高度
+            const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;  //可视区域高度（不包括滚动高度）
+            const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;  //元素总高度（可视高度与滚动高度）
 
-            if (scrollTop + clientHeight === scrollHeight) {  //滚动到底部时
-                this.loadList.bind(this)()
+            if (scrollTop + clientHeight === scrollHeight && scrollTop !== 0) {  //滚动到底部时
+                this.loadList({tabParam: this.props.tabParam, isNewTab: false})
             }
         }
 
-        this.loadList.bind(this)();
+        this.loadList({tabParam: this.props.tabParam, isNewTab: false});
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.tabParam !== this.props.tabParam) {
+            this.loadList({tabParam: nextProps.tabParam, isNewTab: true});
+        }
+        return true
     }
 }
 
@@ -190,7 +194,7 @@ export default class Main extends Component {
         return (
             <div>
                 <Head/>
-                <LoadTopic search={location.search}/>
+                <TopicList tabParam={location.search}/>
                 <Nav/>
             </div>
         )
