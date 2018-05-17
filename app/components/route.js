@@ -1,13 +1,7 @@
 import React, {Component} from "react";
 import {Route, Switch, Redirect} from 'react-router-dom';
-
-import Loadable from 'react-loadable'  //edge不支持其使用Object.assign方法
-// import Home from './home'
-
-const Home = Loadable({
-    loader: () => import('./home'),
-    loading: () => (<div>loading</div>)
-})
+import Home from './Home'
+import Topic from './Topic'
 
 export default class Main extends Component {
     constructor(props) {
@@ -18,6 +12,7 @@ export default class Main extends Component {
         return (
             <Switch>
                 <Route exact path={'/'} component={Home}/>
+                <Route path={'/topic/:id'} component={Topic}/>
                 {/*<Redirect to={'/'}/>*/}
             </Switch>
         )

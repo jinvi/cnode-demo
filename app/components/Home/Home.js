@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Link, NavLink} from 'react-router-dom';
-import {fetchJSON} from '../utils/fetch'
+import {fetchJSON} from '../../utils/fetch'
 
 class Head extends Component {
     constructor(props) {
@@ -51,15 +51,17 @@ class Head extends Component {
     }
 }
 
-class TopicList extends Component {
+class Topics extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            listData: []
+            listData: this.props.topicsList.list  //列表数据在store里
         }
 
-        this.page = 0  //设置列表页数初始值
+        this.page = this.props.topicsList.page  //列表页数
+
+        this.setScrollTop = this.setScrollTop.bind(this)
     }
 
     loadList({tabParam, isNewTab}) {
@@ -82,18 +84,36 @@ class TopicList extends Component {
             limit: initListNum
         });
 
-        fetchJSON('https://cnodejs.org/api/v1/topics?' + queryParams, (json) => {
-            this.setState({
-                listData: isNewTab ? json.data : this.state.listData.concat(json.data)
-            })
+        fetchJSON({
+            url: `/topics?${queryParams}`,
+            success: (json) => {
+                this.props.dispatch({
+                    type: 'LOAD_TOPICS',
+                    payload: {
+                        list: isNewTab ? json.data : this.state.listData.concat(json.data),
+                        page: this.page
+                    }
+                })
+                this.setState({
+                    listData: this.props.topicsList.list
+                })
+            }
+        })
+    }
+
+    setScrollTop() {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        this.props.dispatch({
+            type: 'SET_SCROLL_TOP',
+            payload: scrollTop
         })
     }
 
     render() {
         const avatarStyle = {
-            width: '50px'
-            , height: '50px'
-            , borderRadius: '50%'
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%'
         }
 
         function transTab(originName) {
@@ -132,8 +152,8 @@ class TopicList extends Component {
         return (
             <ul className={'topic-list'}>
                 {this.state.listData.map((item) => (
-                    <li key={item.id}>
-                        <a className={'topic-item'} href={'#'}>
+                    <li key={item.id} onClick={this.setScrollTop}>
+                        <Link className={'topic-item'} to={`/topic/${item.id}`}>
                             <img className={'topic-item-avatar'} src={item.author.avatar_url} style={avatarStyle}/>
                             <div className={'topic-item-content'}>
                                 <h3 className={'topic-item-title'}>{item.title}</h3>
@@ -144,7 +164,7 @@ class TopicList extends Component {
                                     <span className={'fright'}>{item.reply_count} / {item.visit_count}</span>
                                 </div>
                             </div>
-                        </a>
+                        </Link>
                     </li>
                 ))}
                 <li className={'topic-loading'}></li>
@@ -159,16 +179,19 @@ class TopicList extends Component {
             const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;  //元素总高度（可视高度与滚动高度）
 
             if (scrollTop + clientHeight === scrollHeight && scrollTop !== 0) {  //滚动到底部时
-                this.loadList({tabParam: this.props.tabParam, isNewTab: false})
+                this.loadList({tabParam: this.props.location.search, isNewTab: false})
             }
         }
+        document.documentElement.scrollTop = document.body.scrollTop = this.props.scrollTop  //设置历史滚动条高度
 
-        this.loadList({tabParam: this.props.tabParam, isNewTab: false});
+        if (this.props.topicsList.list.length === 0) {
+            this.loadList({tabParam: this.props.location.search, isNewTab: false});
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.tabParam !== this.props.tabParam) {
-            this.loadList({tabParam: nextProps.tabParam, isNewTab: true});
+        if (nextProps.location.search !== this.props.location.search) {
+            this.loadList({tabParam: nextProps.location.search, isNewTab: true});
         }
         return true
     }
@@ -178,11 +201,15 @@ class Nav extends Component {
     render() {
         return (
             <ul className={'nav'}>
-                <li><NavLink to={'/'} activeClassName={'nav-active'}><span
-                    className={'icon-font'}>&#xe644;</span>首页</NavLink></li>
-                <li><NavLink to={'/create'} activeClassName={'nav-active'}><span className={'icon-font'}>&#xe721;</span>新建</NavLink>
+                <li>
+                    <NavLink to={'/'} activeClassName={'nav-active'}><span
+                        className={'icon-font'}>&#xe644;</span>首页</NavLink>
                 </li>
-                <li><NavLink to={'/user'} activeClassName={'nav-active'}><span className={'icon-font'}>&#xe61f;</span>我的</NavLink>
+                <li>
+                    <NavLink to={'/create'} activeClassName={'nav-active'}><span className={'icon-font'}>&#xe721;</span>新建</NavLink>
+                </li>
+                <li>
+                    <NavLink to={'/user'} activeClassName={'nav-active'}><span className={'icon-font'}>&#xe61f;</span>我的</NavLink>
                 </li>
             </ul>
         )
@@ -194,7 +221,7 @@ export default class Main extends Component {
         return (
             <div>
                 <Head/>
-                <TopicList tabParam={location.search}/>
+                <Topics {...this.props}/>
                 <Nav/>
             </div>
         )
