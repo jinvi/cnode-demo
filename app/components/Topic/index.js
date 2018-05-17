@@ -9,7 +9,9 @@ const LoadComponent = Loadable({
 })
 
 const mapStateToProps = state => {
-    return {}
+    return {
+        getDuration:state.utils.getDuration
+    }
 }
 
 const mapDispatchToProps = dispatch => {

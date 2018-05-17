@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {Link, NavLink} from 'react-router-dom';
+import React, {Component} from "react"
+import {Link, NavLink, Route} from 'react-router-dom'
 import {fetchJSON} from '../../utils/fetch'
 
 class Head extends Component {
@@ -86,11 +86,11 @@ class Topics extends Component {
 
         fetchJSON({
             url: `/topics?${queryParams}`,
-            success: (json) => {
+            success: (res) => {
                 this.props.dispatch({
                     type: 'LOAD_TOPICS',
                     payload: {
-                        list: isNewTab ? json.data : this.state.listData.concat(json.data),
+                        list: isNewTab ? res.data : this.state.listData.concat(res.data),
                         page: this.page
                     }
                 })
@@ -102,10 +102,9 @@ class Topics extends Component {
     }
 
     setScrollTop() {
-        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
         this.props.dispatch({
             type: 'SET_SCROLL_TOP',
-            payload: scrollTop
+            payload: document.documentElement.scrollTop || document.body.scrollTop
         })
     }
 
@@ -129,26 +128,6 @@ class Topics extends Component {
             }
         }
 
-        function ctDuration(originTime) {
-            const duration = new Date().getTime() - new Date(originTime).getTime();
-
-            if (duration < 0) {
-                return '';
-            } else if (duration / 1000 < 60) {
-                return '刚刚';
-            } else if ((duration / 60000) < 60) {
-                return parseInt((duration / 60000)) + '分钟前';
-            } else if ((duration / 3600000) < 24) {
-                return parseInt(duration / 3600000) + '小时前';
-            } else if ((duration / 86400000) < 31) {
-                return parseInt(duration / 86400000) + '天前';
-            } else if ((duration / 2592000000) < 12) {
-                return parseInt(duration / 2592000000) + '月前';
-            } else {
-                return parseInt(duration / 31536000000) + '年前';
-            }
-        }
-
         return (
             <ul className={'topic-list'}>
                 {this.state.listData.map((item) => (
@@ -160,7 +139,7 @@ class Topics extends Component {
                                 <div className={'topic-item-detail'}>
                                     <span className={'topic-item-tab'}>{transTab(item.tab)}</span>
                                     <span>{item.author.loginname}</span>
-                                    <span>{ctDuration(item.create_at)}</span>
+                                    <span>{this.props.getDuration(item.create_at)}</span>
                                     <span className={'fright'}>{item.reply_count} / {item.visit_count}</span>
                                 </div>
                             </div>

@@ -8,7 +8,7 @@ import 'es6-promise/auto'  //promise polyfill
 import 'whatwg-fetch'  //fetch polyfill
 
 import 'normalize.css'
-import './style/main.less'
+import './style/index.less'
 
 render((
     <Provider store={store}>
