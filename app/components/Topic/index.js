@@ -10,7 +10,8 @@ const LoadComponent = Loadable({
 
 const mapStateToProps = state => {
     return {
-        getDuration:state.utils.getDuration
+        getDuration: state.utils.getDuration,
+        topic: state.topic
     }
 }
 

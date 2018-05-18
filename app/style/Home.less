@@ -1,22 +1,21 @@
 /*
-  当前样式使用的全局变量，样式名由'--'分隔
+  当前样式使用的全局变量，样式名由'--'分隔，以'T'(top)开头
 */
-@g--nav--z-index: 100; //导航层级，包括主题和底部导航
-@g--nav--height: 52px; //底部导航高度 * 程序有应用此数值，改动需同时改动程序配合 *
-@g--top--height: 64px; //头部色块高度 * 程序有应用此数值，改动需同时改动程序配合 *
-@g--topics-nav--height: 46px; //主题导航高度 * 程序有应用此数值，改动需同时改动程序配合 *
-@g--topic-item--height: 70px;  //主题列表单项高度，不包含1px分隔线 * 程序有应用此数值，改动需同时改动程序配合 *
+@T--nav--height: 52px; //底部导航高度 * 程序有应用此数值，改动需同时改动程序配合 *
+@T--top--height: 64px; //头部色块高度 * 程序有应用此数值，改动需同时改动程序配合 *
+@T--topics-nav--height: 46px; //主题导航高度 * 程序有应用此数值，改动需同时改动程序配合 *
+@T--topic-item--height: 70px; //主题列表单项高度，不包含1px分隔线 * 程序有应用此数值，改动需同时改动程序配合 *
 
 .head {
   position: fixed;
   width: 100%;
-  z-index: @g--nav--z-index;
+  z-index: @G-z-index;
 }
 
 .top {
-  background-color: @g-color-standard;
-  height: @g--top--height;
-  line-height: @g--top--height;
+  background-color: @G-color-standard;
+  height: @T--top--height;
+  line-height: @T--top--height;
   padding: 0 20px;
   color: #ffffff;
 
@@ -47,7 +46,7 @@
     margin-top: @login-state-margin-top;
     border-radius: 5px;
 
-    .link-color(@g-color-standard)
+    .link-color(@G-color-standard)
   }
 
   .top-loginState {
@@ -70,9 +69,9 @@
   position: fixed;
   bottom: 0;
   left: 0;
-  z-index: @g--nav--z-index;
+  z-index: @G-z-index;
   width: 100%;
-  height: @g--nav--height;
+  height: @T--nav--height;
   background-color: #ffffff;
 
   li {
@@ -85,22 +84,20 @@
     display: inline-block;
     width: 25px;
     margin-top: 6px;
-    color: @g-color-nav;
+    color: @G-color-nav;
   }
 
   .nav-active {
-    color: @g-color-standard;
+    color: @G-color-standard;
   }
 
-  .icon-font {
-    font-family: "iconfont" !important;
-    font-size: 24px;
-    font-style: normal;
+  .nav-icon-font {
+    .G-icon-font(24px;)
   }
 }
 
 .topics-nav {
-  height: @g--topics-nav--height;
+  height: @T--topics-nav--height;
   background-color: #ffffff;
 
   li {
@@ -112,20 +109,20 @@
 
   a {
     display: inline-block;
-    color: @g-color-nav;
-    height: @g--topics-nav--height;
-    line-height: @g--topics-nav--height;
+    color: @G-color-nav;
+    height: @T--topics-nav--height;
+    line-height: @T--topics-nav--height;
     box-sizing: border-box;
   }
 
   .active {
-    color: @g-color-standard;
-    border-bottom: 4px solid @g-color-standard;
+    color: @G-color-standard;
+    border-bottom: 4px solid @G-color-standard;
   }
 }
 
 .topic-list {
-  padding: (@g--top--height+@g--topics-nav--height) 0 @g--nav--height 0;
+  padding: (@T--top--height+@T--topics-nav--height) 0 @T--nav--height 0;
 
   .topic-loading {
     height: 20px;
@@ -135,7 +132,7 @@
 
 .topic-item {
   display: flex;
-  height: @g--topic-item--height;
+  height: @T--topic-item--height;
   border-top: 1px solid #F5F5F5;
 
   .topic-item-avatar {
@@ -153,12 +150,12 @@
   .topic-item-title {
     font-size: 14px;
     font-weight: normal;
-    color: @g-color-main;
+    color: @G-color-text;
     margin-bottom: 10px;
   }
 
   .topic-item-detail {
-    color: #bdbdbd;
+    color: @G-color-text-gray;
 
     span {
       margin-right: 10px;

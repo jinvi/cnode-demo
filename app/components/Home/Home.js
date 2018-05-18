@@ -182,13 +182,13 @@ class Nav extends Component {
             <ul className={'nav'}>
                 <li>
                     <NavLink to={'/'} activeClassName={'nav-active'}><span
-                        className={'icon-font'}>&#xe644;</span>首页</NavLink>
+                        className={'nav-icon-font'}>&#xe644;</span>首页</NavLink>
                 </li>
                 <li>
-                    <NavLink to={'/create'} activeClassName={'nav-active'}><span className={'icon-font'}>&#xe721;</span>新建</NavLink>
+                    <NavLink to={'/create'} activeClassName={'nav-active'}><span className={'nav-icon-font'}>&#xe721;</span>新建</NavLink>
                 </li>
                 <li>
-                    <NavLink to={'/user'} activeClassName={'nav-active'}><span className={'icon-font'}>&#xe61f;</span>我的</NavLink>
+                    <NavLink to={'/user'} activeClassName={'nav-active'}><span className={'nav-icon-font'}>&#xe61f;</span>我的</NavLink>
                 </li>
             </ul>
         )

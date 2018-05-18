@@ -43,8 +43,20 @@ function utils(state = {
     return state
 }
 
+function topic(state = {id: '', data: null}, action) {
+    switch (action.type) {
+        case 'LOAD_TOPIC':
+            state.id = action.payload.id
+            state.data = action.payload.data
+            return state
+    }
+
+    return state
+}
+
 export default combineReducers({
     topicsList,
     scrollTop,
-    utils
+    utils,
+    topic
 })
