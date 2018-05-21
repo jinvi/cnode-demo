@@ -11,7 +11,6 @@ const LoadComponent = Loadable({
 const mapStateToProps = state => {
     return {
         topicsList: state.topicsList,
-        scrollTop: state.scrollTop,
         getDuration:state.utils.getDuration
     }
 }

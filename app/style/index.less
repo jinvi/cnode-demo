@@ -9,8 +9,10 @@
 @G-color-contrast: #FA1F1A; //VI对比色
 @G-color-text: #171717; //正文色
 @G-color-text-gray: #b4b4b4;  //正文搭配色
+@G-color-link: #3951f9;  //链接色
 @G-color-nav: #9f9f9f; //主题导航及底部导航色
-@G-z-index: 100; //全局层级
+@G-font-size:14px;  //全局正文大小
+@G-z-index: 100; //使用层级数
 
 /*
   图标字体
@@ -32,5 +34,5 @@
   .color(@c) when(iscolor(@c)){
     color: @c;
   }
-  .color(@color)  //@color参数是默认值时（空字符串）不生效，当设置颜色时生效
+  .color(@color)  //@color参数是默认值时（空字符串）不生效，当是颜色类型时生效
 }

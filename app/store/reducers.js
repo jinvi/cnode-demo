@@ -1,20 +1,26 @@
 import {combineReducers} from "redux";
 
-function topicsList(state = {list: [], page: 0}, action) {
+function topicsList(state = {list: [], page: 0, scrollTop: 0}, action) {
     switch (action.type) {
         case 'LOAD_TOPICS':
-            state.list = action.payload.list
-            state.page = action.payload.page
-            return state
+            return {
+                list: action.payload.list || state.list,
+                page: action.payload.page || state.page,
+                scrollTop: action.payload.scrollTop || state.scrollTop
+            }
     }
 
     return state
 }
 
-function scrollTop(state = 0, action) {
+function topic(state = {id: '', data: null, scrollTop: 0}, action) {
     switch (action.type) {
-        case 'SET_SCROLL_TOP':
-            return action.payload
+        case 'LOAD_TOPIC':
+            return {
+                id: action.payload.id || state.id,
+                data: action.payload.data || state.data,
+                scrollTop: action.payload.scrollTop || state.scrollTop
+            }
     }
 
     return state
@@ -43,20 +49,8 @@ function utils(state = {
     return state
 }
 
-function topic(state = {id: '', data: null}, action) {
-    switch (action.type) {
-        case 'LOAD_TOPIC':
-            state.id = action.payload.id
-            state.data = action.payload.data
-            return state
-    }
-
-    return state
-}
-
 export default combineReducers({
     topicsList,
-    scrollTop,
-    utils,
-    topic
+    topic,
+    utils
 })

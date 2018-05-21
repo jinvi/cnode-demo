@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import ReactDOM from "react-dom";
 import {Link, NavLink, Route} from 'react-router-dom'
 import {fetchJSON} from '../../utils/fetch'
 
@@ -61,7 +62,7 @@ class Topics extends Component {
 
         this.page = this.props.topicsList.page  //列表页数
 
-        this.setScrollTop = this.setScrollTop.bind(this)
+        this.setTopicsScrollTop = this.setTopicsScrollTop.bind(this)
     }
 
     loadList({tabParam, isNewTab}) {
@@ -101,10 +102,12 @@ class Topics extends Component {
         })
     }
 
-    setScrollTop() {
+    setTopicsScrollTop() {
         this.props.dispatch({
-            type: 'SET_SCROLL_TOP',
-            payload: document.documentElement.scrollTop || document.body.scrollTop
+            type: 'LOAD_TOPICS',
+            payload: {
+                scrollTop: document.documentElement.scrollTop || document.body.scrollTop
+            }
         })
     }
 
@@ -131,7 +134,7 @@ class Topics extends Component {
         return (
             <ul className={'topic-list'}>
                 {this.state.listData.map((item) => (
-                    <li key={item.id} onClick={this.setScrollTop}>
+                    <li key={item.id} onClick={this.setTopicsScrollTop}>
                         <Link className={'topic-item'} to={`/topic/${item.id}`}>
                             <img className={'topic-item-avatar'} src={item.author.avatar_url} style={avatarStyle}/>
                             <div className={'topic-item-content'}>
@@ -161,7 +164,7 @@ class Topics extends Component {
                 this.loadList({tabParam: this.props.location.search, isNewTab: false})
             }
         }
-        document.documentElement.scrollTop = document.body.scrollTop = this.props.scrollTop  //设置历史滚动条高度
+        document.documentElement.scrollTop = document.body.scrollTop = this.props.topicsList.scrollTop //设置历史滚动条高度
 
         if (this.props.topicsList.list.length === 0) {
             this.loadList({tabParam: this.props.location.search, isNewTab: false});
@@ -174,6 +177,10 @@ class Topics extends Component {
         }
         return true
     }
+
+    componentWillUnmount() {
+        window.onscroll = null  //取消事件及其里面的异步任务，否则其它组件触发事件时会导致内存泄漏
+    }
 }
 
 class Nav extends Component {
@@ -185,10 +192,12 @@ class Nav extends Component {
                         className={'nav-icon-font'}>&#xe644;</span>首页</NavLink>
                 </li>
                 <li>
-                    <NavLink to={'/create'} activeClassName={'nav-active'}><span className={'nav-icon-font'}>&#xe721;</span>新建</NavLink>
+                    <NavLink to={'/create'} activeClassName={'nav-active'}><span
+                        className={'nav-icon-font'}>&#xe721;</span>新建</NavLink>
                 </li>
                 <li>
-                    <NavLink to={'/user'} activeClassName={'nav-active'}><span className={'nav-icon-font'}>&#xe61f;</span>我的</NavLink>
+                    <NavLink to={'/user'} activeClassName={'nav-active'}><span
+                        className={'nav-icon-font'}>&#xe61f;</span>我的</NavLink>
                 </li>
             </ul>
         )

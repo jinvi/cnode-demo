@@ -13,6 +13,19 @@ export default class Main extends Component {
                 id: this.props.topic.id
             }
         }
+
+        this.goBack = this.goBack.bind(this)
+    }
+
+    goBack() {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        this.props.dispatch({
+            type: 'LOAD_TOPIC',
+            payload: {
+                scrollTop: scrollTop.toString()
+            }
+        })
+        this.props.history.goBack()
     }
 
     render() {
@@ -24,7 +37,7 @@ export default class Main extends Component {
                 <div>
                     <div className={'topic-back clear'}>
                         <span className={'topic-back-btn topic-back-icon-font'}
-                              onClick={this.props.history.goBack}>&#xe647;</span>
+                              onClick={this.goBack}>&#xe647;</span>
                         <a href={'#'} className={'topic-reply-btn fright'}>回复</a>
                     </div>
                     <div className={'topic-title'}>
@@ -39,7 +52,7 @@ export default class Main extends Component {
                             <a className={'fright'}>收藏</a>
                         </div>
                     </div>
-                    {/*{data.content}*/}
+                    <div className={'topic-content'} dangerouslySetInnerHTML={{__html: data.content}}/>
                 </div>
             ) :
             <Loading/>
@@ -48,6 +61,7 @@ export default class Main extends Component {
     componentDidMount() {
         const lastId = this.state.topic.id
         const currentId = this.props.match.params.id
+        document.documentElement.scrollTop = document.body.scrollTop = this.props.topic.scrollTop //设置历史滚动条高度
 
         if (!this.state.topic.data || lastId !== currentId) {
             this.setState({
@@ -58,7 +72,7 @@ export default class Main extends Component {
             })
 
             fetchJSON({
-                url: `/topic/${currentId}?mdrender=false`,
+                url: `/topic/${currentId}?mdrender=true`,
                 success: (res) => {
                     this.props.dispatch({
                         type: 'LOAD_TOPIC',
