@@ -44,6 +44,9 @@ function utils(state = {
         } else {
             return parseInt(duration / 31536000000) + '年前';
         }
+    },
+    toTop: () => {
+        document.documentElement.scrollTop = document.body.scrollTop = 0
     }
 }, action) {
     return state

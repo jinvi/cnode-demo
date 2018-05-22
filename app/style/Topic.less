@@ -1,4 +1,5 @@
 @T--topic-back--height: 52px;
+@T-line-height: 26px;
 
 .T-common-padding-left-right(@padding-top:0px;@padding-bottom:0px) {
   @padding-left-right: 20px;
@@ -25,12 +26,12 @@
   .topic-reply-btn {
     margin: 14px 18px 0 0;
     display: block;
-    width: 46px;
-    @height: 24px;
+    width: 86px;
+    @height: 26px;
     height: @height;
     line-height: @height;
     text-align: center;
-    border-radius: 4px;
+    border-radius: @G-btn-border-radius;
     background-color: @G-color-standard;
     color: #ffffff;
   }
@@ -40,46 +41,51 @@
   padding-top: @T--topic-back--height;
 
   h3 {
-    font-size: 26px;
-    line-height: 40px;
+    font-size: 28px;
+    line-height: 36px;
     font-weight: normal;
-    .T-common-padding-left-right(20px; 14px;);
+    .T-common-padding-left-right(30px; 24px;);
   }
 
   .topic-detail {
-    .T-common-padding-left-right(14px; 14px;);
+    .T-common-padding-left-right(15px; 15px;);
     color: @G-color-text-gray;
     font-size: 12px;
-    background-color: #fafafa;
+    background-color: @G-color-text-bg;
 
     & span {
       margin-right: 12px;
     }
   }
+
+  .topic-collect {
+    color: @G-color-text-link2;
+    text-decoration: underline;
+  }
 }
 
 .topic-content {
+  @p-padding-bottom: 20px;
   @block-padding-bottom: 20px;
-  @line-height: 26px;
   color: @G-color-text;
-  .T-common-padding-left-right(60px; 60px;);
+  .T-common-padding-left-right(40px; 40px;);
 
   a {
-    color: @G-color-link;
+    color: @G-color-text-link;
   }
 
   p {
-    line-height: @line-height;
-    margin-bottom: @block-padding-bottom;
+    line-height: @T-line-height;
+    margin-bottom: @p-padding-bottom;
   }
 
-  ul,ol {
+  ul, ol {
     margin-bottom: @block-padding-bottom;
   }
 
   li {
-    line-height: @line-height;
-    padding-left: 28px;
+    line-height: @T-line-height;
+    margin-left: 28px;
   }
 
   img {
@@ -87,14 +93,94 @@
     max-height: 100%;
   }
 
-  h3 {
-    font-size: 20px;
-    margin: 0px 0 14px 0;
+  h1, h2, h3, h4, h5 {
+    line-height: @T-line-height + 8px;
   }
 
-  .prettyprint {
+  .prettyprint, blockquote {
     padding: 12px;
+    font-size: 12px;
+    line-height: @T-line-height - 3px;
     overflow: auto;
-    background-color: #e9effa;
+    background-color: @G-Topic--blockquote--bg-color;
+    color: @G-Topic--blockquote--text-color;
+    border-bottom: 2px solid @G-Topic--blockquote--line-color;
+    margin-bottom: @block-padding-bottom;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.topic-reply-head {
+  .T-common-padding-left-right(0; 30px;);
+  text-align: center;
+
+  .topic-reply-outer {
+    border: 1px solid @G-color-standard;
+    border-radius: 50px;
+    color: @G-color-standard;
+    text-align: center;
+    padding: 6px 80px;
+    display: inline-block;
+  }
+}
+
+.topic-reply-list {
+  .T-common-padding-left-right(0; 30px;);
+
+  a {
+    color: @G-color-text-link;
+  }
+
+  li {
+    list-style: none;
+    display: flex;
+    border-bottom: 1px solid @G-color-divide-line;
+    padding: 20px 0;
+  }
+
+  .topic-reply-avatar {
+    @size: 35px;
+    width: @size;
+    height: @size;
+    border-radius: @size;
+    margin-right: 10px;
+  }
+
+  .topic-reply-box {
+    width: 100%;
+  }
+
+  .topic-reply-detail {
+    margin: 10px 0 10px 0;
+  }
+
+  //@detail-color: lighten(@G-color-text, 30%);
+  @detail-color: @G-color-text-gray;
+  @margin-right:12px;
+
+  .topic-reply-username {
+    color: @detail-color;
+    margin-right: @margin-right;
+  }
+
+  .topic-reply-duration {
+    color: @G-color-text-gray;
+    margin-right: @margin-right;
+  }
+
+  .topic-reply-content {
+    color: @G-color-text;
+    line-height: @T-line-height - 2px;
+  }
+
+  .topic-reply-up {
+    color: @detail-color;
+  }
+
+  .topic-reply-num{
+    color: @G-color-text-gray;
   }
 }

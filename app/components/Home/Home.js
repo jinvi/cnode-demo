@@ -18,10 +18,6 @@ class Head extends Component {
         const setClass = {}
         location.search.split('=')[1] ? setClass[location.search.split('=')[1]] = activeClass : setClass['all'] = activeClass
 
-        function toTop() {
-            document.documentElement.scrollTop = document.body.scrollTop = 0
-        }
-
         return (
             <div className={'head'}>
                 <div className={'top clear'}>
@@ -41,11 +37,11 @@ class Head extends Component {
                     }
                 </div>
                 <ul className={'topics-nav'}>
-                    <li><Link className={setClass.all} to={'/'} onClick={toTop}>全部</Link></li>
-                    <li><Link className={setClass.good} to={'/?tab=good'} onClick={toTop}>精华</Link></li>
-                    <li><Link className={setClass.share} to={'/?tab=share'} onClick={toTop}>分享</Link></li>
-                    <li><Link className={setClass.ask} to={'/?tab=ask'} onClick={toTop}>问答</Link></li>
-                    <li><Link className={setClass.job} to={'/?tab=job'} onClick={toTop}>招聘</Link></li>
+                    <li><Link className={setClass.all} to={'/'} onClick={this.props.toTop}>全部</Link></li>
+                    <li><Link className={setClass.good} to={'/?tab=good'} onClick={this.props.toTop}>精华</Link></li>
+                    <li><Link className={setClass.share} to={'/?tab=share'} onClick={this.props.toTop}>分享</Link></li>
+                    <li><Link className={setClass.ask} to={'/?tab=ask'} onClick={this.props.toTop}>问答</Link></li>
+                    <li><Link className={setClass.job} to={'/?tab=job'} onClick={this.props.toTop}>招聘</Link></li>
                 </ul>
             </div>
         )
@@ -74,7 +70,7 @@ class Topics extends Component {
         }
 
         const clientHeight = document.documentElement.clientHeight || document.body.clientHeight  //可视区域高度（不包括滚动高度）
-        const listItemHeight = 70 + 1  //列表单项高度（单项高度+分隔线高度）
+        const listItemHeight = 80 + 1  //列表单项高度（单项高度+分隔线高度）
         const excludeListHeight = 52 + 64 + 46  //视图除列表外剩余高度总和（底部导航高度+头部色块高度+主题导航高度）
         const initListNum = Math.ceil((clientHeight - excludeListHeight) / listItemHeight) + 2  //初始加载列表个数（数量足以溢出视区以触发滚动事件）
 
@@ -208,7 +204,7 @@ export default class Main extends Component {
     render() {
         return (
             <div>
-                <Head/>
+                <Head {...this.props}/>
                 <Topics {...this.props}/>
                 <Nav/>
             </div>

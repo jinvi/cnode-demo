@@ -4,7 +4,9 @@
 @T--nav--height: 52px; //底部导航高度 * 程序有应用此数值，改动需同时改动程序配合 *
 @T--top--height: 64px; //头部色块高度 * 程序有应用此数值，改动需同时改动程序配合 *
 @T--topics-nav--height: 46px; //主题导航高度 * 程序有应用此数值，改动需同时改动程序配合 *
-@T--topic-item--height: 70px; //主题列表单项高度，不包含1px分隔线 * 程序有应用此数值，改动需同时改动程序配合 *
+@T--topic-item--height: 80px; //主题列表单项高度，不包含1px分隔线 * 程序有应用此数值，改动需同时改动程序配合 *
+@T--topic-item-avatar--margin-top:15px;  //列表单项头像margint-top
+@T--topic-item-content--margint-top:19px;  //列表单项标题margin-top
 
 .head {
   position: fixed;
@@ -40,11 +42,11 @@
     background-color: #ffffff;
     text-align: center;
     display: block;
-    padding: 4px 8px;
+    padding: 4px 26px;
     line-height: normal;
     font-size: 12px;
     margin-top: @login-state-margin-top;
-    border-radius: 5px;
+    border-radius: @G-btn-border-radius;
 
     .link-color(@G-color-standard)
   }
@@ -125,6 +127,10 @@
 .topic-list {
   padding: (@T--top--height+@T--topics-nav--height) 0 @T--nav--height 0;
 
+  li{
+    list-style: none;
+  }
+
   .topic-loading {
     height: 20px;
     background: url("../assets/loading.gif") no-repeat center 5px;
@@ -134,14 +140,14 @@
 .topic-item {
   display: flex;
   height: @T--topic-item--height;
-  border-top: 1px solid #F5F5F5;
+  border-top: 1px solid @G-color-divide-line;
 
   .topic-item-avatar {
-    margin: 10px 12px 0 22px;
+    margin: @T--topic-item-avatar--margin-top 12px 0 22px;
   }
 
   .topic-item-content {
-    margin-top: 14px;
+    margin-top: @T--topic-item-content--margint-top;
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -165,9 +171,9 @@
   }
 
   .topic-item-tab {
-    background-color: #f5f5f5;
+    background-color: @G-color-text-bg;
     color: #9c9c9c;
-    padding: 2px 6px;
-    border-radius: 4px;
+    padding: 3px 8px;
+    border-radius: @G-btn-border-radius;
   }
 }
