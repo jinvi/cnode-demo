@@ -156,7 +156,7 @@ class Topics extends Component {
             const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;  //可视区域高度（不包括滚动高度）
             const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;  //元素总高度（可视高度与滚动高度）
 
-            if (scrollTop + clientHeight === scrollHeight && scrollTop !== 0) {  //滚动到底部时
+            if (Math.ceil(scrollTop) + Math.ceil(clientHeight) === Math.ceil(scrollHeight) && Math.ceil(scrollTop) !== 0) {  //滚动到底部时
                 this.loadList({tabParam: this.props.location.search, isNewTab: false})
             }
         }
