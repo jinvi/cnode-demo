@@ -15,6 +15,6 @@
     "transform-class-properties",  //parse es6 "class instance fields" and "class static fields"
     "syntax-dynamic-import",  //支持import()动态加载模块
 //    "transform-regenerator",  //使没有生成器的浏览器支持async函数，依赖babel-polyfill
-    "transform-object-rest-spread"  //支持ES6对象扩展运算符
+    "transform-object-rest-spread"  //支持ES6对象扩展运算符(...)
   ]
 }

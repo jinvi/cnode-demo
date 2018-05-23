@@ -29,9 +29,16 @@ export default class Main extends Component {
         this.props.history.goBack()
     }
 
+    checkUserReply(event, topicId) {
+        if (event.target.nodeName === 'A' && event.target.innerHTML.charAt(0) === '@') {
+            const name = event.target.innerHTML.substr(1)
+        }
+    }
+
     render() {
         const data = this.state.topic.data
-        console.log(data)
+
+        // console.log(data)
 
         function createMarkup(content) {
             return {__html: content}
@@ -70,24 +77,43 @@ export default class Main extends Component {
                             (
                                 <ul className={'topic-reply-list'}>
                                     {
-                                        data.replies.map((item,index) => (
-                                            <li key={item.id}>
-                                                <img className={'topic-reply-avatar'} width={100} height={100}
-                                                     src={item.author.avatar_url}/>
-                                                <div className={'topic-reply-box'}>
-                                                    <div className={'topic-reply-detail clear'}>
-                                                        <span
-                                                            className={'topic-reply-username'}>{item.author.loginname}</span>
-                                                        <span
-                                                            className={'topic-reply-duration'}>{this.props.getDuration(item.create_at)}</span>
-                                                        <span className={'topic-reply-num'}>#{index+1}</span>
-                                                        <span
-                                                            className={'topic-reply-up fright'}>{item.ups.length}</span>
+                                        data.replies.map((item, index) => {
+                                            let replyNumClass, replyNumContent;
+                                            if (item.author.loginname === data.author.loginname) {
+                                                replyNumContent = '作者'
+                                                replyNumClass = 'topic-reply-num-active'
+                                            } else {
+                                                replyNumContent = index + 1 + '楼'
+                                                replyNumClass = 'topic-reply-num'
+                                            }
+
+                                            let replyActiveStyle = {
+                                                display:'none'
+                                            }
+
+                                            return (
+                                                <li key={item.id}>
+                                                    <img className={'topic-reply-avatar'} src={item.author.avatar_url}/>
+                                                    <div className={'topic-reply-box'}>
+                                                        <div className={'topic-reply-detail clear'}>
+                                                            <span
+                                                                className={'topic-reply-username'}>{item.author.loginname}</span>
+                                                            <span
+                                                                className={'topic-reply-duration'}>{this.props.getDuration(item.create_at)}</span>
+                                                            <span className={replyNumClass}>{replyNumContent}</span>
+                                                            <span className={'topic-reply-up fright'}>
+                                                                <span className={'topic-reply-upIcon'}>&#xe681;</span>
+                                                                {item.ups.length}
+                                                                </span>
+                                                            <span style={replyActiveStyle} className={'topic-reply-reply fright'}>&#xe609;</span>
+                                                        </div>
+                                                        <div className={'topic-reply-content topic-content'}
+                                                             onMouseOver={(event)=>{this.checkUserReply(event,data.id)}}
+                                                             dangerouslySetInnerHTML={createMarkup(item.content)}/>
                                                     </div>
-                                                    <div className={'topic-reply-content'} dangerouslySetInnerHTML={createMarkup(item.content)}/>
-                                                </div>
-                                            </li>
-                                        ))
+                                                </li>
+                                            )
+                                        })
                                     }
                                 </ul>
                             )
@@ -114,7 +140,7 @@ export default class Main extends Component {
             })
 
             fetchJSON({
-                url: `/topic/${currentId}?mdrender=true`,
+                url: `/topic/${currentId}`,
                 success: (res) => {
                     this.props.dispatch({
                         type: 'LOAD_TOPIC',

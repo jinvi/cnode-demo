@@ -68,10 +68,11 @@
   @p-padding-bottom: 20px;
   @block-padding-bottom: 20px;
   color: @G-color-text;
-  .T-common-padding-left-right(40px; 40px;);
+  .T-common-padding-left-right(30px; 40px;);
 
   a {
     color: @G-color-text-link;
+    //text-decoration: underline;
   }
 
   p {
@@ -100,11 +101,11 @@
   .prettyprint, blockquote {
     padding: 12px;
     font-size: 12px;
-    line-height: @T-line-height - 3px;
+    line-height: @T-line-height - 8px;
     overflow: auto;
     background-color: @G-Topic--blockquote--bg-color;
     color: @G-Topic--blockquote--text-color;
-    border-bottom: 2px solid @G-Topic--blockquote--line-color;
+    border-bottom: 3px solid @G-Topic--blockquote--line-color;
     margin-bottom: @block-padding-bottom;
 
     p {
@@ -138,7 +139,7 @@
     list-style: none;
     display: flex;
     border-bottom: 1px solid @G-color-divide-line;
-    padding: 20px 0;
+    padding-top: 15px;
   }
 
   .topic-reply-avatar {
@@ -157,30 +158,58 @@
     margin: 10px 0 10px 0;
   }
 
-  //@detail-color: lighten(@G-color-text, 30%);
   @detail-color: @G-color-text-gray;
-  @margin-right:12px;
+  @margin-right: 12px;
 
   .topic-reply-username {
-    color: @detail-color;
+    color: @G-color-standard;
     margin-right: @margin-right;
   }
 
   .topic-reply-duration {
-    color: @G-color-text-gray;
+    color: @detail-color;
     margin-right: @margin-right;
+    font-size: 12px;
   }
 
   .topic-reply-content {
-    color: @G-color-text;
-    line-height: @T-line-height - 2px;
+    padding: 0;
+
+    blockquote {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    p, ul, li {
+      overflow: auto;
+    }
   }
 
   .topic-reply-up {
     color: @detail-color;
+    cursor: pointer;
   }
 
-  .topic-reply-num{
-    color: @G-color-text-gray;
+  .topic-reply-upIcon {
+    .G-icon-font(18px);
+    margin-right: 1px;
+  }
+
+  .topic-reply-reply{
+    .G-icon-font(18px;@detail-color);
+    margin-right: 4px;
+  }
+
+  .topic-reply-num, .topic-reply-num-active {
+    color: @detail-color;
+    background-color: @G-color-text-bg;
+    padding: 2px 6px;
+    border-radius: @G-btn-border-radius;
+    font-size: 12px;
+  }
+
+  .topic-reply-num-active {
+    background-color: lighten(@G-color-text-link2, 15%);
+    color: #ffffff;
   }
 }
