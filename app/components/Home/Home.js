@@ -20,7 +20,7 @@ class Head extends Component {
 
         return (
             <div className={'head'}>
-                <div className={'top clear'}>
+                <div className={'top clear'} onClick={this.props.toTop}>
                     <h2>
                         <span>CNODE</span>
                         <span className={'top-commentary'}>个人演示版</span>
@@ -33,15 +33,17 @@ class Head extends Component {
                                 </Link>
                             </span>
                             :
-                            <Link className={'top-loginBtn fright'} to={'/login'}>登录</Link>
+                            <Link className={'top-loginBtn fright'} to={'/login'} onClick={(event) => {
+                                event.stopPropagation()
+                            }}>登录</Link>
                     }
                 </div>
                 <ul className={'topics-nav'}>
-                    <li><Link className={setClass.all} to={'/'} onClick={this.props.toTop}>全部</Link></li>
-                    <li><Link className={setClass.good} to={'/?tab=good'} onClick={this.props.toTop}>精华</Link></li>
-                    <li><Link className={setClass.share} to={'/?tab=share'} onClick={this.props.toTop}>分享</Link></li>
-                    <li><Link className={setClass.ask} to={'/?tab=ask'} onClick={this.props.toTop}>问答</Link></li>
-                    <li><Link className={setClass.job} to={'/?tab=job'} onClick={this.props.toTop}>招聘</Link></li>
+                    <li><Link className={setClass.all} to={'/'}>全部</Link></li>
+                    <li><Link className={setClass.good} to={'/?tab=good'}>精华</Link></li>
+                    <li><Link className={setClass.share} to={'/?tab=share'}>分享</Link></li>
+                    <li><Link className={setClass.ask} to={'/?tab=ask'}>问答</Link></li>
+                    <li><Link className={setClass.job} to={'/?tab=job'}>招聘</Link></li>
                 </ul>
             </div>
         )
@@ -137,6 +139,9 @@ class Topics extends Component {
                                 <h3 className={'topic-item-title'}>{item.title}</h3>
                                 <div className={'topic-item-detail'}>
                                     <span className={'topic-item-tab'}>{transTab(item.tab)}</span>
+                                    <span className={'topic-item-tab'} style={{
+                                        display: item.top ? 'inline-block' : 'none'
+                                    }}>置顶</span>
                                     <span>{item.author.loginname}</span>
                                     <span>{this.props.getDuration(item.create_at)}</span>
                                     <span className={'fright'}>{item.reply_count} / {item.visit_count}</span>

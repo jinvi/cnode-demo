@@ -13,13 +13,14 @@ function topicsList(state = {list: [], page: 0, scrollTop: 0}, action) {
     return state
 }
 
-function topic(state = {id: '', data: null, scrollTop: 0}, action) {
+function topic(state = {id: '', data: null, scrollTop: 0, isReverseReplies: 'false'}, action) {
     switch (action.type) {
         case 'LOAD_TOPIC':
             return {
                 id: action.payload.id || state.id,
                 data: action.payload.data || state.data,
-                scrollTop: action.payload.scrollTop || state.scrollTop
+                scrollTop: action.payload.scrollTop || state.scrollTop,
+                isReverseReplies: action.payload.isReverseReplies || state.isReverseReplies,  //该形式只能使用非布尔值做判断
             }
     }
 
@@ -36,11 +37,11 @@ function utils(state = {
         } else if ((duration / 60000) < 60) {
             return parseInt((duration / 60000)) + '分钟前';
         } else if ((duration / 3600000) < 24) {
-            return parseInt(duration / 3600000) + '小时前';
+            return parseInt(duration / 3600000) + '个小时前';
         } else if ((duration / 86400000) < 31) {
             return parseInt(duration / 86400000) + '天前';
         } else if ((duration / 2592000000) < 12) {
-            return parseInt(duration / 2592000000) + '月前';
+            return parseInt(duration / 2592000000) + '个月前';
         } else {
             return parseInt(duration / 31536000000) + '年前';
         }

@@ -128,6 +128,31 @@
   }
 }
 
+.topic-reply-order{
+  .T-common-padding-left-right(20px;10px;);
+  font-size: 12px;
+  color: @G-color-text-gray;
+
+  .active{
+    color: @G-color-standard;
+    border-bottom: 2px solid @G-color-standard;
+    font-weight: bold;
+  }
+
+  .topic-reply-order-btn{
+    margin-left: 5px;
+    cursor: pointer;
+  }
+
+  .topic-reply-order-title{
+    margin-right: -5px;
+  }
+
+  span{
+    padding: 5px;
+  }
+}
+
 .topic-reply-list {
   .T-common-padding-left-right(0; 30px;);
 
@@ -159,7 +184,7 @@
   }
 
   @detail-color: @G-color-text-gray;
-  @margin-right: 12px;
+  @margin-right: 8px;
 
   .topic-reply-username {
     color: @G-color-standard;
@@ -196,8 +221,10 @@
   }
 
   .topic-reply-reply{
-    .G-icon-font(18px;@detail-color);
-    margin-right: 4px;
+    .G-icon-font(22px;@detail-color);
+    text-align: right;
+    margin-bottom: 10px;
+    cursor: pointer;
   }
 
   .topic-reply-num, .topic-reply-num-active {

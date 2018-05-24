@@ -11,7 +11,19 @@ export default class Main extends Component {
             topic: {
                 data: this.props.topic.data,
                 id: this.props.topic.id
-            }
+            },
+            replies: this.props.topic.data ?
+                (
+                    this.props.topic.isReverseReplies === 'true' ?
+                        [].concat(this.props.topic.data.replies).reverse()
+                        :
+                        this.props.topic.data.replies
+                ) : []
+        }
+
+        this.orderBtnClass = {
+            early: '',
+            new: ''
         }
 
         this.goBack = this.goBack.bind(this)
@@ -37,11 +49,29 @@ export default class Main extends Component {
 
     render() {
         const data = this.state.topic.data
-
         // console.log(data)
+
+        let orderBtnClass = 'topic-reply-order-btn fright';
+        this.orderBtnClass = {  //设置激活排序按钮
+            early: this.props.topic.isReverseReplies === 'false' ? ' active' : '',
+            new: this.props.topic.isReverseReplies === 'true' ? ' active' : '',
+        }
 
         function createMarkup(content) {
             return {__html: content}
+        }
+
+        function setRepliesOrder(replies, isReverse) {
+            this.props.dispatch({
+                type: 'LOAD_TOPIC',
+                payload: {
+                    isReverseReplies: isReverse  //因reducer判断问题，不能设置为布尔值做判断
+                }
+            })
+
+            this.setState({
+                replies: isReverse === 'true' ? [].concat(replies).reverse() : replies
+            })
         }
 
         return this.state.topic.data ?
@@ -69,26 +99,33 @@ export default class Main extends Component {
                     <div className={'topic-content'} dangerouslySetInnerHTML={createMarkup(data.content)}/>
                     <div className={'topic-reply-head'}>
                         <span className={'topic-reply-outer'}>
-                            {data.reply_count} 回复
+                            {this.state.replies.length} 回复
                         </span>
                     </div>
+                    <div className={'topic-reply-order clear'}>
+                        <span className={orderBtnClass + this.orderBtnClass.new} onClick={() => {
+                            setRepliesOrder.bind(this)(data.replies, 'true')
+                        }}>最新</span>
+                        <span className={orderBtnClass + this.orderBtnClass.early} onClick={() => {
+                            setRepliesOrder.bind(this)(data.replies, 'false')
+                        }}>最早</span>
+                        <span className={'topic-reply-order-title fright'}>排序：</span>
+                    </div>
                     {
-                        data.reply_count ?
+                        this.state.replies ?
                             (
                                 <ul className={'topic-reply-list'}>
                                     {
-                                        data.replies.map((item, index) => {
+                                        this.state.replies.map((item, index) => {
                                             let replyNumClass, replyNumContent;
                                             if (item.author.loginname === data.author.loginname) {
                                                 replyNumContent = '作者'
                                                 replyNumClass = 'topic-reply-num-active'
                                             } else {
-                                                replyNumContent = index + 1 + '楼'
+                                                replyNumContent = this.props.topic.isReverseReplies === 'false' ?
+                                                    index + 1 + '楼' :
+                                                    this.state.replies.length - index + '楼'
                                                 replyNumClass = 'topic-reply-num'
-                                            }
-
-                                            let replyActiveStyle = {
-                                                display:'none'
                                             }
 
                                             return (
@@ -105,11 +142,15 @@ export default class Main extends Component {
                                                                 <span className={'topic-reply-upIcon'}>&#xe681;</span>
                                                                 {item.ups.length}
                                                                 </span>
-                                                            <span style={replyActiveStyle} className={'topic-reply-reply fright'}>&#xe609;</span>
                                                         </div>
                                                         <div className={'topic-reply-content topic-content'}
-                                                             onMouseOver={(event)=>{this.checkUserReply(event,data.id)}}
+                                                             onMouseOver={(event) => {
+                                                                 this.checkUserReply(event, data.id)
+                                                             }}
                                                              dangerouslySetInnerHTML={createMarkup(item.content)}/>
+                                                        <div>
+                                                            <span className={'topic-reply-reply fright'}>&#xe7ac;</span>
+                                                        </div>
                                                     </div>
                                                 </li>
                                             )
@@ -146,7 +187,8 @@ export default class Main extends Component {
                         type: 'LOAD_TOPIC',
                         payload: {
                             id: res.data.id,
-                            data: res.data
+                            data: res.data,
+                            isReverseReplies: 'false'  //初始化排序
                         }
                     })
 
@@ -154,7 +196,8 @@ export default class Main extends Component {
                         topic: {
                             data: this.props.topic.data,
                             id: this.props.topic.id
-                        }
+                        },
+                        replies: this.props.topic.data.replies
                     })
                 }
             })
