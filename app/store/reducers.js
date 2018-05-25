@@ -13,7 +13,14 @@ function topicsList(state = {list: [], page: 0, scrollTop: 0}, action) {
     return state
 }
 
-function topic(state = {id: '', data: null, scrollTop: 0, isReverseReplies: 'false'}, action) {
+function topic(state = {
+    id: '',
+    data: null,
+    scrollTop: 0,
+    isReverseReplies: 'false',
+    topicReplyOrderHeight: '0',
+    beyondOrderReplyClass: ' '
+}, action) {
     switch (action.type) {
         case 'LOAD_TOPIC':
             return {
@@ -21,6 +28,8 @@ function topic(state = {id: '', data: null, scrollTop: 0, isReverseReplies: 'fal
                 data: action.payload.data || state.data,
                 scrollTop: action.payload.scrollTop || state.scrollTop,
                 isReverseReplies: action.payload.isReverseReplies || state.isReverseReplies,  //该形式只能使用非布尔值做判断
+                topicReplyOrderHeight: action.payload.topicReplyOrderHeight || state.topicReplyOrderHeight,
+                beyondOrderReplyClass: action.payload.beyondOrderReplyClass || state.beyondOrderReplyClass
             }
     }
 

@@ -43,8 +43,7 @@
   h3 {
     font-size: 28px;
     line-height: 36px;
-    font-weight: normal;
-    .T-common-padding-left-right(30px; 24px;);
+    .T-common-padding-left-right(20px; 24px;);
   }
 
   .topic-detail {
@@ -69,6 +68,7 @@
   @block-padding-bottom: 20px;
   color: @G-color-text;
   .T-common-padding-left-right(30px; 40px;);
+  box-sizing: border-box;
 
   a {
     color: @G-color-text-link;
@@ -115,8 +115,9 @@
 }
 
 .topic-reply-head {
-  .T-common-padding-left-right(0; 30px;);
+  .T-common-padding-left-right(30px; 30px;);
   text-align: center;
+  box-sizing: border-box;
 
   .topic-reply-outer {
     border: 1px solid @G-color-standard;
@@ -129,9 +130,12 @@
 }
 
 .topic-reply-order{
-  .T-common-padding-left-right(20px;10px;);
+  .T-common-padding-left-right(10px;15px;);
   font-size: 12px;
   color: @G-color-text-gray;
+  border-bottom: 1px solid @G-color-divide-line;
+  box-sizing: border-box;
+  background-color: #ffffff;
 
   .active{
     color: @G-color-standard;
@@ -151,6 +155,14 @@
   span{
     padding: 5px;
   }
+}
+
+.topic-reply-order-beyond{
+  width: 100%;
+  position: fixed;
+  z-index: @G-z-index;
+  top: @T--topic-back--height;
+  left: 0;
 }
 
 .topic-reply-list {
@@ -203,6 +215,10 @@
     blockquote {
       margin-left: 0;
       margin-right: 0;
+    }
+
+    p{
+      margin-bottom: 0;
     }
 
     p, ul, li {

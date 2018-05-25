@@ -45,7 +45,7 @@
     padding: 4px 26px;
     line-height: normal;
     font-size: 12px;
-    margin-top: @login-state-margin-top - 5px;
+    margin-top: @login-state-margin-top - 4px;
     border-radius: @G-btn-border-radius;
 
     .link-color(@G-color-standard)
@@ -175,5 +175,23 @@
     color: #9c9c9c;
     padding: 3px 8px;
     border-radius: @G-btn-border-radius;
+  }
+
+  .topic-item-top{
+    background-color: @G-color-text-link2;
+    color: #ffffff;
+    position: relative;
+    padding-right: 22px;
+
+    .topic-item-topIcon{
+      position: absolute;
+      top: 4px;
+      right: -4px;
+      .G-icon-font(14px;)
+    }
+  }
+
+  .topic-item-active{
+    color: @G-color-standard;
   }
 }

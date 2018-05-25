@@ -18,32 +18,78 @@ export default class Main extends Component {
                         [].concat(this.props.topic.data.replies).reverse()
                         :
                         this.props.topic.data.replies
-                ) : []
+                ) : [],
+            beyondOrderReplyClass: this.props.topic.beyondOrderReplyClass,
+            topicReplyOrderHeight: this.props.topic.topicReplyOrderHeight
         }
-
         this.orderBtnClass = {
             early: '',
             new: ''
         }
 
         this.goBack = this.goBack.bind(this)
+        this.beyondOrderReplyOnScroll = this.beyondOrderReplyOnScroll.bind(this)
     }
 
     goBack(event) {
         event.stopPropagation()
-        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-        this.props.dispatch({
-            type: 'LOAD_TOPIC',
-            payload: {
-                scrollTop: scrollTop.toString()
-            }
-        })
         this.props.history.goBack()
     }
 
     checkUserReply(event, topicId) {
         if (event.target.nodeName === 'A' && event.target.innerHTML.charAt(0) === '@') {
             const name = event.target.innerHTML.substr(1)
+        }
+    }
+
+    beyondOrderReplyOnScroll() {
+        const topicTitleHeight = parseInt(getStyle(this._topicTitle, 'height'))
+        const topicBackHeight = parseInt(getStyle(this._topicBack, 'height'))
+        const topicContentHeight = parseInt(getStyle(this._topicContent, 'height'))
+        const topicReplyHeadHeight = parseInt(getStyle(this._topicReplyHead, 'height'))
+        const topicReplyOrderHeight = parseInt(getStyle(this._topicReplyOrder, 'height'))
+        this.replyOrderToTopHeight = topicTitleHeight + topicBackHeight +
+            topicContentHeight + topicReplyHeadHeight - topicReplyOrderHeight
+
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;  //滚动高度
+        if (scrollTop > this.replyOrderToTopHeight) {
+            if (this.state.topicReplyOrderHeight !== '0') return  //以值为是否设置为'0'来判断是否需要更新状态，避免重复更新
+
+            this.props.dispatch({
+                type: 'LOAD_TOPIC',
+                payload: {
+                    beyondOrderReplyClass: ' topic-reply-order-beyond',
+                    topicReplyOrderHeight: topicReplyOrderHeight + 'px'
+                }
+            })
+
+            this.setState({
+                beyondOrderReplyClass: this.props.topic.beyondOrderReplyClass,
+                topicReplyOrderHeight: this.props.topic.topicReplyOrderHeight
+            })
+        } else {
+            if (this.state.topicReplyOrderHeight === '0') return
+
+            this.props.dispatch({
+                type: 'LOAD_TOPIC',
+                payload: {
+                    beyondOrderReplyClass: ' ',
+                    topicReplyOrderHeight: '0'
+                }
+            })
+
+            this.setState({
+                beyondOrderReplyClass: this.props.topic.beyondOrderReplyClass,
+                topicReplyOrderHeight: this.props.topic.topicReplyOrderHeight
+            })
+        }
+
+        function getStyle(ele, style) {  //获取元素计算后的样式
+            if (ele.currentStyle) {  // 兼容ie方法
+                return ele.currentStyle[style];
+            } else {  // 兼容火狐、chome
+                return getComputedStyle(ele)[style];
+            }
         }
     }
 
@@ -62,6 +108,10 @@ export default class Main extends Component {
         }
 
         function setRepliesOrder(replies, isReverse) {
+            if (this.props.topic.topicReplyOrderHeight !== '0') {
+                document.documentElement.scrollTop = document.body.scrollTop = this.replyOrderToTopHeight
+            }
+
             this.props.dispatch({
                 type: 'LOAD_TOPIC',
                 payload: {
@@ -77,14 +127,14 @@ export default class Main extends Component {
         return this.state.topic.data ?
             (
                 <div>
-                    <div className={'topic-back clear'} onClick={this.props.toTop}>
+                    <div className={'topic-back clear'} onClick={this.props.toTop} ref={el => this._topicBack = el}>
                         <span className={'topic-back-btn topic-back-icon-font'}
                               onClick={this.goBack}>&#xe647;</span>
                         <a href={'#'} className={'topic-reply-btn fright'} onClick={(event) => {
                             event.stopPropagation()
                         }}>回复</a>
                     </div>
-                    <div className={'topic-title'}>
+                    <div className={'topic-title'} ref={el => this._topicTitle = el}>
                         <h3>{data.title}</h3>
                         <div className={'topic-detail clear'}>
                             <span>回复：{data.reply_count}</span>
@@ -96,13 +146,15 @@ export default class Main extends Component {
                             <span className={'fright'}>{data.author.loginname}</span>
                         </div>
                     </div>
-                    <div className={'topic-content'} dangerouslySetInnerHTML={createMarkup(data.content)}/>
-                    <div className={'topic-reply-head'}>
+                    <div className={'topic-content'} ref={el => this._topicContent = el}
+                         dangerouslySetInnerHTML={createMarkup(data.content)}/>
+                    <div className={'topic-reply-head'} ref={el => this._topicReplyHead = el}>
                         <span className={'topic-reply-outer'}>
                             {this.state.replies.length} 回复
                         </span>
                     </div>
-                    <div className={'topic-reply-order clear'}>
+                    <div className={'topic-reply-order clear' + this.state.beyondOrderReplyClass}
+                         ref={el => this._topicReplyOrder = el}>
                         <span className={orderBtnClass + this.orderBtnClass.new} onClick={() => {
                             setRepliesOrder.bind(this)(data.replies, 'true')
                         }}>最新</span>
@@ -114,7 +166,8 @@ export default class Main extends Component {
                     {
                         this.state.replies ?
                             (
-                                <ul className={'topic-reply-list'}>
+                                <ul className={'topic-reply-list'}
+                                    style={{marginTop: this.state.topicReplyOrderHeight}}>
                                     {
                                         this.state.replies.map((item, index) => {
                                             let replyNumClass, replyNumContent;
@@ -172,6 +225,12 @@ export default class Main extends Component {
         const currentId = this.props.match.params.id
         document.documentElement.scrollTop = document.body.scrollTop = this.props.topic.scrollTop //设置历史滚动条高度
 
+        if (this._topicTitle) {
+            //执行滚动事件函数，初始化相关数值，触发组件更新，并在componentDidUpdate重新
+            // 定义onscroll事件，以便历史返回时重新注册onscroll事件
+            this.beyondOrderReplyOnScroll()
+        }
+
         if (!this.state.topic.data || lastId !== currentId) {
             this.setState({
                 topic: {
@@ -202,5 +261,25 @@ export default class Main extends Component {
                 }
             })
         }
+    }
+
+    componentDidUpdate() {
+        if (this._topicTitle) {
+            window.onscroll = this.beyondOrderReplyOnScroll
+        }
+    }
+
+    componentWillUnmount() {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        this.props.dispatch({
+            type: 'LOAD_TOPIC',
+            payload: {
+                scrollTop: scrollTop.toString(),  //记录历史滚动条高度
+
+                //把值以'0'为基准取反，以在历史返回时触发onscroll函数里更新组件操作
+                topicReplyOrderHeight: this.props.topic.topicReplyOrderHeight === '0' ? '1' : '0'
+            }
+        })
+        window.onscroll = null
     }
 }

@@ -12,7 +12,8 @@ const mapStateToProps = state => {
     return {
         topicsList: state.topicsList,
         getDuration:state.utils.getDuration,
-        toTop:state.utils.toTop
+        toTop:state.utils.toTop,
+        topic:state.topic
     }
 }
 

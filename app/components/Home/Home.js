@@ -131,25 +131,31 @@ class Topics extends Component {
 
         return (
             <ul className={'topic-list'}>
-                {this.state.listData.map((item) => (
-                    <li key={item.id} onClick={this.setTopicsScrollTop}>
-                        <Link className={'topic-item'} to={`/topic/${item.id}`}>
-                            <img className={'topic-item-avatar'} src={item.author.avatar_url} style={avatarStyle}/>
-                            <div className={'topic-item-content'}>
-                                <h3 className={'topic-item-title'}>{item.title}</h3>
-                                <div className={'topic-item-detail'}>
-                                    <span className={'topic-item-tab'}>{transTab(item.tab)}</span>
-                                    <span className={'topic-item-tab'} style={{
-                                        display: item.top ? 'inline-block' : 'none'
-                                    }}>置顶</span>
-                                    <span>{item.author.loginname}</span>
-                                    <span>{this.props.getDuration(item.create_at)}</span>
-                                    <span className={'fright'}>{item.reply_count} / {item.visit_count}</span>
+                {this.state.listData.map((item) => {
+                    const activeClass = this.props.topic.id === item.id ? ' topic-item-active' : ''
+
+                    return (
+                        <li key={item.id} onClick={this.setTopicsScrollTop}>
+                            <Link className={'topic-item'} to={`/topic/${item.id}`}>
+                                <img className={'topic-item-avatar'} src={item.author.avatar_url} style={avatarStyle}/>
+                                <div className={'topic-item-content'}>
+                                    <h3 className={'topic-item-title' + activeClass}>{item.title}</h3>
+                                    <div className={'topic-item-detail'}>
+                                    <span className={'topic-item-tab topic-item-top'} style={{
+                                        display: item.top ? 'inline' : 'none'
+                                    }}><span className={'topic-item-topIcon'}>&#xe63d;</span>置顶</span>
+                                        <span className={'topic-item-tab'} style={{
+                                            display: item.top ? 'none' : 'inline'
+                                        }}>{transTab(item.tab)}</span>
+                                        <span>{item.author.loginname}</span>
+                                        <span>{this.props.getDuration(item.create_at)}</span>
+                                        <span className={'fright'}>{item.reply_count} / {item.visit_count}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </Link>
-                    </li>
-                ))}
+                            </Link>
+                        </li>
+                    )
+                })}
                 <li className={'topic-loading'}></li>
             </ul>
         )
