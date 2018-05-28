@@ -18,9 +18,7 @@ export default class Main extends Component {
                         [].concat(this.props.topic.data.replies).reverse()
                         :
                         this.props.topic.data.replies
-                ) : [],
-            beyondOrderReplyClass: this.props.topic.beyondOrderReplyClass,
-            topicReplyOrderHeight: this.props.topic.topicReplyOrderHeight
+                ) : []
         }
         this.orderBtnClass = {
             early: '',
@@ -108,10 +106,6 @@ export default class Main extends Component {
         }
 
         function setRepliesOrder(replies, isReverse) {
-            if (this.props.topic.topicReplyOrderHeight !== '0') {
-                document.documentElement.scrollTop = document.body.scrollTop = this.replyOrderToTopHeight
-            }
-
             this.props.dispatch({
                 type: 'LOAD_TOPIC',
                 payload: {
@@ -153,7 +147,7 @@ export default class Main extends Component {
                             {this.state.replies.length} 回复
                         </span>
                     </div>
-                    <div className={'topic-reply-order clear' + this.state.beyondOrderReplyClass}
+                    <div className={'topic-reply-order clear'}
                          ref={el => this._topicReplyOrder = el}>
                         <span className={orderBtnClass + this.orderBtnClass.new} onClick={() => {
                             setRepliesOrder.bind(this)(data.replies, 'true')
@@ -225,12 +219,6 @@ export default class Main extends Component {
         const currentId = this.props.match.params.id
         document.documentElement.scrollTop = document.body.scrollTop = this.props.topic.scrollTop //设置历史滚动条高度
 
-        if (this._topicTitle) {
-            //执行滚动事件函数，初始化相关数值，触发组件更新，并在componentDidUpdate重新
-            // 定义onscroll事件，以便历史返回时重新注册onscroll事件
-            this.beyondOrderReplyOnScroll()
-        }
-
         if (!this.state.topic.data || lastId !== currentId) {
             this.setState({
                 topic: {
@@ -263,23 +251,13 @@ export default class Main extends Component {
         }
     }
 
-    componentDidUpdate() {
-        if (this._topicTitle) {
-            window.onscroll = this.beyondOrderReplyOnScroll
-        }
-    }
-
     componentWillUnmount() {
         const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
         this.props.dispatch({
             type: 'LOAD_TOPIC',
             payload: {
                 scrollTop: scrollTop.toString(),  //记录历史滚动条高度
-
-                //把值以'0'为基准取反，以在历史返回时触发onscroll函数里更新组件操作
-                topicReplyOrderHeight: this.props.topic.topicReplyOrderHeight === '0' ? '1' : '0'
             }
         })
-        window.onscroll = null
     }
 }
