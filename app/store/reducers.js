@@ -17,7 +17,9 @@ function topic(state = {
     id: '',
     data: null,
     scrollTop: 0,
-    isReverseReplies: 'false'
+    isReverseReplies: 'false',  //判断问题必须为字符串
+    topicReplyOrderClass: ' ',  //判断问题必须空格字符串
+    topicReplyOrderHeight: '0'  //判断问题必须为字符串
 }, action) {
     switch (action.type) {
         case 'LOAD_TOPIC':
@@ -25,7 +27,9 @@ function topic(state = {
                 id: action.payload.id || state.id,
                 data: action.payload.data || state.data,
                 scrollTop: action.payload.scrollTop || state.scrollTop,
-                isReverseReplies: action.payload.isReverseReplies || state.isReverseReplies,  //该形式只能使用非布尔值做判断
+                isReverseReplies: action.payload.isReverseReplies || state.isReverseReplies,
+                topicReplyOrderClass: action.payload.topicReplyOrderClass || state.topicReplyOrderClass,
+                topicReplyOrderHeight: action.payload.topicReplyOrderHeight || state.topicReplyOrderHeight
             }
     }
 

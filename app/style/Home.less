@@ -5,8 +5,8 @@
 @T--top--height: 64px; //头部色块高度 * 程序有应用此数值，改动需同时改动程序配合 *
 @T--topics-nav--height: 46px; //主题导航高度 * 程序有应用此数值，改动需同时改动程序配合 *
 @T--topic-item--height: 80px; //主题列表单项高度，不包含1px分隔线 * 程序有应用此数值，改动需同时改动程序配合 *
-@T--topic-item-avatar--margin-top:15px;  //列表单项头像margint-top
-@T--topic-item-content--margint-top:19px;  //列表单项标题margin-top
+@T--topic-item-avatar--margin-top: 15px; //列表单项头像margint-top
+@T--topic-item-content--margint-top: 19px; //列表单项标题margin-top
 
 .head {
   position: fixed;
@@ -101,7 +101,12 @@
 
 .topics-nav {
   height: @T--topics-nav--height;
+  width: 100%;
   background-color: #ffffff;
+  position: fixed;
+  left: 0;
+  z-index: @G-z-index - 1;
+  padding-top: (@T--top--height);
 
   li {
     width: 20%;
@@ -127,7 +132,7 @@
 .topic-list {
   padding: (@T--top--height+@T--topics-nav--height) 0 @T--nav--height 0;
 
-  li{
+  li {
     list-style: none;
   }
 
@@ -177,13 +182,13 @@
     border-radius: @G-btn-border-radius;
   }
 
-  .topic-item-top{
+  .topic-item-top {
     background-color: @G-color-text-link2;
     color: #ffffff;
     position: relative;
     padding-right: 22px;
 
-    .topic-item-topIcon{
+    .topic-item-topIcon {
       position: absolute;
       top: 4px;
       right: -4px;
@@ -191,7 +196,7 @@
     }
   }
 
-  .topic-item-active{
+  .topic-item-active {
     color: @G-color-standard;
   }
 }

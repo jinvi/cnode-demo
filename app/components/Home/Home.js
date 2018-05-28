@@ -14,10 +14,6 @@ class Head extends Component {
     }
 
     render() {
-        const activeClass = 'active'
-        const setClass = {}
-        location.search.split('=')[1] ? setClass[location.search.split('=')[1]] = activeClass : setClass['all'] = activeClass
-
         return (
             <div className={'head'}>
                 <div className={'top clear'} onClick={this.props.toTop}>
@@ -38,13 +34,6 @@ class Head extends Component {
                             }}>登录</Link>
                     }
                 </div>
-                <ul className={'topics-nav'}>
-                    <li><Link className={setClass.all} to={'/'}>全部</Link></li>
-                    <li><Link className={setClass.good} to={'/?tab=good'}>精华</Link></li>
-                    <li><Link className={setClass.share} to={'/?tab=share'}>分享</Link></li>
-                    <li><Link className={setClass.ask} to={'/?tab=ask'}>问答</Link></li>
-                    <li><Link className={setClass.job} to={'/?tab=job'}>招聘</Link></li>
-                </ul>
             </div>
         )
     }
@@ -61,6 +50,8 @@ class Topics extends Component {
         this.page = this.props.topicsList.page  //列表页数
 
         this.setTopicsScrollTop = this.setTopicsScrollTop.bind(this)
+        this.loadNextList = this.loadNextList.bind(this)
+        this.refreshList = this.refreshList.bind(this)
     }
 
     loadList({tabParam, isNewTab}) {
@@ -100,6 +91,25 @@ class Topics extends Component {
         })
     }
 
+    loadNextList() { //添加滚动加载列表事件
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;  //滚动高度
+        const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;  //可视区域高度（不包括滚动高度）
+        const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;  //元素总高度（可视高度与滚动高度）
+
+        if (Math.ceil(scrollTop) + Math.ceil(clientHeight) === Math.ceil(scrollHeight) && Math.ceil(scrollTop) !== 0) {  //滚动到底部时
+            this.loadList({tabParam: this.props.location.search, isNewTab: false})
+        }
+    }
+
+    refreshList() {
+        return console.log(111)
+        this.page = 0
+        this.setState({
+            listData: []
+        })
+        this.loadList({tabParam: this.props.location.search, isNewTab: false});
+    }
+
     setTopicsScrollTop() {
         this.props.dispatch({
             type: 'LOAD_TOPICS',
@@ -116,6 +126,12 @@ class Topics extends Component {
             borderRadius: '50%'
         }
 
+        const listIdSet = new Set()
+
+        const activeClass = 'active'
+        const setClass = {}
+        location.search.split('=')[1] ? setClass[location.search.split('=')[1]] = activeClass : setClass['all'] = activeClass
+
         function transTab(originName) {
             switch (originName) {
                 case 'ask':
@@ -130,49 +146,52 @@ class Topics extends Component {
         }
 
         return (
-            <ul className={'topic-list'}>
-                {this.state.listData.map((item, index, list) => {
-                    if (list[index - 1] && list[index - 1].id === item.id) return null  //假如前一项和当前项相同则返回空
+            <div>
+                <ul className={'topics-nav'}>
+                    <li><Link className={setClass.all} to={'/'} onClick={this.refreshList}>全部</Link></li>
+                    <li><Link className={setClass.good} to={'/?tab=good'} onClick={this.refreshList}>精华</Link></li>
+                    <li><Link className={setClass.share} to={'/?tab=share'} onClick={this.refreshList}>分享</Link></li>
+                    <li><Link className={setClass.ask} to={'/?tab=ask'} onClick={this.refreshList}>问答</Link></li>
+                    <li><Link className={setClass.job} to={'/?tab=job'} onClick={this.refreshList}>招聘</Link></li>
+                </ul>
+                <ul className={'topic-list'}>
+                    {this.state.listData.map((item, index, list) => {
+                        if (listIdSet.has(item.id)) return null  //判断是否有重复项
+                        listIdSet.add(item.id)
 
-                    const activeClass = this.props.topic.id === item.id ? ' topic-item-active' : ''
+                        const activeClass = this.props.topic.id === item.id ? ' topic-item-active' : ''
 
-                    return (
-                        <li key={item.id} onClick={this.setTopicsScrollTop}>
-                            <Link className={'topic-item'} to={`/topic/${item.id}`}>
-                                <img className={'topic-item-avatar'} src={item.author.avatar_url} style={avatarStyle}/>
-                                <div className={'topic-item-content'}>
-                                    <h3 className={'topic-item-title' + activeClass}>{item.title}</h3>
-                                    <div className={'topic-item-detail'}>
+                        return (
+                            <li key={item.id} onClick={this.setTopicsScrollTop}>
+                                <Link className={'topic-item'} to={`/topic/${item.id}`}>
+                                    <img className={'topic-item-avatar'} src={item.author.avatar_url}
+                                         style={avatarStyle}/>
+                                    <div className={'topic-item-content'}>
+                                        <h3 className={'topic-item-title' + activeClass}>{item.title}</h3>
+                                        <div className={'topic-item-detail'}>
                                     <span className={'topic-item-tab topic-item-top'} style={{
                                         display: item.top ? 'inline' : 'none'
                                     }}><span className={'topic-item-topIcon'}>&#xe63d;</span>置顶</span>
-                                        <span className={'topic-item-tab'} style={{
-                                            display: item.top ? 'none' : 'inline'
-                                        }}>{transTab(item.tab)}</span>
-                                        <span>{item.author.loginname}</span>
-                                        <span>{this.props.getDuration(item.create_at)}</span>
-                                        <span className={'fright'}>{item.reply_count} / {item.visit_count}</span>
+                                            <span className={'topic-item-tab'} style={{
+                                                display: item.top ? 'none' : 'inline'
+                                            }}>{transTab(item.tab)}</span>
+                                            <span>{item.author.loginname}</span>
+                                            <span>{this.props.getDuration(item.create_at)}</span>
+                                            <span className={'fright'}>{item.reply_count} / {item.visit_count}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </Link>
-                        </li>
-                    )
-                })}
-                <li className={'topic-loading'}></li>
-            </ul>
+                                </Link>
+                            </li>
+                        )
+                    })}
+                    <li className={'topic-loading'}></li>
+                </ul>
+            </div>
         )
     }
 
     componentDidMount() {
-        window.onscroll = () => { //添加滚动加载列表事件
-            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;  //滚动高度
-            const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;  //可视区域高度（不包括滚动高度）
-            const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;  //元素总高度（可视高度与滚动高度）
-
-            if (Math.ceil(scrollTop) + Math.ceil(clientHeight) === Math.ceil(scrollHeight) && Math.ceil(scrollTop) !== 0) {  //滚动到底部时
-                this.loadList({tabParam: this.props.location.search, isNewTab: false})
-            }
-        }
+        window.addEventListener('scroll', this.loadNextList, false)
         document.documentElement.scrollTop = document.body.scrollTop = this.props.topicsList.scrollTop //设置历史滚动条高度
 
         if (this.props.topicsList.list.length === 0) {
@@ -188,7 +207,7 @@ class Topics extends Component {
     }
 
     componentWillUnmount() {
-        window.onscroll = null  //取消事件及其里面的异步任务，否则其它组件触发事件时会导致内存泄漏
+        window.removeEventListener('scroll', this.loadNextList, false)  //取消事件及其里面的异步任务，否则其它组件触发事件时会导致内存泄漏
     }
 }
 

@@ -18,7 +18,9 @@ export default class Main extends Component {
                         [].concat(this.props.topic.data.replies).reverse()
                         :
                         this.props.topic.data.replies
-                ) : []
+                ) : [],
+            topicReplyOrderClass: this.props.topic.topicReplyOrderClass,
+            topicReplyOrderHeight: this.props.topic.topicReplyOrderHeight
         }
         this.orderBtnClass = {
             early: '',
@@ -27,6 +29,8 @@ export default class Main extends Component {
 
         this.goBack = this.goBack.bind(this)
         this.beyondOrderReplyOnScroll = this.beyondOrderReplyOnScroll.bind(this)
+
+        window.addEventListener('scroll', this.beyondOrderReplyOnScroll, false)
     }
 
     goBack(event) {
@@ -34,9 +38,14 @@ export default class Main extends Component {
         this.props.history.goBack()
     }
 
-    checkUserReply(event, topicId) {
-        if (event.target.nodeName === 'A' && event.target.innerHTML.charAt(0) === '@') {
-            const name = event.target.innerHTML.substr(1)
+    checkLink(event, topicId) {
+        if (event.target.nodeName === 'A') {
+            if (event.target.innerHTML.charAt(0) === '@') {
+                const name = event.target.innerHTML.substr(1)
+                event.target.setAttribute('href', 'https://cnodejs.org/user/' + name)
+            }
+
+            event.target.setAttribute('target', '_blank')
         }
     }
 
@@ -51,38 +60,39 @@ export default class Main extends Component {
 
         const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;  //滚动高度
         if (scrollTop > this.replyOrderToTopHeight) {
-            if (this.state.topicReplyOrderHeight !== '0') return  //以值为是否设置为'0'来判断是否需要更新状态，避免重复更新
+            if (this.state.topicReplyOrderHeight !== '0') return  //避免重复触发更新
 
             this.props.dispatch({
                 type: 'LOAD_TOPIC',
                 payload: {
-                    beyondOrderReplyClass: ' topic-reply-order-beyond',
+                    topicReplyOrderClass: ' topic-reply-order-beyond',
                     topicReplyOrderHeight: topicReplyOrderHeight + 'px'
                 }
             })
 
             this.setState({
-                beyondOrderReplyClass: this.props.topic.beyondOrderReplyClass,
+                topicReplyOrderClass: this.props.topic.topicReplyOrderClass,
                 topicReplyOrderHeight: this.props.topic.topicReplyOrderHeight
             })
         } else {
-            if (this.state.topicReplyOrderHeight === '0') return
+            if (this.state.topicReplyOrderHeight === '0') return  //避免重复触发更新
 
             this.props.dispatch({
                 type: 'LOAD_TOPIC',
                 payload: {
-                    beyondOrderReplyClass: ' ',
+                    topicReplyOrderClass: ' ',
                     topicReplyOrderHeight: '0'
                 }
             })
 
             this.setState({
-                beyondOrderReplyClass: this.props.topic.beyondOrderReplyClass,
+                topicReplyOrderClass: this.props.topic.topicReplyOrderClass,
                 topicReplyOrderHeight: this.props.topic.topicReplyOrderHeight
             })
         }
 
         function getStyle(ele, style) {  //获取元素计算后的样式
+            if (!ele) return
             if (ele.currentStyle) {  // 兼容ie方法
                 return ele.currentStyle[style];
             } else {  // 兼容火狐、chome
@@ -116,6 +126,10 @@ export default class Main extends Component {
             this.setState({
                 replies: isReverse === 'true' ? [].concat(replies).reverse() : replies
             })
+
+            if (this.state.topicReplyOrderHeight !== '0') {
+                document.documentElement.scrollTop = document.body.scrollTop = this.replyOrderToTopHeight
+            }
         }
 
         return this.state.topic.data ?
@@ -134,28 +148,32 @@ export default class Main extends Component {
                             <span>回复：{data.reply_count}</span>
                             <span>阅读：{data.visit_count}</span>
                             <a className={'topic-collect fright'} href={'#'}>{
-                                data.is_collect ? '已收藏' : '未收藏'
+                                data.is_collect ? '已收藏' : '收藏'
                             }</a>
                             <span className={'fright'}>{this.props.getDuration(data.create_at)}</span>
                             <span className={'fright'}>{data.author.loginname}</span>
                         </div>
                     </div>
-                    <div className={'topic-content'} ref={el => this._topicContent = el}
+                    <div className={'topic-content'} ref={el => this._topicContent = el} onMouseOver={
+                        (event) => {
+                            this.checkLink(event)
+                        }}
                          dangerouslySetInnerHTML={createMarkup(data.content)}/>
                     <div className={'topic-reply-head'} ref={el => this._topicReplyHead = el}>
                         <span className={'topic-reply-outer'}>
                             {this.state.replies.length} 回复
                         </span>
                     </div>
-                    <div className={'topic-reply-order clear'}
-                         ref={el => this._topicReplyOrder = el}>
+                    <div className={'topic-reply-order clear' + this.state.topicReplyOrderClass}
+                         ref={el => this._topicReplyOrder = el}
+                         style={{display: !this.state.replies.length ? 'none' : ''}}>
                         <span className={orderBtnClass + this.orderBtnClass.new} onClick={() => {
                             setRepliesOrder.bind(this)(data.replies, 'true')
                         }}>最新</span>
                         <span className={orderBtnClass + this.orderBtnClass.early} onClick={() => {
                             setRepliesOrder.bind(this)(data.replies, 'false')
                         }}>最早</span>
-                        <span className={'topic-reply-order-title fright'}>排序：</span>
+                        <span className={'topic-reply-order-title fright'}>回复排序：</span>
                     </div>
                     {
                         this.state.replies ?
@@ -192,7 +210,7 @@ export default class Main extends Component {
                                                         </div>
                                                         <div className={'topic-reply-content topic-content'}
                                                              onMouseOver={(event) => {
-                                                                 this.checkUserReply(event, data.id)
+                                                                 this.checkLink(event, data.id)
                                                              }}
                                                              dangerouslySetInnerHTML={createMarkup(item.content)}/>
                                                         <div>
@@ -259,5 +277,6 @@ export default class Main extends Component {
                 scrollTop: scrollTop.toString(),  //记录历史滚动条高度
             }
         })
+        window.removeEventListener('scroll', this.beyondOrderReplyOnScroll, false)  //取消scroll事件
     }
 }
