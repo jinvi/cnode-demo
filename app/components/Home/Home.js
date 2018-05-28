@@ -131,7 +131,9 @@ class Topics extends Component {
 
         return (
             <ul className={'topic-list'}>
-                {this.state.listData.map((item) => {
+                {this.state.listData.map((item, index, list) => {
+                    if (list[index - 1] && list[index - 1].id === item.id) return null  //假如前一项和当前项相同则返回空
+
                     const activeClass = this.props.topic.id === item.id ? ' topic-item-active' : ''
 
                     return (
