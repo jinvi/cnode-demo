@@ -1,0 +1,22 @@
+/*
+  图标字体
+*/
+@font-face {  //图标项目更新时需同时更新该代码
+  font-family: 'iconfont';  /* project id 647982 */
+  src: url('//at.alicdn.com/t/font_647982_8mkbmr6nmj2fyldi.eot');
+  src: url('//at.alicdn.com/t/font_647982_8mkbmr6nmj2fyldi.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_647982_8mkbmr6nmj2fyldi.woff') format('woff'),
+  url('//at.alicdn.com/t/font_647982_8mkbmr6nmj2fyldi.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_647982_8mkbmr6nmj2fyldi.svg#iconfont') format('svg');
+}
+
+.G-icon-font(@size:12px;@color:''){
+  font-family: "iconfont" !important;
+  font-style: normal;
+  font-size: @size;
+
+  .color(@c) when(iscolor(@c)){
+    color: @c;
+  }
+  .color(@color)  //@color参数是默认值时（空字符串）不生效，当是颜色类型时生效
+}

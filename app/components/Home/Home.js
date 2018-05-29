@@ -102,12 +102,7 @@ class Topics extends Component {
     }
 
     refreshList() {
-        return console.log(111)
-        this.page = 0
-        this.setState({
-            listData: []
-        })
-        this.loadList({tabParam: this.props.location.search, isNewTab: false});
+        this.isRefreshList = true
     }
 
     setTopicsScrollTop() {
@@ -201,7 +196,15 @@ class Topics extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.location.search !== this.props.location.search) {
+            this.isRefreshList = false
             this.loadList({tabParam: nextProps.location.search, isNewTab: true});
+        } else if (this.isRefreshList) {
+            this.isRefreshList = false
+            this.page = 0
+            this.setState({
+                listData: []
+            })
+            this.loadList({tabParam: this.props.location.search, isNewTab: false});
         }
         return true
     }

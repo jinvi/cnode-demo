@@ -40,6 +40,10 @@
 .topic-title {
   padding-top: @T--topic-back--height;
 
+  a{
+    cursor: pointer;
+  }
+
   h3 {
     font-size: 28px;
     line-height: 36px;
@@ -48,7 +52,7 @@
 
   .topic-detail {
     .T-common-padding-left-right(15px; 15px;);
-    color: @G-color-text-gray;
+    color: @G-color-text-light;
     font-size: 12px;
     background-color: @G-color-text-bg;
 
@@ -57,8 +61,9 @@
     }
   }
 
-  .topic-collect {
-    color: @G-color-text-link2;
+  .active {
+    color: @G-color-text-blue2;
+    margin-right: 0;
   }
 }
 
@@ -70,7 +75,7 @@
   box-sizing: border-box;
 
   a {
-    color: @G-color-text-link;
+    color: @G-color-text-blue;
     //text-decoration: underline;
   }
 
@@ -128,35 +133,35 @@
   }
 }
 
-.topic-reply-order{
-  .T-common-padding-left-right(10px;15px;);
+.topic-reply-order {
+  .T-common-padding-left-right(10px; 15px;);
   font-size: 12px;
-  color: @G-color-text-gray;
+  color: @G-color-text-light;
   border-bottom: 1px solid @G-color-divide-line;
   box-sizing: border-box;
   background-color: #ffffff;
 
-  .active{
+  .active {
     color: @G-color-standard;
     border-bottom: 2px solid @G-color-standard;
     font-weight: bold;
   }
 
-  .topic-reply-order-btn{
+  .topic-reply-order-btn {
     margin-left: 5px;
     cursor: pointer;
   }
 
-  .topic-reply-order-title{
+  .topic-reply-order-title {
     margin-right: -5px;
   }
 
-  span{
+  span {
     padding: 5px;
   }
 }
 
-.topic-reply-order-beyond{
+.topic-reply-order-beyond {
   width: 100%;
   position: fixed;
   z-index: @G-z-index;
@@ -168,7 +173,7 @@
   .T-common-padding-left-right(0; 30px;);
 
   a {
-    color: @G-color-text-link;
+    color: @G-color-text-blue;
   }
 
   li {
@@ -194,7 +199,6 @@
     margin: 10px 0 10px 0;
   }
 
-  @detail-color: @G-color-text-gray;
   @margin-right: 8px;
 
   .topic-reply-username {
@@ -203,7 +207,7 @@
   }
 
   .topic-reply-duration {
-    color: @detail-color;
+    color: @G-color-text-gray;
     margin-right: @margin-right;
     font-size: 12px;
   }
@@ -216,7 +220,7 @@
       margin-right: 0;
     }
 
-    p{
+    p {
       margin-bottom: 0;
     }
 
@@ -226,7 +230,7 @@
   }
 
   .topic-reply-up {
-    color: @detail-color;
+    color: @G-color-text-gray;
     cursor: pointer;
   }
 
@@ -235,15 +239,19 @@
     margin-right: 1px;
   }
 
-  .topic-reply-reply{
-    .G-icon-font(22px;@detail-color);
+  .topic-reply-up-active {
+    color: @G-color-text-light;
+  }
+
+  .topic-reply-reply {
+    .G-icon-font(22px; @G-color-text-gray);
     text-align: right;
     margin-bottom: 10px;
     cursor: pointer;
   }
 
   .topic-reply-num, .topic-reply-num-active {
-    color: @detail-color;
+    color: @G-color-text-gray;
     background-color: @G-color-text-bg;
     padding: 2px 6px;
     border-radius: @G-btn-border-radius;
@@ -251,7 +259,7 @@
   }
 
   .topic-reply-num-active {
-    background-color: lighten(@G-color-text-link2, 15%);
+    background-color: @G-color-text-blue2;
     color: #ffffff;
   }
 }

@@ -18,8 +18,8 @@ function topic(state = {
     data: null,
     scrollTop: 0,
     isReverseReplies: 'false',  //判断问题必须为字符串
-    topicReplyOrderClass: ' ',  //判断问题必须空格字符串
-    topicReplyOrderHeight: '0'  //判断问题必须为字符串
+    replyOrderClass: ' ',  //判断问题必须空格字符串
+    replyOrderHeight: '0'  //判断问题必须为字符串
 }, action) {
     switch (action.type) {
         case 'LOAD_TOPIC':
@@ -28,8 +28,8 @@ function topic(state = {
                 data: action.payload.data || state.data,
                 scrollTop: action.payload.scrollTop || state.scrollTop,
                 isReverseReplies: action.payload.isReverseReplies || state.isReverseReplies,
-                topicReplyOrderClass: action.payload.topicReplyOrderClass || state.topicReplyOrderClass,
-                topicReplyOrderHeight: action.payload.topicReplyOrderHeight || state.topicReplyOrderHeight
+                replyOrderClass: action.payload.replyOrderClass || state.replyOrderClass,
+                replyOrderHeight: action.payload.replyOrderHeight || state.replyOrderHeight
             }
     }
 
