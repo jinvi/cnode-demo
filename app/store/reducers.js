@@ -1,15 +1,17 @@
 import {combineReducers} from "redux";
+import extend from 'extend'
 
 function topicsList(state = {list: [], page: 0, scrollTop: 0}, action) {
+    state = extend(true, {}, state)
     switch (action.type) {
-        case 'LOAD_TOPICS':
-            return {
-                list: action.payload.list || state.list,
-                page: action.payload.page || state.page,
-                scrollTop: action.payload.scrollTop || state.scrollTop
-            }
+        case 'SET_TOPICS_LIST':
+            state.list = action.payload.list
+            state.page = action.payload.page
+            break
+        case 'SET_TOPICS_SCROLL_TOP':
+            state.scrollTop = action.payload.scrollTop
+            break
     }
-
     return state
 }
 
@@ -17,22 +19,46 @@ function topic(state = {
     id: '',
     data: null,
     scrollTop: 0,
-    isReverseReplies: 'false',  //判断问题必须为字符串
-    replyOrderClass: ' ',  //判断问题必须空格字符串
-    replyOrderHeight: '0'  //判断问题必须为字符串
+    isReverseReplies: false,
+    replyOrderClass: '',
+    replyOrderHeight: 0
 }, action) {
+    state = extend(true, {}, state)
     switch (action.type) {
-        case 'LOAD_TOPIC':
-            return {
-                id: action.payload.id || state.id,
-                data: action.payload.data || state.data,
-                scrollTop: action.payload.scrollTop || state.scrollTop,
-                isReverseReplies: action.payload.isReverseReplies || state.isReverseReplies,
-                replyOrderClass: action.payload.replyOrderClass || state.replyOrderClass,
-                replyOrderHeight: action.payload.replyOrderHeight || state.replyOrderHeight
-            }
+        case 'SET_TOPIC_REPLY_ORDER':
+            state.replyOrderClass = action.payload.replyOrderClass
+            state.replyOrderHeight = action.payload.replyOrderHeight
+            break
+        case 'SET_REPLIES_IS_Reverse':
+            state.isReverseReplies = action.payload.isReverseReplies
+            break
+        case 'SET_TOPIC_INIT':
+            state.isReverseReplies = action.payload.isReverseReplies
+            state.id = action.payload.id
+            state.data = action.payload.data
+            break
+        case 'SET_TOPIC_SCROLL_TOP':
+            state.scrollTop = action.payload.scrollTop
+            break
     }
+    return state
+}
 
+function login(state = {
+    accessToken: '',
+    loginName: '',
+    avatar_url: '',
+    id: ''
+}, action) {
+    state = extend(true, {}, state)
+    switch (action.type) {
+        case 'SET_ACCESS_TOKEN':
+            state.accessToken = action.payload.accessToken
+            break
+        case 'SET_ID':
+            state.id = action.payload.id
+            break
+    }
     return state
 }
 
@@ -65,5 +91,6 @@ function utils(state = {
 export default combineReducers({
     topicsList,
     topic,
-    utils
+    utils,
+    login
 })

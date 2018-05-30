@@ -81,8 +81,8 @@ class ReplyOrder extends Component {
     render() {
         let orderBtnClass = 'topic-reply-order-btn fright';
         this.orderBtnClass = {  //设置激活排序按钮
-            early: this.props.topic.isReverseReplies === 'false' ? ' active' : '',
-            new: this.props.topic.isReverseReplies === 'true' ? ' active' : '',
+            early: !this.props.topic.isReverseReplies ? ' active' : '',
+            new: this.props.topic.isReverseReplies ? ' active' : '',
         }
 
         return (
@@ -113,7 +113,7 @@ class Replies extends Component {
                                             replyNumContent = '作者'
                                             replyNumClass = 'topic-reply-num-active'
                                         } else {
-                                            replyNumContent = this.props.topic.isReverseReplies === 'false' ?
+                                            replyNumContent = !this.props.topic.isReverseReplies ?
                                                 index + 1 + '楼' :
                                                 this.props.replies.length - index + '楼'
                                             replyNumClass = 'topic-reply-num'
@@ -170,7 +170,7 @@ export default class Main extends Component {
             },
             replies: this.props.topic.data ?
                 (
-                    this.props.topic.isReverseReplies === 'true' ?
+                    this.props.topic.isReverseReplies ?
                         [].concat(this.props.topic.data.replies).reverse()
                         :
                         this.props.topic.data.replies
@@ -229,10 +229,10 @@ export default class Main extends Component {
 
         const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;  //滚动高度
         if (scrollTop > replyToTopHeight) {
-            if (this.state.replyOrderHeight !== '0') return  //避免重复触发更新
+            if (this.state.replyOrderHeight) return  //避免重复触发更新
 
             this.props.dispatch({
-                type: 'LOAD_TOPIC',
+                type: 'SET_TOPIC_REPLY_ORDER',
                 payload: {
                     replyOrderClass: ' topic-reply-order-beyond',
                     replyOrderHeight: topicReplyOrderHeight + 'px'
@@ -244,13 +244,13 @@ export default class Main extends Component {
                 replyOrderHeight: this.props.topic.replyOrderHeight
             })
         } else {
-            if (this.state.replyOrderHeight === '0') return  //避免重复触发更新
+            if (!this.state.replyOrderHeight) return  //避免重复触发更新
 
             this.props.dispatch({
-                type: 'LOAD_TOPIC',
+                type: 'SET_TOPIC_REPLY_ORDER',
                 payload: {
-                    replyOrderClass: ' ',
-                    replyOrderHeight: '0'
+                    replyOrderClass: '',
+                    replyOrderHeight: 0
                 }
             })
 
@@ -276,21 +276,22 @@ export default class Main extends Component {
 
     render() {
         const data = this.state.topic.data
+
         // console.log(data)
 
         function setRepliesOrder(replies, isReverse) {  //不能作为组件方法，只能作为函数
             this.props.dispatch({
-                type: 'LOAD_TOPIC',
+                type: 'SET_REPLIES_IS_Reverse',
                 payload: {
-                    isReverseReplies: isReverse  //因reducer判断问题，不能设置为布尔值做判断
+                    isReverseReplies: isReverse
                 }
             })
 
             this.setState({
-                replies: isReverse === 'true' ? [].concat(replies).reverse() : replies
+                replies: isReverse ? [].concat(replies).reverse() : replies
             })
 
-            if (this.state.replyOrderHeight !== '0') {
+            if (this.state.replyOrderHeight) {
                 document.documentElement.scrollTop = document.body.scrollTop = this.getReplyToTopHeight()
             }
         }
@@ -309,10 +310,10 @@ export default class Main extends Component {
                                 _topicReplyOrder={el => this._topicReplyOrder = el}
                                 repliesLen={this.state.replies.length}
                                 setOrderTrue={() => {
-                                    setRepliesOrder.bind(this)(data.replies, 'true')
+                                    setRepliesOrder.bind(this)(data.replies, true)
                                 }}
                                 setOrderFalse={() => {
-                                    setRepliesOrder.bind(this)(data.replies, 'false')
+                                    setRepliesOrder.bind(this)(data.replies, false)
                                 }}/>
                     <Replies {...this.props} replies={this.state.replies} replyOrderHeight={this.state.replyOrderHeight}
                              checkLink={this.checkLink} data={data} createMarkup={this.createMarkup}/>
@@ -339,11 +340,11 @@ export default class Main extends Component {
                 url: `/topic/${currentId}`,
                 success: (res) => {
                     this.props.dispatch({
-                        type: 'LOAD_TOPIC',
+                        type: 'SET_TOPIC_INIT',
                         payload: {
                             id: res.data.id,
                             data: res.data,
-                            isReverseReplies: 'false'  //初始化排序
+                            isReverseReplies: false  //初始化排序
                         }
                     })
 
@@ -362,9 +363,9 @@ export default class Main extends Component {
     componentWillUnmount() {
         const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
         this.props.dispatch({
-            type: 'LOAD_TOPIC',
+            type: 'SET_TOPIC_SCROLL_TOP',
             payload: {
-                scrollTop: scrollTop.toString(),  //记录历史滚动条高度
+                scrollTop: scrollTop,  //记录历史滚动条高度
             }
         })
         window.removeEventListener('scroll', this.setBeyondReplyClass, false)  //取消scroll事件

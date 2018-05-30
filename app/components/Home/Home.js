@@ -14,6 +14,8 @@ class Head extends Component {
     }
 
     render() {
+        const accessToken = localStorage.getItem("ACCESS_TOKEN")
+
         return (
             <div className={'head'}>
                 <div className={'top clear'} onClick={this.props.toTop}>
@@ -22,14 +24,14 @@ class Head extends Component {
                         <span className={'top-commentary'}>个人演示版</span>
                     </h2>
                     {
-                        this.state.isLogin ?
+                        accessToken ?
                             <span className={'top-loginState fright'}>
                                 <Link to={'/user'}>
                                     {this.state.userName}
                                 </Link>
                             </span>
                             :
-                            <Link className={'top-loginBtn fright'} to={'/login'} onClick={(event) => {
+                            <Link className={'top-loginBtn fright'} to={'/'} onClick={(event) => {
                                 event.stopPropagation()
                             }}>登录</Link>
                     }
@@ -78,7 +80,7 @@ class Topics extends Component {
             url: `/topics?${queryParams}`,
             success: (res) => {
                 this.props.dispatch({
-                    type: 'LOAD_TOPICS',
+                    type: 'SET_TOPICS_LIST',
                     payload: {
                         list: isNewTab ? res.data : this.state.listData.concat(res.data),
                         page: this.page
@@ -107,7 +109,7 @@ class Topics extends Component {
 
     setTopicsScrollTop() {
         this.props.dispatch({
-            type: 'LOAD_TOPICS',
+            type: 'SET_TOPICS_SCROLL_TOP',
             payload: {
                 scrollTop: document.documentElement.scrollTop || document.body.scrollTop
             }
