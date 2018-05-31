@@ -28,8 +28,8 @@ function response(response) {
 }
 
 //返回JSON格式数据
-function fetchJSON({url, success}) {
-    fetch(preUrl + url)
+function fetchJSON({url, success, req}) {
+    fetch(preUrl + url, req)
         .then(validateResponse)
         .then(readResponseAsJSON)
         .then(success)

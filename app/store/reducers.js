@@ -52,11 +52,11 @@ function login(state = {
 }, action) {
     state = extend(true, {}, state)
     switch (action.type) {
-        case 'SET_ACCESS_TOKEN':
+        case 'SET_USER':
             state.accessToken = action.payload.accessToken
-            break
-        case 'SET_ID':
+            state.loginName = action.payload.loginName
             state.id = action.payload.id
+            state.avatar_url = action.payload.avatar_url
             break
     }
     return state

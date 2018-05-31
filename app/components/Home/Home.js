@@ -6,16 +6,9 @@ import {fetchJSON} from '../../utils/fetch'
 class Head extends Component {
     constructor(props) {
         super(props)
-
-        this.state = {
-            isLogin: false,
-            userName: 'userName'
-        }
     }
 
     render() {
-        const accessToken = localStorage.getItem("ACCESS_TOKEN")
-
         return (
             <div className={'head'}>
                 <div className={'top clear'} onClick={this.props.toTop}>
@@ -24,20 +17,47 @@ class Head extends Component {
                         <span className={'top-commentary'}>个人演示版</span>
                     </h2>
                     {
-                        accessToken ?
+                        this.props.login.loginName ?
                             <span className={'top-loginState fright'}>
                                 <Link to={'/user'}>
-                                    {this.state.userName}
+                                    {this.props.login.loginName}
                                 </Link>
                             </span>
                             :
-                            <Link className={'top-loginBtn fright'} to={'/'} onClick={(event) => {
+                            <Link className={'top-loginBtn fright'} to={'/login'} onClick={(event) => {
                                 event.stopPropagation()
                             }}>登录</Link>
                     }
                 </div>
             </div>
         )
+    }
+
+    componentWillMount() {
+        const accessToken = localStorage.getItem("ACCESS_TOKEN")
+        if (accessToken) {
+            fetchJSON({
+                url: '/accesstoken',
+                req: {
+                    method: 'post',
+                    body: `accesstoken=${accessToken}`,
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    }
+                },
+                success: (res) => {
+                    this.props.dispatch({
+                        type: 'SET_USER',
+                        payload: {
+                            id: res.id,
+                            loginName: res.loginname,
+                            accessToken: accessToken,
+                            avatar_url: res.avatar_url
+                        }
+                    })
+                }
+            })
+        }
     }
 }
 
