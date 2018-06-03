@@ -17,7 +17,7 @@ export default class Main extends Component {
             (
                 <div className={'login-container'}>
                     <div className={'login'}>
-                        <div className={'login-title'}>Access Token 登录</div>
+                        <div className={'login-title'}>用户登录</div>
                         <form>
                             <div>
                                 <input className={'login-text' + _this.state.isActive} placeholder={'Access Token'}
