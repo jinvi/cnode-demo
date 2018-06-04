@@ -45,20 +45,16 @@ function topic(state = {
 }
 
 function login(state = {
-    accessToken: '',
-    loginName: '',
-    avatar_url: '',
-    id: ''
+    localStorageKey: 'LOGIN',
+    success: false
 }, action) {
     state = extend(true, {}, state)
     switch (action.type) {
-        case 'SET_USER':
-            state.accessToken = action.payload.accessToken
-            state.loginName = action.payload.loginName
-            state.id = action.payload.id
-            state.avatar_url = action.payload.avatar_url
+        case 'SET_LOGIN_SUCCESS':
+            state.success = action.payload
             break
     }
+
     return state
 }
 

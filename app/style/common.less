@@ -1,0 +1,32 @@
+.common-loading{
+  background: url("../assets/loading.gif");
+  width: 100px;
+  height: 20px;
+  position: absolute;
+  left: 50%;
+  top:50%;
+  margin: -10px 0 0 -50px;
+}
+
+.common-back-container {
+  .hei {
+    height: @G-back-height;
+  }
+}
+
+.common-back {
+  line-height: @G-back-height;
+  position: fixed;
+  width: 100%;
+  z-index: @G-z-index;
+  background-color: #ffffff;
+
+  .common-back-btn {
+    cursor: pointer;
+    margin-left: 12px;
+  }
+
+  .common-back-icon-font {
+    .G-icon-font(24px; @G-color-nav);
+  }
+}

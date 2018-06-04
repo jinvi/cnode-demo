@@ -9,6 +9,11 @@ class Head extends Component {
     }
 
     render() {
+        let loginData;
+        if (localStorage.getItem(this.props.login.localStorageKey)) {
+            loginData = JSON.parse(localStorage.getItem(this.props.login.localStorageKey))
+        }
+
         return (
             <div className={'head'}>
                 <div className={'top clear'} onClick={this.props.toTop}>
@@ -17,10 +22,11 @@ class Head extends Component {
                         <span className={'top-commentary'}>个人演示版</span>
                     </h2>
                     {
-                        this.props.login.loginName ?
-                            <span className={'top-loginState fright'}>
-                                <Link to={'/user'}>
-                                    {this.props.login.loginName}
+                        loginData ?
+                            <span className={'top-loginState fright clear'}>
+                                <img className={'fleft'} src={loginData.avatar_url}/>
+                                <Link className={'fleft'} to={'/user'}>
+                                    {loginData.loginName}
                                 </Link>
                             </span>
                             :
@@ -34,8 +40,10 @@ class Head extends Component {
     }
 
     componentWillMount() {
-        const accessToken = localStorage.getItem("ACCESS_TOKEN")
-        if (accessToken) {
+        const localStorageKey = this.props.login.localStorageKey
+        const accessToken = localStorage.getItem(localStorageKey) && JSON.parse(localStorage.getItem(localStorageKey)).accessToken
+
+        if (!this.props.login.success && accessToken) {  //初始校验token，其他地方不校验
             fetchJSON({
                 url: '/accesstoken',
                 req: {
@@ -47,14 +55,12 @@ class Head extends Component {
                 },
                 success: (res) => {
                     this.props.dispatch({
-                        type: 'SET_USER',
-                        payload: {
-                            id: res.id,
-                            loginName: res.loginname,
-                            accessToken: accessToken,
-                            avatar_url: res.avatar_url
-                        }
+                        type: 'SET_LOGIN_SUCCESS',
+                        payload: true
                     })
+                },
+                fail: () => {
+                    localStorage.removeItem(localStorageKey)
                 }
             })
         }
@@ -238,6 +244,7 @@ class Topics extends Component {
 
 class Nav extends Component {
     render() {
+        const login = localStorage.getItem(this.props.login.localStorageKey)
         return (
             <ul className={'nav'}>
                 <li>
@@ -245,11 +252,11 @@ class Nav extends Component {
                         className={'nav-icon-font'}>&#xe644;</span>首页</NavLink>
                 </li>
                 <li>
-                    <NavLink to={'/create'} activeClassName={'nav-active'}><span
+                    <NavLink to={login ? '/create' : '/login'} activeClassName={'nav-active'}><span
                         className={'nav-icon-font'}>&#xe721;</span>新建</NavLink>
                 </li>
                 <li>
-                    <NavLink to={'/user'} activeClassName={'nav-active'}><span
+                    <NavLink to={login ? '/user' : '/login'} activeClassName={'nav-active'}><span
                         className={'nav-icon-font'}>&#xe61f;</span>我的</NavLink>
                 </li>
             </ul>
@@ -263,7 +270,7 @@ export default class Main extends Component {
             <div>
                 <Head {...this.props}/>
                 <Topics {...this.props}/>
-                <Nav/>
+                <Nav {...this.props}/>
             </div>
         )
     }

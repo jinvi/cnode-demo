@@ -2,31 +2,7 @@ import React, {Component} from "react";
 import {Link} from 'react-router-dom';
 import {fetchJSON} from '../../utils/fetch'
 import Loading from '../common/loading'
-
-class Back extends Component {
-    constructor(props) {
-        super(props)
-
-        this.goBack = this.goBack.bind(this)
-    }
-
-    goBack(event) {
-        event.stopPropagation()
-        this.props.history.goBack()
-    }
-
-    render() {
-        return (
-            <div className={'topic-back clear'} onClick={this.props.toTop} ref={this.props._topicBack}>
-                        <span className={'topic-back-btn topic-back-icon-font'}
-                              onClick={this.goBack}>&#xe647;</span>
-                <a href={'#'} className={'topic-reply-btn fright'} onClick={(event) => {
-                    event.stopPropagation()
-                }}>回复</a>
-            </div>
-        )
-    }
-}
+import Back from '../common/back'
 
 class Detail extends Component {
     render() {
@@ -150,7 +126,6 @@ class Replies extends Component {
                                 }
                             </ul>
                         )
-
                         :
                         null
                 }
@@ -299,7 +274,11 @@ export default class Main extends Component {
         return this.state.topic.data ?
             (
                 <div>
-                    <Back {...this.props} _topicBack={el => this._topicBack = el}/>
+                    <Back _commonBack={el => this._topicBack = el}>
+                        <a href={'#'} className={'topic-reply-btn fright'} onClick={(event) => {
+                            event.stopPropagation()
+                        }}>回复</a>
+                    </Back>
                     <Detail {...this.props} _topicTitle={el => this._topicTitle = el} data={data}
                             getReplyToTopHeight={this.getReplyToTopHeight}/>
                     <Content _topicContent={el => this._topicContent = el} checkLink={this.checkLink}

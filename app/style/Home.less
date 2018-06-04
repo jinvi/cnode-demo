@@ -54,12 +54,15 @@
   .top-loginState {
     @height: 20px;
     display: inline-block;
-    background-color: red;
-    background: url('../assets/user.gif') no-repeat left center;
-    text-indent: 24px;
     height: @height;
     line-height: @height;
     margin-top: @login-state-margin-top;
+
+    img {
+      height: @height;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
 
     a {
       .link-color(#ffffff)
@@ -183,7 +186,7 @@
   }
 
   .topic-item-top {
-    background-color: @G-color-text-blue2;
+    background-color: @G-color-text-blue;
     color: #ffffff;
     position: relative;
     padding-right: 22px;

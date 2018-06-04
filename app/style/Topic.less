@@ -1,4 +1,3 @@
-@T--topic-back--height: 52px;
 @T-line-height: 26px;
 
 .T-common-padding-left-right(@padding-top:0px;@padding-bottom:0px) {
@@ -6,41 +5,21 @@
   padding: @padding-top @padding-left-right @padding-bottom @padding-left-right;
 }
 
-.topic-back {
-  height: @T--topic-back--height;
-  line-height: @T--topic-back--height;
-  position: fixed;
-  width: 100%;
-  z-index: @G-z-index;
-  background-color: #ffffff;
-
-  .topic-back-btn {
-    cursor: pointer;
-    margin-left: 12px;
-  }
-
-  .topic-back-icon-font {
-    .G-icon-font(24px; @G-color-nav);
-  }
-
-  .topic-reply-btn {
-    margin: 14px 18px 0 0;
-    display: block;
-    width: 86px;
-    @height: 26px;
-    height: @height;
-    line-height: @height;
-    text-align: center;
-    border-radius: @G-btn-border-radius;
-    background-color: @G-color-standard;
-    color: #ffffff;
-  }
+.topic-reply-btn {
+  margin: 14px 18px 0 0;
+  display: block;
+  width: 86px;
+  @height: 26px;
+  height: @height;
+  line-height: @height;
+  text-align: center;
+  border-radius: @G-btn-border-radius;
+  background-color: @G-color-standard;
+  color: #ffffff;
 }
 
 .topic-title {
-  padding-top: @T--topic-back--height;
-
-  a{
+  a {
     cursor: pointer;
   }
 
@@ -62,7 +41,7 @@
   }
 
   .active {
-    color: @G-color-text-blue2;
+    color: @G-color-text-blue;
     margin-right: 0;
   }
 }
@@ -75,7 +54,7 @@
   box-sizing: border-box;
 
   a {
-    color: @G-color-text-blue;
+    color: @G-color-text-link;
     //text-decoration: underline;
   }
 
@@ -165,7 +144,7 @@
   width: 100%;
   position: fixed;
   z-index: @G-z-index;
-  top: @T--topic-back--height;
+  top: @G-back-height;
   left: 0;
 }
 
@@ -173,14 +152,14 @@
   .T-common-padding-left-right(0; 30px;);
 
   a {
-    color: @G-color-text-blue;
+    color: @G-color-text-link;
   }
 
   li {
     list-style: none;
     display: flex;
     border-bottom: 1px solid @G-color-divide-line;
-    padding-top: 15px;
+    padding-top: 10px;
   }
 
   .topic-reply-avatar {
@@ -246,7 +225,7 @@
   .topic-reply-reply {
     .G-icon-font(22px; @G-color-text-gray);
     text-align: right;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     cursor: pointer;
   }
 
@@ -259,7 +238,7 @@
   }
 
   .topic-reply-num-active {
-    background-color: @G-color-text-blue2;
+    background-color: @G-color-text-blue;
     color: #ffffff;
   }
 }

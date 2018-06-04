@@ -28,12 +28,12 @@ function response(response) {
 }
 
 //返回JSON格式数据
-function fetchJSON({url, success, req}) {
+function fetchJSON({url, success, req, fail}) {
     fetch(preUrl + url, req)
         .then(validateResponse)
         .then(readResponseAsJSON)
         .then(success)
-        .catch(logError);
+        .catch(fail ? fail : logError);
 }
 
 //返回文本格式数据
