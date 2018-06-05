@@ -1,34 +1,30 @@
 import React, {Component} from "react";
 
 export default class Main extends Component {
-    setBodyOverflow(value) {
-        function setStyle(el, option) { //设置样式
-            for (var attr in option) {
-                el.style[attr] = option[attr];
-            }
-        }
-        setStyle(document.body, {
-            overflow: value
-        })
-    }
-
     render() {
         return (
             <div className={'reply-bg'} onClick={() => {
                 history.back(-1)
             }}>
-                <div className={'reply-box'}>
-                    reply
+                <div className={'reply-box'} onClick={(e) => {
+                    e.stopPropagation()
+                }}>
+                    <div className={'reply-title'}>发表评论</div>
+                    <form>
+                        <textarea className={'reply-content'} type={'text'}/>
+                        <button className={'reply-btn'}>发表</button>
+                    </form>
+                    <span className={'reply-close'}></span>
                 </div>
             </div>
         )
     }
 
     componentDidMount() {
-        this.setBodyOverflow('hidden')
+        document.body.style.overflow = 'hidden'
     }
 
     componentWillUnmount() {
-        this.setBodyOverflow('auto')
+        document.body.style = ''
     }
 }
