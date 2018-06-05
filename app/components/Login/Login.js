@@ -33,10 +33,10 @@ export default class Main extends Component {
                 }
             },
             success: res => {
-                const login = {
-                    id: res.id,
-                    loginName: res.loginname,
+                const loginData = {
                     accessToken: accessToken,
+                    loginName: res.loginname,
+                    id: res.id,
                     avatar_url: res.avatar_url
                 }
 
@@ -45,11 +45,11 @@ export default class Main extends Component {
                     payload: true
                 })
 
-                localStorage.setItem(this.props.localStorageKey, JSON.stringify(login))
+                localStorage.setItem(this.props.localStorageKey, JSON.stringify(loginData))
                 history.back(-1)
             },
             fail: reson => {
-                alert('Access Token不正确。')
+                alert('登录失败，请重新尝试。')
             }
         })
     }
@@ -61,9 +61,10 @@ export default class Main extends Component {
                 <div className={'login-container'}>
                     <div className={'login'}>
                         <div className={'login-title'}>用户登录</div>
+                        <div className={'login-title-decoration'}></div>
                         <form>
                             <div>
-                                <input className={'login-text' + this.state.isActive} placeholder={'输入Access Token'}
+                                <input className={'login-text' + this.state.isActive} placeholder={'Access Token'}
                                        type={'text'}
                                        onFocus={() => {
                                            this.setActiveClass(' active')

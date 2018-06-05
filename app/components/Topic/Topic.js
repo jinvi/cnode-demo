@@ -1,8 +1,10 @@
 import React, {Component} from "react";
-import {Link} from 'react-router-dom';
+import {Link, Route} from 'react-router-dom';
 import {fetchJSON} from '../../utils/fetch'
 import Loading from '../common/loading'
 import Back from '../common/back'
+import Reply from '../Reply'
+import Home from "../Home";
 
 class Detail extends Component {
     render() {
@@ -151,7 +153,8 @@ export default class Main extends Component {
                         this.props.topic.data.replies
                 ) : [],
             replyOrderClass: this.props.topic.replyOrderClass,
-            replyOrderHeight: this.props.topic.replyOrderHeight
+            replyOrderHeight: this.props.topic.replyOrderHeight,
+            isLoadFail: false
         }
         this.orderBtnClass = {
             early: '',
@@ -251,8 +254,7 @@ export default class Main extends Component {
 
     render() {
         const data = this.state.topic.data
-
-        // console.log(data)
+        const loginData = localStorage.getItem(this.props.login.localStorageKey)
 
         function setRepliesOrder(replies, isReverse) {  //不能作为组件方法，只能作为函数
             this.props.dispatch({
@@ -274,10 +276,13 @@ export default class Main extends Component {
         return this.state.topic.data ?
             (
                 <div>
+                    <Route path={'/topic/:id/replies'} component={Reply}/>
                     <Back _commonBack={el => this._topicBack = el}>
-                        <a href={'#'} className={'topic-reply-btn fright'} onClick={(event) => {
-                            event.stopPropagation()
-                        }}>回复</a>
+                        <Link to={loginData ? `${this.props.location.pathname}/replies` : '/login'}
+                              className={'topic-reply-btn fright'}
+                              onClick={(event) => {
+                                  event.stopPropagation()
+                              }}>回复</Link>
                     </Back>
                     <Detail {...this.props} _topicTitle={el => this._topicTitle = el} data={data}
                             getReplyToTopHeight={this.getReplyToTopHeight}/>
@@ -299,7 +304,7 @@ export default class Main extends Component {
                 </div>
             )
             :
-            <Loading/>
+            <Loading isLoadFail={this.state.isLoadFail}/>
     }
 
     componentDidMount() {
@@ -332,7 +337,13 @@ export default class Main extends Component {
                             data: this.props.topic.data,
                             id: this.props.topic.id
                         },
-                        replies: this.props.topic.data.replies
+                        replies: this.props.topic.data.replies,
+                        isLoadFail: false
+                    })
+                },
+                fail: () => {
+                    this.setState({
+                        isLoadFail: true
                     })
                 }
             })

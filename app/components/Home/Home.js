@@ -72,7 +72,8 @@ class Topics extends Component {
         super(props)
 
         this.state = {
-            listData: this.props.topicsList.list  //列表数据在store里
+            listData: this.props.topicsList.list,  //列表数据在store里
+            isLoadFail: false
         }
 
         this.page = this.props.topicsList.page  //列表页数
@@ -113,7 +114,13 @@ class Topics extends Component {
                     }
                 })
                 this.setState({
-                    listData: this.props.topicsList.list
+                    listData: this.props.topicsList.list,
+                    isLoadFail: false
+                })
+            },
+            fail: () => {
+                this.setState({
+                    isLoadFail: true
                 })
             }
         })
@@ -165,6 +172,8 @@ class Topics extends Component {
                     return '招聘'
                 case 'good':
                     return '精华'
+                case 'dev':
+                    return '测试'
             }
         }
 
@@ -176,6 +185,7 @@ class Topics extends Component {
                     <li><Link className={setClass.share} to={'/?tab=share'} onClick={this.refreshList}>分享</Link></li>
                     <li><Link className={setClass.ask} to={'/?tab=ask'} onClick={this.refreshList}>问答</Link></li>
                     <li><Link className={setClass.job} to={'/?tab=job'} onClick={this.refreshList}>招聘</Link></li>
+                    <li><Link className={setClass.dev} to={'/?tab=dev'} onClick={this.refreshList}>测试</Link></li>
                 </ul>
                 <ul className={'topic-list'}>
                     {this.state.listData.map((item, index, list) => {
@@ -207,7 +217,13 @@ class Topics extends Component {
                             </li>
                         )
                     })}
-                    <li className={'topic-loading'}></li>
+                    {
+                        !this.state.isLoadFail ?
+                            <li className={'topic-loading'}></li>
+                            :
+                            <li className={'topic-loadFail'}>无法获取数据...</li>
+                    }
+
                 </ul>
             </div>
         )

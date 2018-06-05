@@ -4,16 +4,12 @@ import {connect} from "react-redux"
 import Loading from '../common/loading'
 
 const LoadComponent = Loadable({
-    loader: () => import('./Topic'),
+    loader: () => import('./Reply'),
     loading: Loading
 })
 
 const mapStateToProps = state => {
     return {
-        getDuration: state.utils.getDuration,
-        toTop: state.utils.toTop,
-        topic: state.topic,
-        login: state.login
     }
 }
 
