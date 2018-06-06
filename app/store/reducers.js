@@ -21,7 +21,11 @@ function topic(state = {
     scrollTop: 0,
     isReverseReplies: false,
     replyOrderClass: '',
-    replyOrderHeight: 0
+    replyOrderHeight: 0,
+    replyComment: {
+        reply_id: '',
+        author: ''
+    }
 }, action) {
     state = extend(true, {}, state)
     switch (action.type) {
@@ -39,6 +43,9 @@ function topic(state = {
             break
         case 'SET_TOPIC_SCROLL_TOP':
             state.scrollTop = action.payload.scrollTop
+            break
+        case 'SET_REPLY_COMMENT':
+            state.replyComment = action.payload
             break
     }
     return state

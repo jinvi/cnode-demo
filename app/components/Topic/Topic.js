@@ -1,140 +1,15 @@
 import React, {Component} from "react";
-import {Link, Route} from 'react-router-dom';
+import {Link, Route, Redirect} from 'react-router-dom';
 import {fetchJSON} from '../../utils/fetch'
+
 import Loading from '../common/loading'
 import Back from '../common/back'
 import Reply from '../Reply'
-import Home from "../Home";
-
-class Detail extends Component {
-    render() {
-        return (
-            <div className={'topic-title'} ref={this.props._topicTitle}>
-                <h3>{this.props.data.title}</h3>
-                <div className={'topic-detail clear'}>
-                    <span>回复：
-                        {this.props.data.reply_count ?
-                            <a className={'active'} onClick={() => {
-                                document.documentElement.scrollTop = document.body.scrollTop = this.props.getReplyToTopHeight()
-                            }}>{this.props.data.reply_count}</a>
-                            :
-                            this.props.data.reply_count
-                        }
-                    </span>
-                    <span>阅读：{this.props.data.visit_count}</span>
-                    <a className={'active fright'}>{
-                        this.props.data.is_collect ? '已收藏' : '收藏'
-                    }</a>
-                    <span className={'fright'}>{this.props.getDuration(this.props.data.create_at)}</span>
-                    <span className={'fright'}>{this.props.data.author.loginname}</span>
-                </div>
-            </div>
-        )
-    }
-}
-
-class Content extends Component {
-    render() {
-        return (
-            <div className={'topic-content'} ref={this.props._topicContent} onMouseOver={
-                (event) => {
-                    this.props.checkLink(event)
-                }}
-                 dangerouslySetInnerHTML={this.props.createMarkup(this.props.data.content)}/>
-        )
-    }
-}
-
-class ReplyHead extends Component {
-    render() {
-        return (
-            <div className={'topic-reply-head'} ref={this.props._topicReplyHead}>
-                <span className={'topic-reply-outer'}>{this.props.repliesLen} 回复</span>
-            </div>
-        )
-    }
-}
-
-class ReplyOrder extends Component {
-    render() {
-        let orderBtnClass = 'topic-reply-order-btn fright';
-        this.orderBtnClass = {  //设置激活排序按钮
-            early: !this.props.topic.isReverseReplies ? ' active' : '',
-            new: this.props.topic.isReverseReplies ? ' active' : '',
-        }
-
-        return (
-            <div className={'topic-reply-order clear' + this.props.replyOrderClass}
-                 ref={this.props._topicReplyOrder}
-                 style={{display: !this.props.repliesLen ? 'none' : ''}}>
-                <span className={orderBtnClass + this.orderBtnClass.new} onClick={this.props.setOrderTrue}>最新</span>
-                <span className={orderBtnClass + this.orderBtnClass.early} onClick={this.props.setOrderFalse}>最早</span>
-                <span className={'topic-reply-order-title fright'}>回复排序：</span>
-            </div>
-        )
-    }
-}
-
-class Replies extends Component {
-    render() {
-        return (
-            <div>
-                {
-                    this.props.replies ?
-                        (
-                            <ul className={'topic-reply-list'}
-                                style={{marginTop: this.props.replyOrderHeight}}>
-                                {
-                                    this.props.replies.map((item, index) => {
-                                        let replyNumClass, replyNumContent;
-                                        if (item.author.loginname === this.props.data.author.loginname) {
-                                            replyNumContent = '作者'
-                                            replyNumClass = 'topic-reply-num-active'
-                                        } else {
-                                            replyNumContent = !this.props.topic.isReverseReplies ?
-                                                index + 1 + '楼' :
-                                                this.props.replies.length - index + '楼'
-                                            replyNumClass = 'topic-reply-num'
-                                        }
-
-                                        return (
-                                            <li key={item.id}>
-                                                <img className={'topic-reply-avatar'} src={item.author.avatar_url}/>
-                                                <div className={'topic-reply-box'}>
-                                                    <div className={'topic-reply-detail clear'}>
-                                                            <span
-                                                                className={'topic-reply-username'}>{item.author.loginname}</span>
-                                                        <span
-                                                            className={'topic-reply-duration'}>{this.props.getDuration(item.create_at)}</span>
-                                                        <span className={replyNumClass}>{replyNumContent}</span>
-                                                        <span className={'topic-reply-up fright' +
-                                                        (item.ups.length ? ' topic-reply-up-active' : '')}>
-                                                                <span className={'topic-reply-upIcon'}>&#xe681;</span>
-                                                            {item.ups.length}
-                                                                </span>
-                                                    </div>
-                                                    <div className={'topic-reply-content topic-content'}
-                                                         onMouseOver={(event) => {
-                                                             this.props.checkLink(event, this.props.data.id)
-                                                         }}
-                                                         dangerouslySetInnerHTML={this.props.createMarkup(item.content)}/>
-                                                    <div>
-                                                        <span className={'topic-reply-reply fright'}>&#xe7ac;</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        )
-                                    })
-                                }
-                            </ul>
-                        )
-                        :
-                        null
-                }
-            </div>
-        )
-    }
-}
+import Detail from './Detail'
+import Content from './Content'
+import ReplyHead from './ReplyHead'
+import ReplyOrder from './ReplyOrder'
+import Replies from './Replies'
 
 export default class Main extends Component {
     constructor(props) {
@@ -163,6 +38,7 @@ export default class Main extends Component {
 
         this.setBeyondReplyClass = this.setBeyondReplyClass.bind(this)
         this.getReplyToTopHeight = this.getReplyToTopHeight.bind(this)
+        this.loadData = this.loadData.bind(this)
 
         window.addEventListener('scroll', this.setBeyondReplyClass, false)
     }
@@ -252,8 +128,55 @@ export default class Main extends Component {
         return {__html: content}
     }
 
+    loadData(id, isLoadReply) {
+        fetchJSON({
+            url: `/topic/${id}`,
+            success: (res) => {
+                if (!isLoadReply) {
+                    this.props.dispatch({
+                        type: 'SET_TOPIC_INIT',
+                        payload: {
+                            id: res.data.id,
+                            data: res.data,
+                            isReverseReplies: false  //初始化排序
+                        }
+                    })
+
+                    this.setState({
+                        topic: {
+                            data: this.props.topic.data,
+                            id: this.props.topic.id
+                        },
+                        replies: this.props.topic.data.replies,
+                        isLoadFail: false
+                    })
+                } else {
+                    this.props.dispatch({
+                        type: 'SET_TOPIC_INIT',
+                        payload: {
+                            id: res.data.id,
+                            data: res.data,
+                            isReverseReplies: this.props.topic.isReverseReplies
+                        }
+                    })
+
+                    this.setState({
+                        replies: this.props.topic.isReverseReplies ?
+                            [].concat(this.props.topic.data.replies).reverse()
+                            :
+                            this.props.topic.data.replies
+                    })
+                }
+            },
+            fail: () => {
+                this.setState({
+                    isLoadFail: true
+                })
+            }
+        })
+    }
+
     render() {
-        const data = this.state.topic.data
         const loginData = localStorage.getItem(this.props.login.localStorageKey)
 
         function setRepliesOrder(replies, isReverse) {  //不能作为组件方法，只能作为函数
@@ -276,7 +199,9 @@ export default class Main extends Component {
         return this.state.topic.data ?
             (
                 <div>
-                    <Route path={'/topic/:id/replies'} component={Reply}/>
+                    <Route path={'/topic/:id/replies'}
+                           render={(props) => <Reply {...props} loadTopic={this.loadData}
+                                                     replyCommentData={this.props.topic.replyComment}/>}/>
                     <Back _commonBack={el => this._topicBack = el}>
                         <Link to={loginData ? `${this.props.location.pathname}/replies` : '/login'}
                               className={'topic-reply-btn fright'}
@@ -284,23 +209,24 @@ export default class Main extends Component {
                                   event.stopPropagation()
                               }}>回复</Link>
                     </Back>
-                    <Detail {...this.props} _topicTitle={el => this._topicTitle = el} data={data}
+                    <Detail {...this.props} _topicTitle={el => this._topicTitle = el} data={this.props.topic.data}
                             getReplyToTopHeight={this.getReplyToTopHeight}/>
                     <Content _topicContent={el => this._topicContent = el} checkLink={this.checkLink}
-                             createMarkup={this.createMarkup} data={data}/>
+                             createMarkup={this.createMarkup} data={this.props.topic.data}/>
                     <ReplyHead _topicReplyHead={el => this._topicReplyHead = el}
                                repliesLen={this.state.replies.length}/>
                     <ReplyOrder {...this.props} replyOrderClass={this.state.replyOrderClass}
                                 _topicReplyOrder={el => this._topicReplyOrder = el}
                                 repliesLen={this.state.replies.length}
                                 setOrderTrue={() => {
-                                    setRepliesOrder.bind(this)(data.replies, true)
+                                    setRepliesOrder.bind(this)(this.props.topic.data.replies, true)
                                 }}
                                 setOrderFalse={() => {
-                                    setRepliesOrder.bind(this)(data.replies, false)
+                                    setRepliesOrder.bind(this)(this.props.topic.data.replies, false)
                                 }}/>
                     <Replies {...this.props} replies={this.state.replies} replyOrderHeight={this.state.replyOrderHeight}
-                             checkLink={this.checkLink} data={data} createMarkup={this.createMarkup}/>
+                             checkLink={this.checkLink} data={this.props.topic.data} createMarkup={this.createMarkup}
+                             loadTopic={this.loadData}/>
                 </div>
             )
             :
@@ -320,33 +246,7 @@ export default class Main extends Component {
                 }
             })
 
-            fetchJSON({
-                url: `/topic/${currentId}`,
-                success: (res) => {
-                    this.props.dispatch({
-                        type: 'SET_TOPIC_INIT',
-                        payload: {
-                            id: res.data.id,
-                            data: res.data,
-                            isReverseReplies: false  //初始化排序
-                        }
-                    })
-
-                    this.setState({
-                        topic: {
-                            data: this.props.topic.data,
-                            id: this.props.topic.id
-                        },
-                        replies: this.props.topic.data.replies,
-                        isLoadFail: false
-                    })
-                },
-                fail: () => {
-                    this.setState({
-                        isLoadFail: true
-                    })
-                }
-            })
+            this.loadData(currentId)
         }
     }
 

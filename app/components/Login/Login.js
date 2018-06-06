@@ -48,7 +48,7 @@ export default class Main extends Component {
                 localStorage.setItem(this.props.localStorageKey, JSON.stringify(loginData))
                 history.back(-1)
             },
-            fail: reson => {
+            fail: reason => {
                 alert('登录失败，请重新尝试。')
             }
         })

@@ -10,6 +10,7 @@ const LoadComponent = Loadable({
 
 const mapStateToProps = state => {
     return {
+        localStorageKey: state.login.localStorageKey
     }
 }
 
