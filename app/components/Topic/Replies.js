@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {Link} from 'react-router-dom';
+import {fetchJSON} from '../../utils/fetch'
 
 export default class Replies extends Component {
     constructor(props) {
