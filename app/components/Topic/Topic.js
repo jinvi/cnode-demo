@@ -129,8 +129,10 @@ export default class Main extends Component {
     }
 
     loadData(id, isLoadReply) {
+        const loginData = JSON.parse(localStorage.getItem(this.props.login.localStorageKey))
+        const accessToken = loginData ? '?accesstoken=' + loginData.accessToken : ''
         fetchJSON({
-            url: `/topic/${id}`,
+            url: `/topic/${id + accessToken}`,
             success: (res) => {
                 if (!isLoadReply) {
                     this.props.dispatch({
@@ -210,7 +212,8 @@ export default class Main extends Component {
                               }}>回复</Link>
                     </Back>
                     <Detail {...this.props} _topicTitle={el => this._topicTitle = el} data={this.props.topic.data}
-                            getReplyToTopHeight={this.getReplyToTopHeight}/>
+                            getReplyToTopHeight={this.getReplyToTopHeight} login={this.props.login}
+                            loadTopic={this.loadData}/>
                     <Content _topicContent={el => this._topicContent = el} checkLink={this.checkLink}
                              createMarkup={this.createMarkup} data={this.props.topic.data}/>
                     <ReplyHead _topicReplyHead={el => this._topicReplyHead = el}

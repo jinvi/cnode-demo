@@ -73,7 +73,11 @@ export default class Replies extends Component {
                                                             className={'topic-reply-duration'}>{this.props.getDuration(item.create_at)}</span>
                                                         <span className={replyNumClass}>{replyNumContent}</span>
                                                         <span className={'topic-reply-up fright' +
-                                                        (item.ups.length ? ' topic-reply-up-active' : '')}
+                                                        (
+                                                            item.ups.length ?
+                                                                (item.is_uped ? ' topic-reply-up-ownActive' : ' topic-reply-up-active') :
+                                                                ''
+                                                        )}
                                                               onClick={() => {
                                                                   this.setUps(item.id)
                                                               }}>
