@@ -42,7 +42,6 @@ export default class Replies extends Component {
 
     render() {
         const loginData = localStorage.getItem(this.props.login.localStorageKey)
-
         return (
             <div>
                 {
