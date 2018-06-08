@@ -18,21 +18,21 @@
   position: relative;
 }
 
-.reply-title{
+.reply-title {
   margin-bottom: 25px;
   font-size: 24px;
 
-  .reply-title-name{
+  .reply-title-name {
     color: @G-color-standard;
   }
 }
 
-.reply-content{
+.reply-content {
   width: 100%;
-  outline:0;
+  outline: 0;
   margin-bottom: 5px;
-  border: 1px solid #e5e5e5;
-  background-color: #f7f7f7;
+  border: @G-form-box-border;
+  background-color: @G-form-box-bg;
   color: @G-color-text-light;
   height: 180px;
   line-height: 20px;
@@ -41,19 +41,19 @@
   border-radius: @G-btn-border-radius;
 }
 
-.reply-clear{
+.reply-clear {
   margin-bottom: 10px;
   text-align: right;
   font-size: 12px;
 
-  .reply-clear-btn{
+  .reply-clear-btn {
     padding: 4px 8px;
     cursor: pointer;
     color: @G-color-text-gray;
   }
 }
 
-.reply-btn{
+.reply-btn {
   width: 100%;
   height: 36px;
   border: none;
@@ -63,9 +63,9 @@
   outline: 0;
 }
 
-.reply-close{
-  .G-icon-font(18px;@G-color-text-light);
-  @length:10px;
+.reply-close {
+  .G-icon-font(18px; @G-color-text-light);
+  @length: 10px;
 
   position: absolute;
   right: @length;

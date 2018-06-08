@@ -1,12 +1,11 @@
 import {combineReducers} from "redux";
 import extend from 'extend'
 
-function topicsList(state = {list: [], page: 0, scrollTop: 0}, action) {
+function topicsList(state = {list: [], page: 0, scrollTop: 0, url: ''}, action) {
     state = extend(true, {}, state)
     switch (action.type) {
         case 'SET_TOPICS_LIST':
-            state.list = action.payload.list
-            state.page = action.payload.page
+            state = action.payload
             break
         case 'SET_TOPICS_SCROLL_TOP':
             state.scrollTop = action.payload.scrollTop

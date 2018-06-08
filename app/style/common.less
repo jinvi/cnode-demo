@@ -34,3 +34,35 @@
     .G-icon-font(24px; @G-color-nav);
   }
 }
+
+.common-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: @G-z-index;
+  width: 100%;
+  height: @G--common-nav--height;
+  background-color: #ffffff;
+  font-size: 12px;
+
+  li {
+    display: inline-block;
+    width: 33%;
+    text-align: center;
+  }
+
+  a {
+    display: inline-block;
+    width: 25px;
+    margin-top: 6px;
+    color: @G-color-nav;
+  }
+
+  .common-nav-active {
+    color: @G-color-standard;
+  }
+
+  .common-nav-icon-font {
+    .G-icon-font(24px;)
+  }
+}

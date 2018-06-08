@@ -1,7 +1,6 @@
 /*
   当前样式使用的全局变量，样式名由'--'分隔，以'T'(top)开头
 */
-@T--nav--height: 52px; //底部导航高度 * 程序有应用此数值，改动需同时改动程序配合 *
 @T--top--height: 64px; //头部色块高度 * 程序有应用此数值，改动需同时改动程序配合 *
 @T--topics-nav--height: 46px; //主题导航高度 * 程序有应用此数值，改动需同时改动程序配合 *
 @T--topic-item--height: 80px; //主题列表单项高度，不包含1px分隔线 * 程序有应用此数值，改动需同时改动程序配合 *
@@ -70,38 +69,6 @@
   }
 }
 
-.nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  z-index: @G-z-index;
-  width: 100%;
-  height: @T--nav--height;
-  background-color: #ffffff;
-  font-size: 12px;
-
-  li {
-    display: inline-block;
-    width: 33%;
-    text-align: center;
-  }
-
-  a {
-    display: inline-block;
-    width: 25px;
-    margin-top: 6px;
-    color: @G-color-nav;
-  }
-
-  .nav-active {
-    color: @G-color-standard;
-  }
-
-  .nav-icon-font {
-    .G-icon-font(24px;)
-  }
-}
-
 .topics-nav {
   height: @T--topics-nav--height;
   width: 100%;
@@ -135,7 +102,7 @@
 }
 
 .topic-list {
-  padding: (@T--top--height+@T--topics-nav--height) 0 @T--nav--height 0;
+  padding: (@T--top--height+@T--topics-nav--height) 0 @G--common-nav--height 0;
 
   li {
     list-style: none;

@@ -4,6 +4,7 @@ import Home from './Home'
 import Topic from './Topic'
 import User from './User'
 import Login from './Login'
+import Create from './Create'
 
 export default class Main extends Component {
     constructor(props) {
@@ -13,10 +14,11 @@ export default class Main extends Component {
     render() {
         return (
             <Switch>
-                <Route exact path={'/'} component={Home}/>
+                <Route path={'/'} exact component={Home}/>
                 <Route path={'/topic/:id'} component={Topic}/>
                 <Route path={'/user'} component={User}/>
                 <Route path={'/login'} component={Login}/>
+                <Route path={'/create'} component={Create}/>
                 {/*<Redirect to={'/'}/>*/}
             </Switch>
         )

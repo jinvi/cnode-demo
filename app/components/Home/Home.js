@@ -1,7 +1,9 @@
 import React, {Component} from "react"
 import ReactDOM from "react-dom";
-import {Link, NavLink, Route} from 'react-router-dom'
+import {Link,Route} from 'react-router-dom'
 import {fetchJSON} from '../../utils/fetch'
+
+import Nav from '../common/nav'
 
 class Head extends Component {
     constructor(props) {
@@ -110,7 +112,8 @@ class Topics extends Component {
                     type: 'SET_TOPICS_LIST',
                     payload: {
                         list: isNewTab ? res.data : this.state.listData.concat(res.data),
-                        page: this.page
+                        page: this.page,
+                        url: location.search
                     }
                 })
                 this.setState({
@@ -255,28 +258,7 @@ class Topics extends Component {
 
     componentWillUnmount() {
         window.removeEventListener('scroll', this.loadNextList, false)  //取消事件及其里面的异步任务，否则其它组件触发事件时会导致内存泄漏
-    }
-}
-
-class Nav extends Component {
-    render() {
-        const login = localStorage.getItem(this.props.login.localStorageKey)
-        return (
-            <ul className={'nav'}>
-                <li>
-                    <NavLink to={'/'} activeClassName={'nav-active'}><span
-                        className={'nav-icon-font'}>&#xe644;</span>首页</NavLink>
-                </li>
-                <li>
-                    <NavLink to={login ? '/create' : '/login'} activeClassName={'nav-active'}><span
-                        className={'nav-icon-font'}>&#xe721;</span>新建</NavLink>
-                </li>
-                <li>
-                    <NavLink to={login ? '/user' : '/login'} activeClassName={'nav-active'}><span
-                        className={'nav-icon-font'}>&#xe61f;</span>我的</NavLink>
-                </li>
-            </ul>
-        )
+        this.setTopicsScrollTop()
     }
 }
 
