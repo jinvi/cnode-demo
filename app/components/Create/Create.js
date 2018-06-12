@@ -10,11 +10,15 @@ export default class Main extends Component {
         this.state = {
             selectActiveClass: '',
             titleActiveClass: '',
-            contentActiveClass: ''
+            contentActiveClass: '',
+            selectValue: '',
+            titleValue: '',
+            contentValue: ''
         }
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.reset = this.reset.bind(this)
     }
 
     handleSubmit(e) {
@@ -74,27 +78,46 @@ export default class Main extends Component {
         })
     }
 
-    handleChange(e, prop) {
+    handleChange(e, itemName) {
         if (e.target.value) {
             this.setState({
-                [prop]: ''
+                [itemName + 'ActiveClass']: ''
             })
         }
+
+        this.setState({
+            [itemName + 'Value']: e.target.value
+        })
+    }
+
+    reset() {
+        this.setState({
+            selectActiveClass: '',
+            titleActiveClass: '',
+            contentActiveClass: '',
+            selectValue: '',
+            titleValue: '',
+            contentValue: ''
+        })
     }
 
     render() {
         return (
             <div className={'create-container'}>
                 <div className={'create'}>
-                    <div className={'create-title'}>发表主题<span className={'create-info'}>（所有项目为必填项）</span></div>
+                    <div className={'create-title clear'}>
+                        <span className={'fleft'}>发表主题</span>
+                        <span className={'create-info fleft'}>（所有项目为必填项）</span>
+                        <span className={'create-reset fright'} onClick={this.reset}>重置</span>
+                    </div>
                     <form>
                         <div className={'create-subTitle'}>选择发表版块：
                             <span className={'create-warning fright' + this.state.selectActiveClass}>* 请选择发表版块</span>
                         </div>
                         <select className={'create-select'} name={'tab'} onChange={(e) => {
-                            this.handleChange(e, 'selectActiveClass')
-                        }}>
-                            <option value={''}>-- 版块 --</option>
+                            this.handleChange(e, 'select')
+                        }} value={this.state.selectValue}>
+                            <option value={''}>--- 版块 ---</option>
                             <option value={'ask'}>问答</option>
                             <option value={'share'}>分享</option>
                             <option value={'job'}>招聘</option>
@@ -104,14 +127,14 @@ export default class Main extends Component {
                             <span className={'create-warning fright' + this.state.titleActiveClass}>* 请输入标题</span>
                         </div>
                         <input className={'create-inputTitle'} type={'text'} name={'title'} onChange={(e) => {
-                            this.handleChange(e, 'titleActiveClass')
-                        }}/>
+                            this.handleChange(e, 'title')
+                        }} value={this.state.titleValue}/>
                         <div className={'create-subTitle'}>输入正文：
                             <span className={'create-warning fright' + this.state.contentActiveClass}>* 请输入正文</span>
                         </div>
                         <textarea className={'create-content'} name={'content'} onChange={(e) => {
-                            this.handleChange(e, 'contentActiveClass')
-                        }}></textarea>
+                            this.handleChange(e, 'content')
+                        }} value={this.state.contentValue}></textarea>
                         <button className={'create-btn'} onClick={this.handleSubmit}>发表</button>
                     </form>
                 </div>
