@@ -37,6 +37,8 @@ export default class Detail extends Component {
     }
 
     render() {
+        const loginData = JSON.parse(localStorage.getItem(this.props.login.localStorageKey))
+
         return (
             <div className={'topic-title'} ref={this.props._topicTitle}>
                 <h3>{this.props.data.title}</h3>
@@ -51,8 +53,13 @@ export default class Detail extends Component {
                         }
                     </span>
                     <span>阅读：{this.props.data.visit_count}</span>
-                    <a className={'active fright'}
-                       onClick={this.setCollect}>{this.props.data.is_collect ? '已收藏' : '收藏'}</a>
+                    {
+                        loginData ?
+                            <a className={'active fright'}
+                               onClick={this.setCollect}>{this.props.data.is_collect ? '已收藏' : '收藏'}</a> :
+                            null
+                    }
+
                     <span className={'fright'}>{this.props.getDuration(this.props.data.create_at)}</span>
                     <span className={'fright'}>{this.props.data.author.loginname}</span>
                 </div>

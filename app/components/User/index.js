@@ -10,8 +10,9 @@ const LoadComponent = Loadable({
 
 const mapStateToProps = state => {
     return {
-        login:state.login,
-        topicsList:state.topicsList
+        login: state.login,
+        topicsList: state.topicsList,
+        getDuration: state.utils.getDuration
     }
 }
 

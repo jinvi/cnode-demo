@@ -19,7 +19,7 @@ export default class Main extends Component {
                 <Route path={'/user'} component={User}/>
                 <Route path={'/login'} component={Login}/>
                 <Route path={'/create'} component={Create}/>
-                {/*<Redirect to={'/'}/>*/}
+                <Redirect to={'/'}/>
             </Switch>
         )
     }
