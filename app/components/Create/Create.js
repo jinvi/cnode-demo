@@ -107,7 +107,7 @@ export default class Main extends Component {
                 <div className={'create'}>
                     <div className={'create-title clear'}>
                         <span className={'fleft'}>发表主题</span>
-                        <span className={'create-info fleft'}>（所有项目为必填项）</span>
+                        {/*<span className={'create-info fleft'}>（所有项目为必填项）</span>*/}
                         <span className={'create-reset fright'} onClick={this.reset}>重置</span>
                     </div>
                     <form>
