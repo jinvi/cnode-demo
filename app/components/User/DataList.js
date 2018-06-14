@@ -60,7 +60,7 @@ export default class Main extends Component {
                             <NavLink to={'/user/replies'} activeClassName={'active'}>回复</NavLink>
                         </li>
                         <li>
-                            <NavLink to={'/user/collect'} activeClassName={'active'}>主题</NavLink>
+                            <NavLink to={'/user/collect'} activeClassName={'active'}>收藏</NavLink>
                         </li>
                     </ul>
                 </Back>
