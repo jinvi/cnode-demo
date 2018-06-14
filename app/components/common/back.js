@@ -9,6 +9,9 @@ export default class Main extends Component {
 
     goBack(event) {
         event.stopPropagation()
+        if (this.props.path) {
+            return this.props.history.push(this.props.path)
+        }
         history.go(-1)
     }
 
@@ -19,7 +22,8 @@ export default class Main extends Component {
     render() {
         return (
             <div className={'common-back-container'}>
-                <div className={'common-back hei clear'} onClick={this.toTop} ref={this.props._commonBack}>
+                <div className={'common-back hei clear ' + (this.props.additionalClass || '')} onClick={this.toTop}
+                     ref={this.props._commonBack}>
                         <span className={'common-back-btn common-back-icon-font'}
                               onClick={this.goBack}>&#xe647;</span>
                     {this.props.children}

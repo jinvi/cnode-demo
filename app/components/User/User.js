@@ -14,15 +14,17 @@ class User extends Component {
                     <div className={'user-head-logout clear'}>
                         <span className={'fright'}>退出</span>
                     </div>
-                    <div className={'user-head-username'}>{this.props.data.loginname}</div>
+                    <div className={'user-head-username'}>{this.props.userData.loginname}</div>
                     <div
-                        className={'user-head-signInfo'}>积分：{this.props.data.score}</div>
+                        className={'user-head-signInfo'}>积分：{this.props.userData.score}</div>
                 </div>
-                <img src={this.props.data.avatar_url} className={'user-avatar'}></img>
+                <img src={this.props.userData.avatar_url} className={'user-avatar'}></img>
                 <ul className={'user-detail'}>
                     <li>
                         <div className={'user-detail-num'}>
-                            <Link to={'/user/list'}>{this.props.data.recent_topics.length}</Link>
+                            <Link to={'/user/topics'}>
+                                {this.props.userData.recent_topics.length}
+                            </Link>
                         </div>
                         <div className={'user-detail-name'}>
                             <span>主题</span>
@@ -30,37 +32,54 @@ class User extends Component {
                     </li>
                     <li>
                         <div className={'user-detail-num'}>
-                            <span>{this.props.data.recent_replies.length}</span>
+                            <Link to={'/user/replies'}>
+                                {this.props.userData.recent_replies.length}
+                            </Link>
                         </div>
                         <div className={'user-detail-name'}><span>回复</span></div>
                     </li>
                     <li>
                         <div className={'user-detail-num'}>
-                            <span>{this.props.collectData.length}</span>
+                            <Link to={'/user/collect'}>
+                                {this.props.collectData.length}
+                            </Link>
                         </div>
                         <div className={'user-detail-name'}><span>收藏</span></div>
                     </li>
                 </ul>
                 <ul className={'user-items'}>
                     <li>
-                        <span className={'user-items-icon'}>&#xe616;</span>
-                        <span className={'user-items-name'}>主题</span>
-                        <span className={'user-items-arrow fright'}>&#xe636;</span>
+                        <Link to={'/user/topics'}>
+                            <span className={'user-items-icon'}>&#xe616;</span>
+                            <span className={'user-items-name'}>主题</span>
+                            <span className={'user-items-arrow fright'}>&#xe636;</span>
+                        </Link>
                     </li>
                     <li>
-                        <span className={'user-items-icon'}>&#xe7ac;</span>
-                        <span className={'user-items-name'}>回复</span>
-                        <span className={'user-items-arrow fright'}>&#xe636;</span>
+                        <Link to={'/user/replies'}>
+                            <span className={'user-items-icon'}>&#xe7ac;</span>
+                            <span className={'user-items-name'}>回复</span>
+                            <span className={'user-items-arrow fright'}>&#xe636;</span>
+                        </Link>
                     </li>
                     <li>
-                        <span className={'user-items-icon'}>&#xe6f5;</span>
-                        <span className={'user-items-name'}>消息</span>
-                        <span className={'user-items-arrow fright'}>&#xe636;</span>
+                        <Link to={'/user/messages'}>
+                            <span className={'user-items-icon'}>&#xe6f5;</span>
+                            <span className={'user-items-name'}>消息</span>
+                            {
+                                this.props.unReadMsgNum ?
+                                    <span className={'user-items-unReadMsgNum'}>{this.props.unReadMsgNum}</span> :
+                                    null
+                            }
+                            <span className={'user-items-arrow fright'}>&#xe636;</span>
+                        </Link>
                     </li>
                     <li>
-                        <span className={'user-items-icon'}>&#xe620;</span>
-                        <span className={'user-items-name'}>收藏</span>
-                        <span className={'user-items-arrow fright'}>&#xe636;</span>
+                        <Link to={'/user/collect'}>
+                            <span className={'user-items-icon'}>&#xe620;</span>
+                            <span className={'user-items-name'}>收藏</span>
+                            <span className={'user-items-arrow fright'}>&#xe636;</span>
+                        </Link>
                     </li>
                 </ul>
                 <Nav {...this.props.topProps}/>
@@ -74,8 +93,10 @@ export default class Main extends Component {
         super(props)
 
         this.state = {
-            data: '',
+            userData: '',
             collectData: '',
+            messageData: '',
+            unReadMsgNum: 0,
             isLoadFail: false
         }
 
@@ -85,12 +106,13 @@ export default class Main extends Component {
     loadData() {
         const loginData = JSON.parse(localStorage.getItem(this.props.login.localStorageKey))
         const loginName = loginData.loginName
+        const accessToken = '?accesstoken=' + loginData.accessToken
 
-        fetchJSON({
+        fetchJSON({  //用户数据
             url: `/user/${loginName}`,
             success: (res) => {
                 this.setState({
-                    data: res.data
+                    userData: res.data
                 })
             },
             fail: () => {
@@ -100,7 +122,7 @@ export default class Main extends Component {
             }
         })
 
-        fetchJSON({
+        fetchJSON({  //收藏数据
             url: `/topic_collect/${loginName}`,
             success: (res) => {
                 this.setState({
@@ -108,18 +130,41 @@ export default class Main extends Component {
                 })
             }
         })
+
+        fetchJSON({  //未读消息数
+            url: `/message/count${accessToken}`,
+            success: (res) => {
+                this.setState({
+                    unReadMsgNum: res.data
+                })
+            }
+        })
+
+        fetchJSON({  //已读、未读消息
+            url: `/messages${accessToken}`,
+            success: (res) => {
+                this.setState({
+                    messageData: res.data
+                })
+            }
+        })
     }
 
     render() {
-        const data = this.state.data
+        const userData = this.state.userData
         const collectData = this.state.collectData
+        const messageData = this.state.messageData
 
-        return data && collectData ?
+        return userData && collectData ?
             (
                 <Switch>
                     <Route path='/user' exact
-                           render={() => <User data={data} collectData={collectData} topProps={this.props}/>}/>
-                    <Route path={'/user/list'} render={(props) => <DataList {...props}/>}/>
+                           render={() => <User userData={userData} collectData={collectData} topProps={this.props}
+                                               unReadMsgNum={this.state.unReadMsgNum}/>}
+                    />
+                    <Route path={'/user/:type'} render={(props) =>
+                        <DataList {...props} userData={userData} collectData={collectData} messageData={messageData}/>
+                    }/>
                     <Redirect to={'/'}/>
                 </Switch>
             ) :

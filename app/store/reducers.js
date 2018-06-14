@@ -74,7 +74,7 @@ function utils(state = {
         } else if ((duration / 60000) < 60) {
             return parseInt((duration / 60000)) + '分钟前';
         } else if ((duration / 3600000) < 24) {
-            return parseInt(duration / 3600000) + '个小时前';
+            return parseInt(duration / 3600000) + '小时前';
         } else if ((duration / 86400000) < 31) {
             return parseInt(duration / 86400000) + '天前';
         } else if ((duration / 2592000000) < 12) {
