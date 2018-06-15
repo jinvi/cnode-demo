@@ -117,7 +117,7 @@ export default class Main extends Component {
                         <select className={'create-select'} name={'tab'} onChange={(e) => {
                             this.handleChange(e, 'select')
                         }} value={this.state.selectValue}>
-                            <option value={''}>--- 版块 ---</option>
+                            <option value={''}>- 版块 -</option>
                             <option value={'ask'}>问答</option>
                             <option value={'share'}>分享</option>
                             <option value={'job'}>招聘</option>

@@ -18,7 +18,9 @@ class User extends Component {
                     <div
                         className={'user-head-signInfo'}>积分：{this.props.userData.score}</div>
                 </div>
-                <img src={this.props.userData.avatar_url} className={'user-avatar'}></img>
+                <div className={'user-avatar'}>
+                    <img src={this.props.userData.avatar_url}></img>
+                </div>
                 <ul className={'user-detail'}>
                     <li>
                         <div className={'user-detail-num'}>
@@ -163,7 +165,8 @@ export default class Main extends Component {
                                                unReadMsgNum={this.state.unReadMsgNum}/>}
                     />
                     <Route path={'/user/:type'} render={(props) =>
-                        <DataList {...props} userData={userData} collectData={collectData} messageData={messageData}/>
+                        <DataList {...props} userData={userData} collectData={collectData} messageData={messageData}
+                                  getDuration={this.props.getDuration}/>
                     }/>
                     <Redirect to={'/'}/>
                 </Switch>
