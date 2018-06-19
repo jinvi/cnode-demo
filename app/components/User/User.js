@@ -65,7 +65,7 @@ class User extends Component {
                         </Link>
                     </li>
                     <li>
-                        <Link to={'/user/messages'}>
+                        <Link to={'/user/unreadMsg'}>
                             <span className={'user-items-icon'}>&#xe6f5;</span>
                             <span className={'user-items-name'}>消息</span>
                             {

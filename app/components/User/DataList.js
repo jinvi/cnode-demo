@@ -41,12 +41,12 @@ export default class Main extends Component {
 
         const msgList = [
             {
-                name: '未读信息',
-                path: '/user/messages'
+                name: '未读消息',
+                path: '/user/unreadMsg'
             },
             {
-                name: '已读信息',
-                path: '/user/messages/readed'
+                name: '已读消息',
+                path: '/user/readMsg'
             }
         ]
 
@@ -66,14 +66,19 @@ export default class Main extends Component {
                 this.menuList = topicList
                 this.currentType = '收藏'
                 break
-            case 'messages':
-                data = this.props.messageData
+            case 'unreadMsg':
+                data = this.props.messageData.hasnot_read_messages
                 this.menuList = msgList
-                this.currentType = '未读信息'
+                this.currentType = '未读消息'
+                break
+            case 'readMsg':
+                data = this.props.messageData.has_read_messages
+                this.menuList = msgList
+                this.currentType = '已读消息'
                 break
         }
 
-        // data = data.concat(data).concat(data)
+        // data = data.concat(data).concat(data).concat(data)
         const originLength = data.length
 
         const clientHeight = document.documentElement.clientHeight || document.body.clientHeight  //可视区域高度（不包括滚动高度）
@@ -99,7 +104,7 @@ export default class Main extends Component {
         const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;  //可视区域高度（不包括滚动高度）
         const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;  //元素总高度（可视高度与滚动高度）
 
-        if (Math.ceil(scrollTop) + Math.ceil(clientHeight) === Math.ceil(scrollHeight) && Math.ceil(scrollTop) !== 0) {  //滚动到底部时
+        if (Math.ceil(scrollTop) + Math.ceil(clientHeight) > Math.ceil(scrollHeight) - 50 && Math.ceil(scrollTop) !== 0) {  //滚动到距离底部50px时
             const data = this.state.data
 
             for (let i = 0, len = this.restList.length, delNum = this.initListNum - 1; i < len; i++) {
@@ -116,6 +121,8 @@ export default class Main extends Component {
     }
 
     render() {
+        const isMsg = this.currentType.search(/消息/) !== -1
+
         return (
             <div>
                 <Back additionalClass={'flex'} path={'/user'} {...this.props}>
@@ -124,7 +131,8 @@ export default class Main extends Component {
                             this.menuList.map((item, index) => {
                                 return (
                                     <li key={index}>
-                                        <NavLink to={item.path} activeClassName={'active'}>
+                                        <NavLink to={item.path} activeClassName={'active'}
+                                                 onClick={(e) => e.stopPropagation()}>
                                             {item.name}
                                         </NavLink>
                                     </li>
@@ -140,14 +148,22 @@ export default class Main extends Component {
                     {
                         this.state.data.map((item, index) => {
                             return (
-                                <li key={index}>
-                                    <Link to={`/topic/${item.id}`} className={'clear'}>
-                                        <img className={'user-sublist-avatar fleft'} src={item.author.avatar_url}/>
-                                        <span className={'user-sublist-title fleft'}>{item.title}</span>
-                                        <span
-                                            className={'user-sublist-date fright'}>{this.props.getDuration(item.last_reply_at)}</span>
+                                !isMsg ?
+                                    <li key={index}>
+                                        <Link to={`/topic/${item.id}`} className={'clear'}>
+                                            <img className={'user-sublist-avatar fleft'} src={item.author.avatar_url}/>
+                                            <span className={'user-sublist-title fleft'}>{item.title}</span>
+                                            <span
+                                                className={'user-sublist-date fright'}>{this.props.getDuration(item.last_reply_at)}</span>
+                                        </Link>
+                                    </li> :
+                                    <li key={index} className={'user-sublist-msg'}>
+                                        <a href={`https://cnodejs.org/user/${item.author.loginname}`}
+                                           target={'_blank'}>{item.author.loginname}</a> 回复了你的
+                                        话题 <Link to={`/topic/${item.topic.id}`}>
+                                        {item.topic.title}
                                     </Link>
-                                </li>
+                                    </li>
                             )
                         })
                     }
@@ -162,11 +178,12 @@ export default class Main extends Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener('scroll', this.addRestList, false)  //取消事件
+        window.removeEventListener('scroll', this.addRestList, false)
     }
 
     shouldComponentUpdate(nextState, nextProps) {
         if (this.props.history.location.pathname !== this.props.match.url) {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;  //滚动高度
             this.setData()
         }
         return true

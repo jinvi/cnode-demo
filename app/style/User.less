@@ -20,7 +20,7 @@
     font-size: 30px;
     color: #ffffff;
     color: lighten(@G-color-standard, 10%);
-    margin: 25px 0 12px 0;
+    margin: 25px 0 8px 0;
   }
 
   .user-head-signInfo {
@@ -140,14 +140,16 @@
   border-top: 4px solid @G-color-divide-line;
   @avatar-size: 25px;
 
-  a {
-    width: 100%;
+  li{
     height: @avatar-size;
-    color: @G-color-text;
-    display: inline-block;
     padding: 10px 0 10px 0px;
     border-bottom: 1px solid @G-color-divide-line;
     line-height: @avatar-size;
+  }
+
+  a {
+    width: 100%;
+    color: @G-color-text;
   }
 
   .user-sublist-avatar {
@@ -168,5 +170,13 @@
     margin-right: @T-margin-left-right;
     color: @G-color-text-gray;
     font-size: 12px;
+  }
+
+  .user-sublist-msg{
+    text-indent: @T-margin-left-right;
+
+    a{
+      color: @G-color-text-link;
+    }
   }
 }

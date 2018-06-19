@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 import ReactDOM from "react-dom";
-import {Link,Route} from 'react-router-dom'
+import {Link, Route} from 'react-router-dom'
 import {fetchJSON} from '../../utils/fetch'
 
 import Nav from '../common/nav'
@@ -79,6 +79,7 @@ class Topics extends Component {
         }
 
         this.page = this.props.topicsList.page  //列表页数
+        this.isLoadFinish = true
 
         this.setTopicsScrollTop = this.setTopicsScrollTop.bind(this)
         this.loadNextList = this.loadNextList.bind(this)
@@ -105,6 +106,9 @@ class Topics extends Component {
             limit: initListNum
         });
 
+        if (!this.isLoadFinish) return  //判断当前是否完成读取数据，防止同时二次读取数据
+        this.isLoadFinish = false
+
         fetchJSON({
             url: `/topics?${queryParams}`,
             success: (res) => {
@@ -120,6 +124,7 @@ class Topics extends Component {
                     listData: this.props.topicsList.list,
                     isLoadFail: false
                 })
+                this.isLoadFinish = true
             },
             fail: () => {
                 this.setState({
@@ -134,7 +139,10 @@ class Topics extends Component {
         const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;  //可视区域高度（不包括滚动高度）
         const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;  //元素总高度（可视高度与滚动高度）
 
-        if (Math.ceil(scrollTop) + Math.ceil(clientHeight) === Math.ceil(scrollHeight) && Math.ceil(scrollTop) !== 0) {  //滚动到底部时
+        const currentHeight = Math.ceil(scrollTop) + Math.ceil(clientHeight)
+        const bodyHeight = Math.ceil(scrollHeight)
+
+        if (currentHeight - bodyHeight >= 0 && Math.ceil(scrollTop) !== 0) {  //滚动到底部时
             this.loadList({tabParam: this.props.location.search, isNewTab: false})
         }
     }
