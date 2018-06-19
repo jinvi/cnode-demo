@@ -7,12 +7,23 @@ import Nav from '../common/nav'
 import DataList from './DataList'
 
 class User extends Component {
+    constructor(props) {
+        super(props)
+
+        this.signOut = this.signOut.bind(this)
+    }
+
+    signOut() {
+        // localStorage.removeItem(this.props.localStorageKey)
+        this.props.history.push('/')
+    }
+
     render() {
         return (
             <div>
                 <div className={'user-head'}>
                     <div className={'user-head-logout clear'}>
-                        <span className={'fright'}>退出</span>
+                        <span className={'fright'} onClick={this.signOut}>退出</span>
                     </div>
                     <div className={'user-head-username'}>{this.props.userData.loginname}</div>
                     <div
@@ -162,7 +173,9 @@ export default class Main extends Component {
                 <Switch>
                     <Route path='/user' exact
                            render={() => <User userData={userData} collectData={collectData} topProps={this.props}
-                                               unReadMsgNum={this.state.unReadMsgNum}/>}
+                                               unReadMsgNum={this.state.unReadMsgNum}
+                                               localStorageKey={this.props.login.localStorageKey}
+                                               history={this.props.history}/>}
                     />
                     <Route path={'/user/:type'} render={(props) =>
                         <DataList {...props} userData={userData} collectData={collectData} messageData={messageData}

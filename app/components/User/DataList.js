@@ -149,7 +149,7 @@ export default class Main extends Component {
                         this.state.data.map((item, index) => {
                             return (
                                 !isMsg ?
-                                    <li key={index}>
+                                    <li key={index} className={'user-sublist-item'}>
                                         <Link to={`/topic/${item.id}`} className={'clear'}>
                                             <img className={'user-sublist-avatar fleft'} src={item.author.avatar_url}/>
                                             <span className={'user-sublist-title fleft'}>{item.title}</span>
@@ -157,7 +157,7 @@ export default class Main extends Component {
                                                 className={'user-sublist-date fright'}>{this.props.getDuration(item.last_reply_at)}</span>
                                         </Link>
                                     </li> :
-                                    <li key={index} className={'user-sublist-msg'}>
+                                    <li key={index} className={'user-sublist-msgItem'}>
                                         <a href={`https://cnodejs.org/user/${item.author.loginname}`}
                                            target={'_blank'}>{item.author.loginname}</a> 回复了你的
                                         话题 <Link to={`/topic/${item.topic.id}`}>

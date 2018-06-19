@@ -1,4 +1,4 @@
-@T-margin-left-right:20px;
+@T-margin-left-right: 20px;
 
 .user-head {
   height: 200px;
@@ -140,16 +140,20 @@
   border-top: 4px solid @G-color-divide-line;
   @avatar-size: 25px;
 
-  li{
+  .item() {
     height: @avatar-size;
-    padding: 10px 0 10px 0px;
+    padding: 10px 0;
     border-bottom: 1px solid @G-color-divide-line;
     line-height: @avatar-size;
   }
 
-  a {
-    width: 100%;
-    color: @G-color-text;
+  .user-sublist-item {
+    a {
+      .item();
+      display: inline-block;
+      width: 100%;
+      color: @G-color-text;
+    }
   }
 
   .user-sublist-avatar {
@@ -172,10 +176,11 @@
     font-size: 12px;
   }
 
-  .user-sublist-msg{
+  .user-sublist-msgItem {
     text-indent: @T-margin-left-right;
+    .item();
 
-    a{
+    a {
       color: @G-color-text-link;
     }
   }
