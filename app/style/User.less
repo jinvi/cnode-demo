@@ -5,42 +5,49 @@
   background: url("../assets/bg.jpg") no-repeat left top;
   background-size: 100% auto;
   text-align: center;
+  text-shadow: 1px 1px 5px #868686;
+
+  @light-text: #eaeaea;
 
   .user-head-logout {
     @padding: 15px;
-    color: @G-color-text-gray;
+    color: @light-text;
     padding: @padding @padding 0 0;
+    font-size: 12px;
 
     span {
       cursor: pointer;
+      border: 1px solid @light-text;
+      padding: 3px 8px;
+      border-radius: 40px;
     }
   }
 
   .user-head-username {
     font-size: 30px;
     color: #ffffff;
-    color: lighten(@G-color-standard, 10%);
-    margin: 25px 0 8px 0;
+    margin: 25px 0 10px 0;
   }
 
   .user-head-signInfo {
     font-size: 12px;
-    color: @G-color-text-gray;
+    color: @light-text;
   }
 }
 
 .user-avatar {
-  @size: 80px;
+  @size: 100px;
   width: @size;
   height: @size;
-  margin: -55px auto 0 auto;
-  border-radius: 10px;
+  margin: -60px auto 0 auto;
+  border-radius: 50%;
   border: 8px solid #ffffff;
   box-shadow: 0 2px 4px #ebebeb;
   background-color: #ffffff;
 
   img {
     width: @size;
+    border-radius: 50%;
   }
 }
 
@@ -59,7 +66,6 @@
   .user-detail-num {
     font-size: 40px;
     margin-bottom: 4px;
-    color: @G-color-standard;
 
     a {
       color: @G-color-standard;
@@ -118,7 +124,6 @@
 
   .active {
     color: @G-color-standard;
-    //font-size: 18px;
     border-bottom: 4px solid @G-color-standard;
     padding-bottom: 6px;
     font-weight: bold;
@@ -127,7 +132,7 @@
 
 .user-subtitle {
   font-size: 24px;
-  margin: 40px @T-margin-left-right 10px 0;
+  margin: 20px @T-margin-left-right 10px 0;
   text-align: right;
 
   .active {
@@ -138,6 +143,7 @@
 
 .user-sublist {
   border-top: 4px solid @G-color-divide-line;
+  margin-bottom: 30px;
   @avatar-size: 25px;
 
   .item() {
@@ -153,6 +159,10 @@
       display: inline-block;
       width: 100%;
       color: @G-color-text;
+    }
+
+    .active {
+      color: @G-color-standard;
     }
   }
 

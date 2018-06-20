@@ -12,7 +12,9 @@ const mapStateToProps = state => {
     return {
         login: state.login,
         topicsList: state.topicsList,
-        getDuration: state.utils.getDuration
+        getDuration: state.utils.getDuration,
+        topicId: state.topic.id,
+        scrollTopData: state.user.scrollTop
     }
 }
 

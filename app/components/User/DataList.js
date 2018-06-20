@@ -12,13 +12,10 @@ export default class Main extends Component {
             originLength: 0
         }
 
-        this.restList = []
         this.menuList = []
         this.currentType = ''
-        this.initListNum = 0
 
         this.setData = this.setData.bind(this)
-        this.addRestList = this.addRestList.bind(this)
     }
 
     setData() {
@@ -79,50 +76,14 @@ export default class Main extends Component {
         }
 
         // data = data.concat(data).concat(data).concat(data)
-        const originLength = data.length
-
-        const clientHeight = document.documentElement.clientHeight || document.body.clientHeight  //可视区域高度（不包括滚动高度）
-        const listItemHeight = 45 + 1 + 8  //列表单项高度（单项高度+分隔线高度+误差高度）
-        const excludeListHeight = 52 + 77 + 4  //视图除列表外剩余高度总和（顶部返回高度+标题高度+列表顶部边框高度）
-        this.initListNum = Math.ceil((clientHeight - excludeListHeight) / listItemHeight) + 4  //初始加载列表个数（数量足以溢出视区以触发滚动事件）
-
-        for (let i = 0, len = data.length, delNum = this.initListNum - 1; i < len; i++) {
-            if (i > delNum) {
-                this.restList.push(data[delNum])
-                data.splice(delNum, 1)
-            }
-        }
 
         this.setState({
             data: data,
-            originLength: originLength
+            originLength: data.length
         })
     }
 
-    addRestList() {
-        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;  //滚动高度
-        const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;  //可视区域高度（不包括滚动高度）
-        const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;  //元素总高度（可视高度与滚动高度）
-
-        if (Math.ceil(scrollTop) + Math.ceil(clientHeight) > Math.ceil(scrollHeight) - 50 && Math.ceil(scrollTop) !== 0) {  //滚动到距离底部50px时
-            const data = this.state.data
-
-            for (let i = 0, len = this.restList.length, delNum = this.initListNum - 1; i < len; i++) {
-                if (i < delNum) {
-                    data.push(this.restList[0])
-                    this.restList.splice(0, 1)
-                }
-            }
-
-            this.setState({
-                data: data
-            })
-        }
-    }
-
     render() {
-        const isMsg = this.currentType.search(/消息/) !== -1
-
         return (
             <div>
                 <Back additionalClass={'flex'} path={'/user'} {...this.props}>
@@ -148,21 +109,29 @@ export default class Main extends Component {
                     {
                         this.state.data.map((item, index) => {
                             return (
-                                !isMsg ?
-                                    <li key={index} className={'user-sublist-item'}>
+                                !(this.currentType.search(/消息/) !== -1) ?
+                                    <li key={index} className={'user-sublist-item'}>  {/*主题列表*/}
                                         <Link to={`/topic/${item.id}`} className={'clear'}>
                                             <img className={'user-sublist-avatar fleft'} src={item.author.avatar_url}/>
-                                            <span className={'user-sublist-title fleft'}>{item.title}</span>
                                             <span
-                                                className={'user-sublist-date fright'}>{this.props.getDuration(item.last_reply_at)}</span>
+                                                className={'user-sublist-title fleft' + (
+                                                    this.props.topicId === item.id ?
+                                                        ' active' : ''
+                                                )}>{item.title}</span>
+                                            <span
+                                                className={'user-sublist-date fright'}>{
+                                                item.create_at ?
+                                                    this.props.getDuration(item.create_at) :
+                                                    this.props.getDuration(item.last_reply_at)
+                                            }</span>
                                         </Link>
                                     </li> :
-                                    <li key={index} className={'user-sublist-msgItem'}>
+                                    <li key={index} className={'user-sublist-msgItem'}>  {/*消息列表*/}
                                         <a href={`https://cnodejs.org/user/${item.author.loginname}`}
                                            target={'_blank'}>{item.author.loginname}</a> 回复了你的
                                         话题 <Link to={`/topic/${item.topic.id}`}>
-                                        {item.topic.title}
-                                    </Link>
+                                            {item.topic.title}
+                                        </Link>
                                     </li>
                             )
                         })
@@ -174,11 +143,19 @@ export default class Main extends Component {
 
     componentWillMount() {
         this.setData()
-        window.addEventListener('scroll', this.addRestList, false)
     }
 
     componentWillUnmount() {
-        window.removeEventListener('scroll', this.addRestList, false)
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        if (scrollTop) {
+            this.props.dispatch({
+                type: 'SET_USER_SCROLL_TOP',
+                payload: {
+                    value: scrollTop,
+                    currentType: this.currentType
+                }
+            })
+        }
     }
 
     shouldComponentUpdate(nextState, nextProps) {
@@ -190,6 +167,10 @@ export default class Main extends Component {
     }
 
     componentDidMount() {
+        if (this.currentType === this.props.scrollTopData.currentType && this.props.scrollTopData.value) {
+            document.documentElement.scrollTop = document.body.scrollTop = this.props.scrollTopData.value  //设置历史滚动条高度
+        }
+
         // console.log(getStyle(this._subtitle,'height'))
         function getStyle(ele, style) {  //获取元素计算后的样式
             if (ele.currentStyle) {  // 兼容ie方法

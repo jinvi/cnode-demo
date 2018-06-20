@@ -14,8 +14,8 @@ class User extends Component {
     }
 
     signOut() {
-        // localStorage.removeItem(this.props.localStorageKey)
-        this.props.history.push('/')
+        localStorage.removeItem(this.props.localStorageKey)
+        this.props.history.push(`/${this.props.url}`)
     }
 
     render() {
@@ -175,13 +175,15 @@ export default class Main extends Component {
                            render={() => <User userData={userData} collectData={collectData} topProps={this.props}
                                                unReadMsgNum={this.state.unReadMsgNum}
                                                localStorageKey={this.props.login.localStorageKey}
-                                               history={this.props.history}/>}
+                                               history={this.props.history}
+                                               url={this.props.topicsList.url}/>}
                     />
                     <Route path={'/user/:type'} render={(props) =>
                         <DataList {...props} userData={userData} collectData={collectData} messageData={messageData}
-                                  getDuration={this.props.getDuration}/>
+                                  getDuration={this.props.getDuration} topicId={this.props.topicId}
+                                  dispatch={this.props.dispatch}
+                                  scrollTopData={this.props.scrollTopData}/>
                     }/>
-                    <Redirect to={'/'}/>
                 </Switch>
             ) :
             <Loading isLoadFail={this.state.isLoadFail}/>

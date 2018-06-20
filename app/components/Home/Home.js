@@ -27,13 +27,13 @@ class Head extends Component {
                         loginData ?
                             <span className={'top-loginState fright clear'}>
                                 <img className={'fleft'} src={loginData.avatar_url}/>
-                                <Link className={'fleft'} to={'/user'}>
+                                <Link className={'fleft'} to={'/user'} onClick={e => e.stopPropagation()}>
                                     {loginData.loginName}
                                 </Link>
                             </span>
                             :
-                            <Link className={'top-loginBtn fright'} to={'/login'} onClick={(event) => {
-                                event.stopPropagation()
+                            <Link className={'top-loginBtn fright'} to={'/login'} onClick={e => {
+                                e.stopPropagation()
                             }}>登录</Link>
                     }
                 </div>

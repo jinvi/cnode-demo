@@ -64,6 +64,22 @@ function login(state = {
     return state
 }
 
+function user(state = {
+    scrollTop: {
+        value: 0,
+        currentType: ''
+    }
+}, action) {
+    state = extend(true, {}, state)
+    switch (action.type) {
+        case 'SET_USER_SCROLL_TOP':
+            state.scrollTop = action.payload
+            break
+    }
+
+    return state
+}
+
 function utils(state = {
     getDuration: (originTime) => {
         const duration = new Date().getTime() - new Date(originTime).getTime();
@@ -94,5 +110,6 @@ export default combineReducers({
     topicsList,
     topic,
     utils,
-    login
+    login,
+    user
 })
