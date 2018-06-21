@@ -147,15 +147,13 @@ export default class Main extends Component {
 
     componentWillUnmount() {
         const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        if (scrollTop) {
-            this.props.dispatch({
-                type: 'SET_USER_SCROLL_TOP',
-                payload: {
-                    value: scrollTop,
-                    currentType: this.currentType
-                }
-            })
-        }
+        this.props.dispatch({
+            type: 'SET_USER_SCROLL_TOP',
+            payload: {
+                value: scrollTop,
+                currentType: this.currentType
+            }
+        })
     }
 
     shouldComponentUpdate(nextState, nextProps) {

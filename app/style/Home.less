@@ -14,16 +14,26 @@
 }
 
 .top {
-  background: linear-gradient(170deg, @G-color-standard, #51c626, #53CF27, #89e81d);
-  //background: @G-color-standard url("../assets/top-bg.png") no-repeat right bottom;
+  background: @G-gradient-bg;
   height: @T--top--height;
   line-height: @T--top--height;
   padding: 0 20px;
   color: #ffffff;
+  position: relative;
+
+  @bg-z-index: 10;
 
   h2 {
     display: inline;
     font-size: 28px;
+  }
+
+  .top-bg {
+    position: absolute;
+    z-index: @bg-z-index;
+    width: 100%;
+    height: @T--top--height;
+    background: url("../assets/top-bg.png") no-repeat right bottom;
   }
 
   .top-commentary {
@@ -47,7 +57,8 @@
     font-size: 12px;
     margin-top: @login-state-margin-top - 4px;
     border-radius: @G-btn-border-radius;
-
+    position: relative;
+    z-index: @bg-z-index+1;
     .link-color(@G-color-standard)
   }
 
@@ -57,6 +68,8 @@
     height: @height;
     line-height: @height;
     margin-top: @login-state-margin-top;
+    position: relative;
+    z-index: @bg-z-index+1;
 
     img {
       height: @height;

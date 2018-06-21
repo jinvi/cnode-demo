@@ -5,6 +5,10 @@ export default class Detail extends Component {
     constructor(props) {
         super(props)
 
+        this.state = {
+            isCollect: this.props.data.is_collect
+        }
+
         this.setCollect = this.setCollect.bind(this)
     }
 
@@ -19,7 +23,7 @@ export default class Detail extends Component {
             });
 
             fetchJSON({
-                url: !this.props.data.is_collect ? '/topic_collect/collect' : '/topic_collect/de_collect',
+                url: !this.state.isCollect ? '/topic_collect/collect' : '/topic_collect/de_collect',
                 req: {
                     method: 'post',
                     body: queryParams,
@@ -28,7 +32,14 @@ export default class Detail extends Component {
                     }
                 },
                 success: (res) => {
-                    this.props.loadTopic(this.props.match.params.id)
+                    this.setState({
+                        isCollect: !this.state.isCollect
+                    })
+
+                    this.props.dispatch({
+                        type: 'SET_TOPIC_IS_COLLECT',
+                        payload: this.state.isCollect
+                    })
                 }
             })
         } else {
@@ -56,7 +67,7 @@ export default class Detail extends Component {
                     {
                         loginData ?
                             <a className={'active fright'}
-                               onClick={this.setCollect}>{this.props.data.is_collect ? '已收藏' : '收藏'}</a> :
+                               onClick={this.setCollect}>{this.state.isCollect ? '已收藏' : '收藏'}</a> :
                             null
                     }
 

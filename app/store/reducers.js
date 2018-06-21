@@ -46,6 +46,12 @@ function topic(state = {
         case 'SET_REPLY_COMMENT':
             state.replyComment = action.payload
             break
+        case 'SET_TOPIC_IS_COLLECT':
+            state.data.is_collect = action.payload
+            break
+        case 'SET_TOPIC_REPLIES':
+            state.data.replies = action.payload
+            break
     }
     return state
 }

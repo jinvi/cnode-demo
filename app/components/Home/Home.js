@@ -19,6 +19,7 @@ class Head extends Component {
         return (
             <div className={'head'}>
                 <div className={'top clear'} onClick={this.props.toTop}>
+                    <div className={'top-bg'}></div>
                     <h2>
                         <span>CNODE</span>
                         <span className={'top-commentary'}>个人演示版</span>
