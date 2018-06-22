@@ -6,7 +6,7 @@ export default class Detail extends Component {
         super(props)
 
         this.state = {
-            isCollect: this.props.data.is_collect
+            isCollect: this.props.topic.data.is_collect
         }
 
         this.setCollect = this.setCollect.bind(this)
@@ -52,18 +52,18 @@ export default class Detail extends Component {
 
         return (
             <div className={'topic-title'} ref={this.props._topicTitle}>
-                <h3>{this.props.data.title}</h3>
+                <h3>{this.props.topic.data.title}</h3>
                 <div className={'topic-detail clear'}>
                     <span>回复：
-                        {this.props.data.reply_count ?
+                        {this.props.topic.data.reply_count ?
                             <a className={'active'} onClick={() => {
                                 document.documentElement.scrollTop = document.body.scrollTop = this.props.getReplyToTopHeight()
-                            }}>{this.props.data.reply_count}</a>
+                            }}>{this.props.topic.data.reply_count}</a>
                             :
-                            this.props.data.reply_count
+                            this.props.topic.data.reply_count
                         }
                     </span>
-                    <span>阅读：{this.props.data.visit_count}</span>
+                    <span>阅读：{this.props.topic.data.visit_count}</span>
                     {
                         loginData ?
                             <a className={'active fright'}
@@ -71,8 +71,8 @@ export default class Detail extends Component {
                             null
                     }
 
-                    <span className={'fright'}>{this.props.getDuration(this.props.data.create_at)}</span>
-                    <span className={'fright'}>{this.props.data.author.loginname}</span>
+                    <span className={'fright'}>{this.props.getDuration(this.props.topic.data.create_at)}</span>
+                    <span className={'fright'}>{this.props.topic.data.author.loginname}</span>
                 </div>
             </div>
         )

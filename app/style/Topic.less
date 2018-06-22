@@ -81,7 +81,7 @@
     line-height: @T-line-height + 8px;
   }
 
-  .prettyprint, blockquote {
+  .prettyprint, blockquote, table {
     padding: 12px;
     font-size: 12px;
     line-height: @T-line-height - 8px;
@@ -94,6 +94,18 @@
     p {
       margin-bottom: 0;
     }
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  table, table tr th, table tr td {
+    border: 1px solid @G-Topic--blockquote--line-color;
+  }
+
+  td, th {
+    padding: 10px;
   }
 }
 
@@ -133,7 +145,7 @@
 
   .topic-reply-order-title {
     margin-right: -5px;
-    color:@G-color-text-gray;
+    color: @G-color-text-gray;
   }
 
   span {

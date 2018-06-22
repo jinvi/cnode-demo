@@ -20,6 +20,13 @@ export default class Main extends Component {
                 data: this.props.topic.data,
                 id: this.props.topic.id
             },
+            replies: this.props.topic.data ?
+                (
+                    this.props.topic.isReverseReplies ?
+                        [].concat(this.props.topic.data.replies).reverse()
+                        :
+                        this.props.topic.data.replies
+                ) : [],
             replyOrderClass: this.props.topic.replyOrderClass,
             replyOrderHeight: this.props.topic.replyOrderHeight,
             isLoadFail: false
@@ -142,6 +149,7 @@ export default class Main extends Component {
                             data: this.props.topic.data,
                             id: this.props.topic.id
                         },
+                        replies: this.props.topic.data.replies,
                         isLoadFail: false
                     })
                 } else {
@@ -152,6 +160,13 @@ export default class Main extends Component {
                             data: res.data,
                             isReverseReplies: this.props.topic.isReverseReplies
                         }
+                    })
+
+                    this.setState({
+                        replies: this.props.topic.isReverseReplies ?
+                            [].concat(this.props.topic.data.replies).reverse()
+                            :
+                            this.props.topic.data.replies
                     })
                 }
             },
@@ -174,6 +189,10 @@ export default class Main extends Component {
                 }
             })
 
+            this.setState({
+                replies: isReverse ? [].concat(replies).reverse() : replies
+            })
+
             if (this.state.replyOrderHeight) {
                 document.documentElement.scrollTop = document.body.scrollTop = this.getReplyToTopHeight()
             }
@@ -192,27 +211,24 @@ export default class Main extends Component {
                                   event.stopPropagation()
                               }}>回复</Link>
                     </Back>
-                    <Detail {...this.props} _topicTitle={el => this._topicTitle = el} data={this.props.topic.data}
-                            getReplyToTopHeight={this.getReplyToTopHeight} login={this.props.login}
-                            dispatch={this.props.dispatch}/>
+                    <Detail {...this.props} _topicTitle={el => this._topicTitle = el}
+                            getReplyToTopHeight={this.getReplyToTopHeight}/>
                     <Content _topicContent={el => this._topicContent = el} checkLink={this.checkLink}
                              createMarkup={this.createMarkup} data={this.props.topic.data}/>
                     <ReplyHead _topicReplyHead={el => this._topicReplyHead = el}
                                repliesLen={this.props.topic.data.replies.length}/>
                     <ReplyOrder {...this.props} replyOrderClass={this.state.replyOrderClass}
                                 _topicReplyOrder={el => this._topicReplyOrder = el}
-                                repliesLen={this.props.topic.data.replies.length}
                                 setOrderTrue={() => {
                                     setRepliesOrder.bind(this)(this.props.topic.data.replies, true)
                                 }}
                                 setOrderFalse={() => {
                                     setRepliesOrder.bind(this)(this.props.topic.data.replies, false)
                                 }}/>
-                    <Replies {...this.props} replies={this.props.topic.data.replies}
+                    <Replies {...this.props} replies={this.state.replies}
                              replyOrderHeight={this.state.replyOrderHeight}
                              checkLink={this.checkLink} createMarkup={this.createMarkup}
-                             loginname={this.props.topic.data.author.loginname}
-                             id={this.props.topic.data.id} loadTopic={this.loadData} dispatch={this.props.dispatch}/>
+                             loadTopic={this.loadData}/>
                 </div>
             )
             :

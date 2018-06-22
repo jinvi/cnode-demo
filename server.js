@@ -23,7 +23,5 @@ app.get('*', function (req, res) {
     res.sendFile(path.resolve(__dirname, 'app', 'index.html'))
 })
 
-app.use('/', proxy({target: 'https://cnodejs.org/api/v1', changeOrigin: true}));
-
 app.listen(port, () => {
 });

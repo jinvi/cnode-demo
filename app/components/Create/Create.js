@@ -129,7 +129,7 @@ export default class Main extends Component {
                         <input className={'create-inputTitle'} type={'text'} name={'title'} onChange={(e) => {
                             this.handleChange(e, 'title')
                         }} value={this.state.titleValue}/>
-                        <div className={'create-subTitle'}>输入正文：
+                        <div className={'create-subTitle'}>输入正文（<a href={'https://segmentfault.com/markdown'} target={'_blank'}>Markdown指南</a>）：
                             <span className={'create-warning fright' + this.state.contentActiveClass}>* 请输入正文</span>
                         </div>
                         <textarea className={'create-content'} name={'content'} onChange={(e) => {

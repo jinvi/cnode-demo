@@ -6,10 +6,6 @@ export default class Replies extends Component {
     constructor(props) {
         super(props)
 
-        this.state = {
-            data: this.props.replies
-        }
-
         this.setUps = this.setUps.bind(this)
     }
 
@@ -39,19 +35,17 @@ export default class Replies extends Component {
                     const is_uped = res.action === 'up'
                     const isReverse = this.props.topic.isReverseReplies
 
-                    for (let i = 0; i < this.state.data.length; i++) {
-                        if (this.state.data[i].id === reply_id) {
-                            this.state.data[i].is_uped = is_uped
-                            is_uped ? this.state.data[i].ups.push('tem_token') : this.state.data[i].ups.pop()
+                    for (let i = 0; i < this.props.replies.length; i++) {
+                        if (this.props.replies[i].id === reply_id) {
+                            this.props.replies[i].is_uped = is_uped
+                            is_uped ? this.props.replies[i].ups.push('tem_token') : this.props.replies[i].ups.pop()
 
                             this.props.dispatch({
                                 type: 'SET_TOPIC_REPLIES',
-                                payload: !isReverse ? this.state.data : this.state.data.reverse()
+                                payload: isReverse ? [].concat(this.props.replies).reverse() : this.props.replies
                             })
 
-                            this.setState({
-                                data: !isReverse ? this.state.data : this.state.data.reverse()
-                            })
+                            break
                         }
                     }
                 }
@@ -63,28 +57,23 @@ export default class Replies extends Component {
 
     render() {
         const loginData = localStorage.getItem(this.props.login.localStorageKey)
-        let data = [].concat(this.state.data)
         return (
             <div>
                 {
-                    this.state.data ?
+                    this.props.replies ?
                         (
                             <ul className={'topic-reply-list'}
                                 style={{marginTop: this.props.replyOrderHeight}}>
                                 {
-                                    (
-                                        !this.props.topic.isReverseReplies ?
-                                            this.state.data :
-                                            data.reverse()
-                                    ).map((item, index) => {
+                                    this.props.replies.map((item, index) => {
                                         let replyNumClass, replyNumContent;
-                                        if (item.author.loginname === this.props.loginname) {
+                                        if (item.author.loginname === this.props.topic.data.author.loginname) {
                                             replyNumContent = '作者'
                                             replyNumClass = 'topic-reply-num-active'
                                         } else {
                                             replyNumContent = !this.props.topic.isReverseReplies ?
                                                 index + 1 + '楼' :
-                                                this.state.data.length - index + '楼'
+                                                this.props.replies.length - index + '楼'
                                             replyNumClass = 'topic-reply-num'
                                         }
 
@@ -113,7 +102,7 @@ export default class Replies extends Component {
                                                     </div>
                                                     <div className={'topic-reply-content topic-content'}
                                                          onMouseOver={(event) => {
-                                                             this.props.checkLink(event, this.props.id)
+                                                             this.props.checkLink(event, this.props.topic.data.id)
                                                          }}
                                                          dangerouslySetInnerHTML={this.props.createMarkup(item.content)}/>
                                                     <div>

@@ -11,7 +11,7 @@ export default class ReplyOrder extends Component {
         return (
             <div className={'topic-reply-order clear' + this.props.replyOrderClass}
                  ref={this.props._topicReplyOrder}
-                 style={{display: !this.props.repliesLen ? 'none' : ''}}>
+                 style={{display: !this.props.topic.data.replies.length ? 'none' : ''}}>
                 <span className={orderBtnClass + this.orderBtnClass.new} onClick={this.props.setOrderTrue}>最新</span>
                 <span className={orderBtnClass + this.orderBtnClass.early} onClick={this.props.setOrderFalse}>最早</span>
                 {/*<span className={'topic-reply-order-title fright'}>回复排序：</span>*/}
