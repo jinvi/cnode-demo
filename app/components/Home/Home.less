@@ -137,6 +137,7 @@
 .topic-item {
   display: flex;
   height: @T--topic-item--height;
+  width: 100%;
   border-top: 1px solid @G-color-divide-line;
 
   .topic-item-avatar {
@@ -145,10 +146,11 @@
 
   .topic-item-content {
     margin-top: @T--topic-item-content--margint-top;
-    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    width: 100%;
+    padding-right: 10px;
   }
 
   .topic-item-title {
@@ -156,6 +158,9 @@
     font-weight: normal;
     color: @G-color-text;
     margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .topic-item-detail {

@@ -82,8 +82,9 @@ export default class Replies extends Component {
                                                 <img className={'topic-reply-avatar'} src={item.author.avatar_url}/>
                                                 <div className={'topic-reply-box'}>
                                                     <div className={'topic-reply-detail clear'}>
-                                                            <span
-                                                                className={'topic-reply-username'}>{item.author.loginname}</span>
+                                                        <a href={`https://cnodejs.org/user/${item.author.loginname}`}
+                                                           target={'_blank'}
+                                                           className={'topic-reply-username'}>{item.author.loginname}</a>
                                                         <span
                                                             className={'topic-reply-duration'}>{this.props.getDuration(item.create_at)}</span>
                                                         <span className={replyNumClass}>{replyNumContent}</span>
