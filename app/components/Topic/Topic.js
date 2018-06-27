@@ -181,9 +181,9 @@ export default class Main extends Component {
     render() {
         const loginData = localStorage.getItem(this.props.login.localStorageKey)
 
-        function setRepliesOrder(replies, isReverse) {  //不能作为组件方法，只能作为函数
+        function setRepliesOrder(replies, isReverse) {  //因为触发setState()，不能作为组件方法，只能作为函数
             this.props.dispatch({
-                type: 'SET_REPLIES_IS_Reverse',
+                type: 'SET_REPLIES_IS_REVERSE',
                 payload: {
                     isReverseReplies: isReverse
                 }

@@ -7,10 +7,6 @@ import Login from './Login'
 import Create from './Create'
 
 export default class Main extends Component {
-    constructor(props) {
-        super(props)
-    }
-
     render() {
         return (
             <Switch>
