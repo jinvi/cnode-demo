@@ -149,9 +149,11 @@ export default class Topics extends Component {
                                     <span className={'topic-item-tab topic-item-top'} style={{
                                         display: item.top ? 'inline' : 'none'
                                     }}><span className={'topic-item-topIcon'}>&#xe63d;</span>置顶</span>
-                                            <span className={'topic-item-tab'} style={{
-                                                display: item.top ? 'none' : 'inline'
-                                            }}>{transTab(item.tab)}</span>
+                                            {item.good && !item.top ?
+                                                <span className={'topic-item-tab topic-item-good'}>精华</span> :
+                                                <span className={'topic-item-tab'} style={{
+                                                    display: item.top ? 'none' : 'inline'
+                                                }}>{transTab(item.tab)}</span>}
                                             <span>{item.author.loginname}</span>
                                             <span>{this.props.getDuration(item.create_at)}</span>
                                             <span className={'fright'}>{item.reply_count} / {item.visit_count}</span>
