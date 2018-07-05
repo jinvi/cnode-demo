@@ -36,7 +36,7 @@ export default class Main extends Component {
         const title = formData.get('title') || this.setState({titleActiveClass: activeClass})
         const content = formData.get('content') || this.setState({contentActiveClass: activeClass})
 
-        if (!(tab && title && content)) {  //验证不通过时
+        if (!(tab && title && content)) {  //校验参数是否为空
             return
         }
 
