@@ -1,27 +1,41 @@
 const express = require('express');
 const webpack = require('webpack');
 const path = require('path');
-const proxy = require('http-proxy-middleware');
 
 const app = express();
-const config = require('./webpack.config.js');
-const compiler = webpack(config);
-const WebpackDevMiddleware = require('webpack-dev-middleware')(compiler, {
-    publicPath: config.output.publicPath
-})
-const WebpackHotMiddleware = require("webpack-hot-middleware")(compiler)
-const port = 8080;
+let port = 8080;
 
-app.use(WebpackDevMiddleware);
-app.use(WebpackHotMiddleware);
+if (process.env.NODE_ENV === 'development') {
+    /*
+    * 开发模式
+    * */
+    const config = require('./webpack.config.js');
+    const compiler = webpack(config);
+    const WebpackDevMiddleware = require('webpack-dev-middleware')(compiler, {
+        publicPath: config.output.publicPath
+    })
+    const WebpackHotMiddleware = require("webpack-hot-middleware")(compiler)
 
-WebpackDevMiddleware.waitUntilValid(() => {
-    console.log(`App listening on port ${port}!\n`);
-});
+    app.use(WebpackDevMiddleware);
+    app.use(WebpackHotMiddleware);
 
-app.get('*', function (req, res) {
-    res.sendFile(path.resolve(__dirname, 'app', 'index.html'))
-})
+    WebpackDevMiddleware.waitUntilValid(() => {
+        console.log(`App listening on port ${port}!\n`);
+    });
+} else {
+    /*
+    * 产品模式
+    * */
+    port = 3000
+    app.use(express.static(__dirname + '/output'))  //静态资源文件夹
+}
+
+// app.get('*', function (req, res) {
+//     res.sendFile(path.resolve(__dirname, 'app', 'index.html'))
+// })
 
 app.listen(port, () => {
+    if (process.env.NODE_ENV !== 'development') {
+        console.log(`App listening on port ${port}!\n`);
+    }
 });

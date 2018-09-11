@@ -7,9 +7,12 @@ import 'whatwg-fetch'  //fetch polyfill
 import App from './components/route'
 import {Provider} from 'react-redux'
 import store from './store/store'
+import swReg from './service-worker/registration'  //service worker注册
 
 import 'normalize.css'
 import './style/index.less'
+
+swReg();  //注册service worker
 
 render((
     <Provider store={store}>

@@ -2,17 +2,18 @@ const path = require('path')
 const webpack = require('webpack')
 const CleanWebpackPlugin = require('clean-webpack-plugin')  //清除构建目录
 const ExtractTextPlugin = require("extract-text-webpack-plugin");  //将样式提取到独立文件
+const {GenerateSW, InjectManifest} = require('workbox-webpack-plugin');  //service worker工具集workbox
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const entryPath = path.resolve('app', 'app.js')
 const outputPath = path.resolve('output')
 const publicPath = '/'  //线上路径
 
 let isCleanOutput, entry;
-if (process.argv.indexOf('-p') === -1) {
+if (process.env.NODE_ENV === 'development') {
     /*
     * 开发环境
     * */
-    process.env.NODE_ENV = 'development'  //设置node环境变量
     isCleanOutput = false
     entry = {
         app: [
@@ -37,13 +38,31 @@ const CleanPluginOption = {
     dry: !isCleanOutput,  //true：不会操作删除任务，可查看将删除的内容
     verbose: isCleanOutput,  //是否打印log
     allowExternal: false,  //删除的输出目录在当前目录外，需设此项
-    exclude: []  //排除的文件
+    exclude: ['.git']  //排除的文件
+}
+
+//输出html插件选项
+const htmlWebpackPluginOption = {
+    title: 'Cnode-demo',
+    template: './app/template/index.html',
+    meta: {
+        viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui'
+    }
+}
+
+//workbox plugin选项
+const injectManifestOption = {
+    swSrc: './app/service-worker/sw.js',
+    importWorkboxFrom: 'local',  //local表示加载和生成workbox依赖文件在自己服务器，不设置则默认加载远程谷歌服务器文件
+    // include: [/\.(js|css|html)$/],  //预缓存包含文件
+    exclude: [/\.(jpg|png|gif)$/],  //预缓存排除文件
+    importsDirectory: 'wb-assets',
 }
 
 module.exports = {
     entry: entry,
     output: {
-        filename: 'bundle.js',
+        filename: 'main.js',
         path: outputPath,
         publicPath: publicPath
     },
@@ -89,16 +108,18 @@ module.exports = {
         ]
     },
     plugins: [
+        new HtmlWebpackPlugin(htmlWebpackPluginOption),
         new webpack.HotModuleReplacementPlugin(),
         new CleanWebpackPlugin(outputPath, CleanPluginOption),
         new ExtractTextPlugin({  //提取样式文件
-            filename: '[name].css',
+            filename: 'css/style.css',
             disable: process.env.NODE_ENV === "development"  //开发模式取消提取
         }),
         // new webpack.optimize.CommonsChunkPlugin({
         //     name: 'vendor',  //入口的chunk名称
         //     filename: "commons.js",  //公共文件输出文件名
         //     minChunks: Infinity
-        // })
+        // }),
+        new InjectManifest(injectManifestOption),  //workbox生成service worker文件
     ]
 }

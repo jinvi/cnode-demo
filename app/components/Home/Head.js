@@ -60,7 +60,7 @@ export default class Head extends Component {
                     })
                 },
                 fail: () => {
-                    localStorage.removeItem(localStorageKey)  //失败则删除localStorage
+                    // localStorage.removeItem(localStorageKey)  //失败则删除localStorage
                 }
             })
         }
