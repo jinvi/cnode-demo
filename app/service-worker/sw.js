@@ -14,17 +14,17 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest || []);  //预缓存
 //导航网址返回预缓存文件index.html
 workbox.routing.registerNavigationRoute("/");
 
-//缓存字体图标和用户头像
+//缓存字体图标
 workbox.routing.registerRoute(
-    new RegExp('(?:http:\\/\\/at\\.alicdn\\.com\\/.*\\.woff)'),
+    new RegExp('.*alicdn.*\\.woff'),
     workbox.strategies.staleWhileRevalidate({
-        cacheName: pjPrefix + '-opaque',
+        cacheName: pjPrefix + '-iconfont',
         plugins: [
             new workbox.cacheableResponse.Plugin({
                 statuses: [0, 200]
             }),
             new workbox.expiration.Plugin({
-                maxEntries: 5,
+                maxEntries: 1,
                 purgeOnQuotaError: true
             })
         ]

@@ -141,8 +141,10 @@ export default class Topics extends Component {
                         return (
                             <li key={item.id} onClick={this.setTopicsScrollTop}>
                                 <Link className={'topic-item'} to={`/topic/${item.id}`}>
-                                    <img className={'topic-item-avatar'} src={item.author.avatar_url}
-                                         style={avatarStyle}/>
+                                    <span className={'topic-item-avatar'}>
+                                        <img src={item.author.avatar_url}
+                                             style={avatarStyle}/>
+                                    </span>
                                     <div className={'topic-item-content'}>
                                         <h3 className={'topic-item-title' + activeClass}>{item.title}</h3>
                                         <div className={'topic-item-detail'}>

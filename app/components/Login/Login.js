@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {fetchJSON} from '../../utils/fetch'
 import Back from '../common/back'
+import idb from 'idb'  //indexedDB Promise库
 
 export default class Main extends Component {
     constructor(props) {
@@ -46,6 +47,20 @@ export default class Main extends Component {
                 })
 
                 localStorage.setItem(this.props.localStorageKey, JSON.stringify(loginData))
+
+                //更新用户头像地址到indexedDB
+                // if ('indexedDB' in window) {
+                //     const dbPromise = idb.open('Cnode-demo-avatar')
+                //     dbPromise.then(db => {
+                //         const tx = db.transaction('avatar_url', 'readwrite')
+                //         const store = tx.objectStore('avatar_url')
+                //         store.put({
+                //             url: res.avatar_url
+                //         },1)
+                //         return tx.complete;
+                //     })
+                // }
+
                 history.back(-1)
             },
             fail: reason => {
