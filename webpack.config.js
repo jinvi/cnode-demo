@@ -45,7 +45,7 @@ const CleanPluginOption = {
 //输出html插件选项
 const htmlTag = require('./app/assets/code/htmlTag')
 const htmlWebpackPluginOption = {
-    title1: 'Cnode-demo',
+    title: 'Cnode-demo',
     template: './app/template/index.html',
     meta: {viewport: htmlTag.viewport},
     // manifest: htmlTag.manifest
