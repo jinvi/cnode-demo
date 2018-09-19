@@ -79,6 +79,7 @@
 
 .user-items {
   border-top: 1px solid @G-color-divide-line;
+  margin-bottom: @G--common-nav--height + 60;
 
   @line-height: 22px;
 
@@ -167,9 +168,12 @@
   }
 
   .user-sublist-avatar {
-    width: @avatar-size;
-    border-radius: 50%;
-    margin-left: @T-margin-left-right;
+    margin-left: @T-margin-left-right - 6;
+
+    img {
+      width: @avatar-size;
+      border-radius: 50%;
+    }
   }
 
   .user-sublist-title {

@@ -7,11 +7,14 @@ import 'whatwg-fetch'  //fetch polyfill
 import App from './components/route'
 import {Provider} from 'react-redux'
 import store from './store/store'
-import swReg from './service-worker/registration'  //service worker注册
 
 import 'normalize.css'
 import './style/index.less'
 
+// import vConsole from 'vconsole'  //移动端控制台，需new创建实例出来，不用时请注销
+// new vConsole();
+
+import swReg from './service-worker/registration'  //service worker注册
 swReg();  //注册service worker
 
 render((

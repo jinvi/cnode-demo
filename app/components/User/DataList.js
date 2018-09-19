@@ -112,7 +112,9 @@ export default class Main extends Component {
                                 !(this.currentType.search(/消息/) !== -1) ?
                                     <li key={index} className={'user-sublist-item'}>  {/*主题列表*/}
                                         <Link to={`/topic/${item.id}`} className={'clear'}>
-                                            <img className={'user-sublist-avatar fleft'} src={item.author.avatar_url}/>
+                                            <span className={'user-sublist-avatar fleft'}>
+                                                <img src={item.author.avatar_url}/>
+                                            </span>
                                             <span
                                                 className={'user-sublist-title fleft' + (
                                                     this.props.topicId === item.id ?

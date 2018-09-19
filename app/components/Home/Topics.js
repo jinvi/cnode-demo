@@ -75,7 +75,7 @@ export default class Topics extends Component {
         const currentHeight = Math.ceil(scrollTop) + Math.ceil(clientHeight)
         const bodyHeight = Math.ceil(scrollHeight)
 
-        if (currentHeight - bodyHeight >= 0 && Math.ceil(scrollTop) !== 0) {  //滚动到底部时
+        if (currentHeight - bodyHeight > -100 && Math.ceil(scrollTop) !== 0) {  //滚动到底部时
             this.loadList({tabParam: this.props.location.search, isNewTab: false})
         }
     }

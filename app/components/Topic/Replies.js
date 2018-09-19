@@ -79,7 +79,9 @@ export default class Replies extends Component {
 
                                         return (
                                             <li key={item.id}>
-                                                <img className={'topic-reply-avatar'} src={item.author.avatar_url}/>
+                                                <span className={'topic-reply-avatar'}>
+                                                    <img src={item.author.avatar_url}/>
+                                                </span>
                                                 <div className={'topic-reply-box'}>
                                                     <div className={'topic-reply-detail clear'}>
                                                         <a href={`https://cnodejs.org/user/${item.author.loginname}`}
