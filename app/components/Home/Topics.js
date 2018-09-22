@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {fetchJSON} from '../../utils/fetch'
 import {Link} from 'react-router-dom'
+import Hammer from 'hammerjs'
 
 export default class Topics extends Component {
     constructor(props) {
@@ -131,7 +132,7 @@ export default class Topics extends Component {
                     <li><Link className={setClass.job} to={'/?tab=job'} onClick={this.refreshList}>招聘</Link></li>
                     <li><Link className={setClass.dev} to={'/?tab=dev'} onClick={this.refreshList}>测试</Link></li>
                 </ul>
-                <ul className={'topic-list'}>
+                <ul className={'topic-list'} ref={el => this._topicList = el}>
                     {this.state.listData.map((item, index, list) => {
                         if (listIdSet.has(item.id)) return null  //判断是否有重复项
                         listIdSet.add(item.id)
@@ -178,11 +179,43 @@ export default class Topics extends Component {
     }
 
     componentDidMount() {
+        const _this = this
+
         window.addEventListener('scroll', this.loadNextList, false)
         document.documentElement.scrollTop = document.body.scrollTop = this.props.topicsList.scrollTop //设置历史滚动条高度
 
         if (this.props.topicsList.list.length === 0) {
             this.loadList({tabParam: this.props.location.search, isNewTab: false});
+        }
+
+        //移动端左右手势移动话题列表栏目
+        const hammertime = new Hammer(this._topicList);
+        hammertime.on('swipeleft', function (ev) {
+            _this.props.history.push(`/` + nextUrl('swipeleft', location.search))
+        });
+        hammertime.on('swiperight', function (ev) {
+            _this.props.history.push(`/` + nextUrl('swiperight', location.search))
+        });
+
+        function nextUrl(direction, currentUrl) {
+            let num;
+            const tagList = ['', '?tab=good', '?tab=share', '?tab=ask', '?tab=job', '?tab=dev']
+
+            if (direction === 'swiperight') {
+                num = tagList.indexOf(currentUrl)
+                if (num === 0) {
+                    return tagList[tagList.length - 1]
+                } else {
+                    return tagList[num - 1]
+                }
+            } else {
+                num = tagList.indexOf(currentUrl)
+                if (num === tagList.length - 1) {
+                    return tagList[0]
+                } else {
+                    return tagList[num + 1]
+                }
+            }
         }
     }
 

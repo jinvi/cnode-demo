@@ -4,7 +4,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin')  //清除构建目录
 const ExtractTextPlugin = require("extract-text-webpack-plugin");  //将样式提取到独立文件
 const {GenerateSW, InjectManifest} = require('workbox-webpack-plugin');  //service worker工具集workbox，处理文件缓存
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');  //拷贝文件
+const CopyWebpackPlugin = require('copy-webpack-plugin');  //拷贝文件到输出目录
 
 const entryPath = path.resolve('app', 'app.js')
 const outputPath = path.resolve('output')
@@ -48,7 +48,7 @@ const htmlWebpackPluginOption = {
     title: 'Cnode-demo',
     template: './app/template/index.html',
     meta: {viewport: htmlTag.viewport},
-    // manifest: htmlTag.manifest
+    manifest: htmlTag.manifest  //index.html插入manifest.json及浏览器兼容标签
 }
 
 //workbox plugin选项
@@ -116,11 +116,11 @@ module.exports = {
             filename: 'css/style.css',
             disable: process.env.NODE_ENV === "development"  //开发模式取消提取
         }),
-        // new CopyWebpackPlugin([{
-        //     from: './app/manifest.json'
-        // }, {
-        //     from: './app/assets/touch', to: 'img/touch'
-        // }]),
+        new CopyWebpackPlugin([{
+            from: './app/manifest.json'
+        }, {
+            from: './app/assets/touch', to: 'img/touch'
+        }]),
         // new webpack.optimize.CommonsChunkPlugin({
         //     name: 'vendor',  //入口的chunk名称
         //     filename: "commons.js",  //公共文件输出文件名

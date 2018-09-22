@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {fetchJSON} from '../../utils/fetch'
-import {Route, Switch, Redirect, Link} from 'react-router-dom';
+import {Route, Switch, Link} from 'react-router-dom';
 
 import Loading from '../common/loading'
 import Nav from '../common/nav'

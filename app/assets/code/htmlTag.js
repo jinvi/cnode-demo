@@ -1,11 +1,18 @@
+const AndroidChromeThemeColor = '#4eb729'  //安卓Chrome浏览器导航栏颜色，非桌面应用
+const Win8tileColor = '#4eb729'
+
 module.exports = {
-    viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui',
+
+    //视口设置
+    viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
+
+    //manifest.json及其浏览器兼容标签
     manifest: `    
     <!-- Web Application Manifest -->
     <link rel="manifest" href="manifest.json">
 
     <!-- Chrome for Android theme color -->
-    <meta name="theme-color" content="#2E3AA1">
+    <meta name="theme-color" content="${AndroidChromeThemeColor}">
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -19,7 +26,10 @@ module.exports = {
     <link rel="apple-touch-icon" href="img/touch/icon-192x192.png">
 
     <!-- Tile for Win8 -->
-    <meta name="msapplication-TileColor" content="#3372DF">
+    <meta name="msapplication-TileColor" content="${Win8tileColor}">
     <meta name="msapplication-TileImage" content="img/touch/icon-192x192.png">
+    
+    <!--去掉IE10,11在Windows Phone点击时产生的高光-->
+    <meta name="msapplication-tap-highlight" content="no" />
 `
 }

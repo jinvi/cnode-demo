@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Link, Route, Redirect} from 'react-router-dom';
 import {fetchJSON} from '../../utils/fetch'
+import Hammer from 'hammerjs'
 
 import Loading from '../common/loading'
 import Back from '../common/back'
@@ -250,6 +251,15 @@ export default class Main extends Component {
 
             this.loadData(currentId)
         }
+
+        const hammertime = new Hammer(document.getElementById('container'));
+        hammertime.on('swiperight', function (ev) {
+            console.log(222)
+
+
+
+            // history.go(-1)
+        });
     }
 
     componentWillUnmount() {

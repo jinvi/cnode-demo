@@ -11,11 +11,10 @@ import store from './store/store'
 import 'normalize.css'
 import './style/index.less'
 
-// import vConsole from 'vconsole'  //移动端控制台，需new创建实例出来，不用时请注销
+// import vConsole from 'vconsole'  //移动端控制台，需new创建实例出来，不用时请注释
 // new vConsole();
 
-import swReg from './service-worker/registration'  //service worker注册
-swReg();  //注册service worker
+require('./service-worker/registration')()  //service worker注册
 
 render((
     <Provider store={store}>
