@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Link} from 'react-router-dom';
 import {fetchJSON} from '../../utils/fetch'
+import {gestureBack, gestureCommentOrder} from "../common/gesture";
 
 export default class Replies extends Component {
     constructor(props) {
@@ -62,7 +63,7 @@ export default class Replies extends Component {
                 {
                     this.props.replies ?
                         (
-                            <ul className={'topic-reply-list'}
+                            <ul className={'topic-reply-list'} ref={el => this._topicReplyList = el}
                                 style={{marginTop: this.props.replyOrderHeight}}>
                                 {
                                     this.props.replies.map((item, index) => {
@@ -128,5 +129,12 @@ export default class Replies extends Component {
                 }
             </div>
         )
+    }
+
+    componentDidMount() {
+        gestureBack(this._topicReplyList)  //手势向右返回上一页
+
+        //手势向左评论切换排序
+        gestureCommentOrder(this._topicReplyList, this.props.isReverseReplies, this.props.setOrderTrue, this.props.setOrderFalse)
     }
 }

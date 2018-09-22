@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {fetchJSON} from '../../utils/fetch'
+import {gestureBack, gestureToComment} from "../common/gesture";
 
 export default class Detail extends Component {
     constructor(props) {
@@ -51,7 +52,10 @@ export default class Detail extends Component {
         const loginData = JSON.parse(localStorage.getItem(this.props.login.localStorageKey))
 
         return (
-            <div className={'topic-title'} ref={this.props._topicTitle}>
+            <div className={'topic-title'} ref={el => {
+                this.props._topicTitle(el);
+                this._topicTitle = el;
+            }}>
                 <h3>{this.props.topic.data.title}</h3>
                 <div className={'topic-detail clear'}>
                     <span>回复：
@@ -76,5 +80,10 @@ export default class Detail extends Component {
                 </div>
             </div>
         )
+    }
+
+    componentDidMount() {
+        gestureBack(this._topicTitle)  //手势向右返回上一页
+        gestureToComment(this._topicTitle, this.props.getReplyToTopHeight)  //手势向左至评论区
     }
 }

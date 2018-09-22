@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {Link, Route, Redirect} from 'react-router-dom';
 import {fetchJSON} from '../../utils/fetch'
-import Hammer from 'hammerjs'
 
 import Loading from '../common/loading'
 import Back from '../common/back'
@@ -215,11 +214,14 @@ export default class Main extends Component {
                     <Detail {...this.props} _topicTitle={el => this._topicTitle = el}
                             getReplyToTopHeight={this.getReplyToTopHeight}/>
                     <Content _topicContent={el => this._topicContent = el} checkLink={this.checkLink}
-                             createMarkup={this.createMarkup} data={this.props.topic.data}/>
+                             createMarkup={this.createMarkup} data={this.props.topic.data}
+                             getReplyToTopHeight={this.getReplyToTopHeight}/>
                     <ReplyHead _topicReplyHead={el => this._topicReplyHead = el}
-                               repliesLen={this.props.topic.data.replies.length}/>
+                               repliesLen={this.props.topic.data.replies.length}
+                               getReplyToTopHeight={this.getReplyToTopHeight}/>
                     <ReplyOrder {...this.props} replyOrderClass={this.state.replyOrderClass}
                                 _topicReplyOrder={el => this._topicReplyOrder = el}
+                                getReplyToTopHeight={this.getReplyToTopHeight}
                                 setOrderTrue={() => {
                                     setRepliesOrder.bind(this)(this.props.topic.data.replies, true)
                                 }}
@@ -229,7 +231,14 @@ export default class Main extends Component {
                     <Replies {...this.props} replies={this.state.replies}
                              replyOrderHeight={this.state.replyOrderHeight}
                              checkLink={this.checkLink} createMarkup={this.createMarkup}
-                             loadTopic={this.loadData}/>
+                             loadTopic={this.loadData}
+                             setOrderTrue={() => {
+                                 setRepliesOrder.bind(this)(this.props.topic.data.replies, true)
+                             }}
+                             setOrderFalse={() => {
+                                 setRepliesOrder.bind(this)(this.props.topic.data.replies, false)
+                             }}
+                             isReverseReplies={this.props.topic.isReverseReplies}/>
                 </div>
             )
             :
@@ -251,15 +260,6 @@ export default class Main extends Component {
 
             this.loadData(currentId)
         }
-
-        const hammertime = new Hammer(document.getElementById('container'));
-        hammertime.on('swiperight', function (ev) {
-            console.log(222)
-
-
-
-            // history.go(-1)
-        });
     }
 
     componentWillUnmount() {
