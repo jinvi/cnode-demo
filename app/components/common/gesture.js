@@ -60,4 +60,12 @@ function gestureCommentOrder(el, isReverseReplies, setOrderTrue, setOrderFalse) 
     });
 }
 
-export {gestureToNextTag, gestureBack, gestureToComment, gestureCommentOrder}
+//双击滚动到顶部
+function gestureToTop(el) {
+    const hammertime = new Hammer(el);
+    hammertime.on('doubletap', function (ev) {
+        document.documentElement.scrollTop = document.body.scrollTop = 0
+    });
+}
+
+export {gestureToNextTag, gestureBack, gestureToComment, gestureCommentOrder, gestureToTop}

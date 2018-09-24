@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {gestureBack, gestureToComment} from "../common/gesture";
+import {gestureBack, gestureToComment, gestureToTop} from "../common/gesture";
 
 export default class ReplyHead extends Component {
     render() {
@@ -16,5 +16,6 @@ export default class ReplyHead extends Component {
     componentDidMount() {
         gestureBack(this._topicReplyHead)  //手势向右返回上一页
         gestureToComment(this._topicReplyHead, this.props.getReplyToTopHeight)  //手势向左至评论区
+        gestureToTop(this._topicReplyHead)  //双击滚动到顶部
     }
 }
