@@ -1,6 +1,6 @@
 {
-  "name": "CNODE DEMO",
-  "short_name": "CD",
+  "name": "CNODE demo",
+  "short_name": "CNODE demo",
   "start_url": "index.html",
   "icons": [{
     "src": "img/touch/icon-128x128.png",

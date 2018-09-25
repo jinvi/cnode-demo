@@ -263,11 +263,10 @@ export default class Main extends Component {
     }
 
     componentWillUnmount() {
-        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
         this.props.dispatch({
             type: 'SET_TOPIC_SCROLL_TOP',
             payload: {
-                scrollTop: scrollTop,  //记录历史滚动条高度
+                scrollTop: document.documentElement.scrollTop || document.body.scrollTop  //记录历史滚动条高度
             }
         })
         window.removeEventListener('scroll', this.setBeyondReplyClass, false)  //取消scroll事件

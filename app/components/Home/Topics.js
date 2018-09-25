@@ -51,7 +51,8 @@ export default class Topics extends Component {
                     payload: {
                         list: isNewTab ? res.data : this.state.listData.concat(res.data),
                         page: this.page,
-                        url: location.search
+                        url: location.search,
+                        scrollTop: document.documentElement.scrollTop || document.body.scrollTop
                     }
                 })
                 this.setState({
@@ -86,12 +87,17 @@ export default class Topics extends Component {
     }
 
     setTopicsScrollTop() {
-        this.props.dispatch({
-            type: 'SET_TOPICS_SCROLL_TOP',
-            payload: {
-                scrollTop: document.documentElement.scrollTop || document.body.scrollTop
-            }
-        })
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;  //滚动高度
+
+        if (scrollTop != 0) {
+            this.props.dispatch({
+                type: 'SET_TOPICS_SCROLL_TOP',
+                payload: {
+                    scrollTop: scrollTop
+                }
+            })
+        }
+
     }
 
     render() {

@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {Route, Switch, Redirect, Link, NavLink} from 'react-router-dom';
+import {gestureBack} from "../common/gesture";
 
 import Back from '../common/back'
 
@@ -170,6 +171,8 @@ export default class Main extends Component {
         if (this.currentType === this.props.scrollTopData.currentType && this.props.scrollTopData.value) {
             document.documentElement.scrollTop = document.body.scrollTop = this.props.scrollTopData.value  //设置历史滚动条高度
         }
+
+        gestureBack(this._sublist, this.props.history.push, '/user')  //手势向右返回用户首页
 
         // console.log(getStyle(this._subtitle,'height'))
         function getStyle(ele, style) {  //获取元素计算后的样式

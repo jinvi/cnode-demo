@@ -1,4 +1,5 @@
 import Hammer from 'hammerjs'
+import store from '../../store/store'
 
 //左右手势移动话题列表栏目
 function gestureToNextTag(el, component) {
@@ -32,10 +33,13 @@ function gestureToNextTag(el, component) {
     }
 }
 
-//手势向右返回上一页
-function gestureBack(el) {
+//手势向右返回上一页或指定路径
+function gestureBack(el, pushFn, url) {
     const hammertime = new Hammer(el);
     hammertime.on('swiperight', function (ev) {
+        if (pushFn) {
+            return pushFn(url)
+        }
         history.go(-1)
     });
 }
@@ -49,10 +53,10 @@ function gestureToComment(el, heightFn) {
 }
 
 //手势向左评论切换排序
-function gestureCommentOrder(el, isReverseReplies, setOrderTrue, setOrderFalse) {
+function gestureCommentOrder(el, setOrderTrue, setOrderFalse) {
     const hammertime = new Hammer(el);
     hammertime.on('swipeleft', function (ev) {
-        if (!isReverseReplies) {
+        if (!store.getState().topic.isReverseReplies) {
             setOrderTrue()
         } else {
             setOrderFalse()

@@ -136,6 +136,6 @@ export default class Replies extends Component {
         gestureToTop(this._topicReplyList)  //双击滚动到顶部
 
         //手势向左评论切换排序
-        gestureCommentOrder(this._topicReplyList, this.props.isReverseReplies, this.props.setOrderTrue, this.props.setOrderFalse)
+        gestureCommentOrder(this._topicReplyList, this.props.setOrderTrue, this.props.setOrderFalse)
     }
 }
