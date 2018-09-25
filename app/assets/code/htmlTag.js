@@ -28,8 +28,11 @@ module.exports = {
     <!-- Tile for Win8 -->
     <meta name="msapplication-TileColor" content="${Win8tileColor}">
     <meta name="msapplication-TileImage" content="img/touch/icon-192x192.png">
-    
+`,
+
+    //其他html头部标签
+    otherTag: `
     <!--去掉IE10,11在Windows Phone点击时产生的高光-->
     <meta name="msapplication-tap-highlight" content="no" />
-`
+    `
 }

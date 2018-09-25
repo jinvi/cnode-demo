@@ -48,7 +48,8 @@ const htmlWebpackPluginOption = {
     title: 'Cnode-demo',
     template: './app/template/index.html',
     meta: {viewport: htmlTag.viewport},
-    manifest: htmlTag.manifest  //index.html插入manifest.json及浏览器兼容标签
+    manifest: htmlTag.manifest,  //index.html插入manifest.json及浏览器兼容标签
+    otherTag: htmlTag.otherTag  //其他html头部标签
 }
 
 //workbox plugin选项
