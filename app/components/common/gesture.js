@@ -33,11 +33,22 @@ function gestureToNextTag(el, component) {
     }
 }
 
-//手势按住话题列表不放重新加载列表，取消字段选择功能，取消右击默认事件
-function gestureReload(el, component) {
+//手势按住话题列表不放重新加载列表(或双指操作)，取消字段选择功能，取消右击默认事件
+function gestureReload(el, evName, component) {
     const hammertime = new Hammer(el);
-    hammertime.get('press').set({time: 600})  //按压时间，单位微秒
-    hammertime.on('press', function (ev) {
+
+    switch (evName) {
+        case 'press':
+            hammertime.get(evName).set({time: 600})  //按压时间，单位微秒
+            break
+
+        //bug:无法上下移动
+        case 'pinchin':
+            hammertime.get('pinch').set({enable: true})
+            break
+    }
+
+    hammertime.on(evName, function (ev) {
         component.isRefreshList = true
         component.props.history.push({
             pathname: '/',
