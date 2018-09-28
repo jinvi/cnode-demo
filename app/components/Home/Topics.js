@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {fetchJSON} from '../../utils/fetch'
 import {Link} from 'react-router-dom'
-import {gestureToNextTag} from "../common/gesture";
+import {gestureReload, gestureToNextTag} from "../common/gesture";
 
 export default class Topics extends Component {
     constructor(props) {
@@ -193,6 +193,7 @@ export default class Topics extends Component {
         }
 
         gestureToNextTag(this._topicList, this)  //左右手势移动话题列表栏目
+        gestureReload(this._topicList, this)  //手势按住话题列表不放重新加载列表，取消字段选择功能，取消右击默认事件
     }
 
     shouldComponentUpdate(nextProps, nextState) {

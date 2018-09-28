@@ -33,6 +33,21 @@ function gestureToNextTag(el, component) {
     }
 }
 
+//手势按住话题列表不放重新加载列表，取消字段选择功能，取消右击默认事件
+function gestureReload(el, component) {
+    const hammertime = new Hammer(el);
+    hammertime.get('press').set({time: 600})  //按压时间，单位微秒
+    hammertime.on('press', function (ev) {
+        component.isRefreshList = true
+        component.props.history.push({
+            pathname: '/',
+            search: location.search
+        })
+        document.onselectstart = () => false  //取消字段选择功能
+        document.oncontextmenu = () => false  //取消右击默认事件
+    });
+}
+
 //手势向右返回上一页或指定路径
 function gestureBack(el, pushFn, url) {
     const hammertime = new Hammer(el);
@@ -72,4 +87,4 @@ function gestureToTop(el) {
     });
 }
 
-export {gestureToNextTag, gestureBack, gestureToComment, gestureCommentOrder, gestureToTop}
+export {gestureToNextTag, gestureBack, gestureToComment, gestureCommentOrder, gestureToTop, gestureReload}
