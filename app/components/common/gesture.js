@@ -54,8 +54,6 @@ function gestureReload(el, evName, component) {
             pathname: '/',
             search: location.search
         })
-        document.onselectstart = () => false  //取消字段选择功能
-        document.oncontextmenu = () => false  //取消右击默认事件
     });
 }
 

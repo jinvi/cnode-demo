@@ -194,7 +194,8 @@ export default class Topics extends Component {
 
         gestureToNextTag(this._topicList, this)  //左右手势移动话题列表栏目
         gestureReload(this._topicList, 'press', this)  //手势按住话题列表不放重新加载列表，取消字段选择功能，取消右击默认事件
-        // gestureReload(this._topicList, 'pinchin', this)  //双指操作重新加载列表
+        document.onselectstart = () => false  //取消字段选择功能
+        document.oncontextmenu = () => false  //取消右击默认事件
     }
 
     shouldComponentUpdate(nextProps, nextState) {
