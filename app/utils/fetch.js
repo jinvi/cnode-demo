@@ -1,5 +1,3 @@
-const preUrl = 'https://cnodejs.org/api/v1'
-
 function logResult(result) {
     console.log(result);
 }
@@ -29,6 +27,7 @@ function response(response) {
 
 //返回JSON格式数据
 function fetchJSON({url, success, req, fail}) {
+    const preUrl = 'https://cnodejs.org/api/v1'
     fetch(preUrl + url, req)
         .then(validateResponse)
         .then(readResponseAsJSON)
