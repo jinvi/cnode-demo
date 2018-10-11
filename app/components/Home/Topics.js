@@ -12,6 +12,7 @@ export default class Topics extends Component {
             isLoadFail: false
         }
 
+        this.isRefreshList = false
         this.page = this.props.topicsList.page  //列表页数
         this.isLoadFinish = true
 

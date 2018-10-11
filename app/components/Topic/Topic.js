@@ -31,6 +31,7 @@ export default class Main extends Component {
             replyOrderHeight: this.props.topic.replyOrderHeight,
             isLoadFail: false
         }
+
         this.orderBtnClass = {
             early: '',
             new: ''

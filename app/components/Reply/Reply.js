@@ -10,8 +10,8 @@ export default class Main extends Component {
         }
 
         this.replyCommentData = this.props.replyCommentData
-        this.contentHandler = this.contentHandler.bind(this)
 
+        this.contentHandler = this.contentHandler.bind(this)
         this.reply = this.reply.bind(this)
     }
 
